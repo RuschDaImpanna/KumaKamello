@@ -83,10 +83,13 @@
                 <br/>
 
                 <div id="lapse">
+
                     <label for="initTime">Initial Hour</label>
                     <input type="time" name="initTime" value="07:00">
                     <label for="endTime">Ending Hour</label>
                     <input type="time" name="endTime" value="19:00">
+
+                    <h6 hidden>Only 10 min-based time available</h6>
 
                 </div>
 
@@ -101,6 +104,9 @@
                     <label for="fifty">50 min</label>
                     <input type="radio" id="hour" name="units" checked>
                     <label for="hour">1 hour</label>
+
+                    <h3>Add deadtime</h3>
+                    <input type="checkbox" id="deadtime" name="deadtime" disabled>
 
                 </div>
 
