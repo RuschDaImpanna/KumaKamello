@@ -109,7 +109,7 @@ function createTable() {
     document.getElementById('tableTitle').innerHTML = setting[0]
 
     //Calculate size
-    const {xSize, ySize} = calculateSize()
+    const {xSize, ySize, unit, yWrap} = calculateSize()
 
     //Create table
     table.innerHTML = ''
@@ -141,12 +141,22 @@ function createTable() {
 
                 const text = document.createElement('h3')
                 text.innerText = days[(setting[1]+(x-1)) % 7]
+                text.style.textAlign = 'center'
                 cell.appendChild(text)
 
             }
             else if (x === 0) {
 
                 cell.classList.add('timeHeader')
+
+                if(!yWrap){
+
+                    const text = document.createElement('h3')
+                    text.innerText =  `${String((setting[3]+unit*(y-1))/unit).padStart(2, '0')}`
+                    text.style.textAlign = 'center'
+                    cell.appendChild(text)
+
+                }
 
             }
             else {
@@ -197,7 +207,7 @@ function createTable() {
         //If the grid doesn't fit, add +1 unit
         const gridEnd = Math.ceil(endTime / unit) * unit
         fitToUnit(gridEnd, endTime, form.endTime)
-        setting[4] = gridEnd
+        setting[4] = gridEnd > 1440 ? setting[4]:gridEnd
 
         //Change the display on the form
         function fitToUnit (fixed, old, formParam){
@@ -222,7 +232,7 @@ function createTable() {
         const ySize = ((gridEnd - gridStart) / unit)+1
         console.log(setting)
 
-        return {xSize, ySize}
+        return {xSize, ySize, unit, yWrap}
 
     }
 
