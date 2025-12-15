@@ -1,7 +1,7 @@
 const form = document.getElementById('tableSettings');
 const table = document.querySelector(".table")
 
-const setting = ['', 0, 4, 420, 1140, 2, false]
+const setting = ['', 0, 4, 420, 1140, 2, false, true]
 
 createTable()
 
@@ -101,6 +101,9 @@ function readSettings() {
 
     }
 
+    //24-hour based format
+    setting[7] = form.format.checked
+
 }
 
 function createTable() {
@@ -152,7 +155,14 @@ function createTable() {
                 if(!yWrap){
 
                     const text = document.createElement('h3')
-                    text.innerText =  `${String((setting[3]+unit*(y-1))/unit).padStart(2, '0')}`
+
+                    let firstHour = Math.floor((setting[3]+unit*(y-1))/60)
+                    let firstMinute = (setting[3]+unit*(y-1))%60
+
+                    console.log(firstHour)
+                    console.log(firstMinute)
+
+                    text.innerText =  `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')}`
                     text.style.textAlign = 'center'
                     cell.appendChild(text)
 
@@ -206,7 +216,7 @@ function createTable() {
 
         //If the grid doesn't fit, add +1 unit
         const gridEnd = Math.ceil(endTime / unit) * unit
-        fitToUnit(gridEnd, endTime, form.endTime)
+        fitToUnit(gridEnd % 1440, endTime, form.endTime)
         setting[4] = gridEnd > 1440 ? setting[4]:gridEnd
 
         //Change the display on the form
