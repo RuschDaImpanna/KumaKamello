@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
 
         <meta charset="UTF-8">
         <meta name="author" content="Rusch Da Impanna">
         <meta name="description" content="A way to organize your schedule by building blocks depending on available slots. Ideal for college schedules">
 
-        <link rel="stylesheet" href="../css/schedule.css">
+        <!--<link rel="stylesheet" href="../css/schedule.css">-->
 
         <title>Kuma Kamello</title>
 
@@ -16,74 +16,113 @@
 
         <article class="schedule">
 
+            <div class="table">
+
+                <h1 id="tableTitle"></h1>
+
+            </div>
+            <div class="blocks"></div>
+
         </article>
 
         <article class="settings">
-            <form>
 
-                <h3>Title</h3>
-                <input type="text" id="title" name="title">
+            <form id="tableSettings">
 
-                <br/>
+                <div id="title">
 
-                <h3>Initial Day</h3>
-                <input type="radio" id="monday" name="initDay">
-                <label for="monday">Monday</label>
-                <input type="radio" id="tuesday" name="initDay">
-                <label for="tuesday">Tuesday</label>
-                <input type="radio" id="wednesday" name="initDay">
-                <label for="wednesday">Wednesday</label>
-                <input type="radio" id="thursday" name="initDay">
-                <label for="thursday">Thursday</label>
-                <input type="radio" id="friday" name="initDay">
-                <label for="friday">Friday</label>
-                <input type="radio" id="saturday" name="initDay">
-                <label for="saturday">Saturday</label>
-                <input type="radio" id="sunday" name="initDay">
-                <label for="sunday">Sunday</label>
+                    <h3>Title</h3>
+                    <input type="text" name="title" placeholder="My Schedule">
+
+                </div>
 
                 <br/>
 
-                <h3>Final Day</h3>
-                <input type="radio" id="monday" name="finalDay">
-                <label for="monday">Monday</label>
-                <input type="radio" id="tuesday" name="finalDay">
-                <label for="tuesday">Tuesday</label>
-                <input type="radio" id="wednesday" name="finalDay">
-                <label for="wednesday">Wednesday</label>
-                <input type="radio" id="thursday" name="finalDay">
-                <label for="thursday">Thursday</label>
-                <input type="radio" id="friday" name="finalDay">
-                <label for="friday">Friday</label>
-                <input type="radio" id="saturday" name="finalDay">
-                <label for="saturday">Saturday</label>
-                <input type="radio" id="sunday" name="finalDay">
-                <label for="sunday">Sunday</label>
+                <div id="initDay">
+
+                    <h3>Initial Day</h3>
+                    <input type="radio" value="initM" name="initDay" checked>
+                    <label for="initM">Monday</label>
+                    <input type="radio" value="initT" name="initDay">
+                    <label for="initT">Tuesday</label>
+                    <input type="radio" value="initW" name="initDay">
+                    <label for="initW">Wednesday</label>
+                    <input type="radio" value="initTh" name="initDay">
+                    <label for="initTh">Thursday</label>
+                    <input type="radio" value="initF" name="initDay">
+                    <label for="initF">Friday</label>
+                    <input type="radio" value="initSt" name="initDay">
+                    <label for="initSt">Saturday</label>
+                    <input type="radio" value="initSn" name="initDay">
+                    <label for="initSn">Sunday</label>
+
+                </div>
 
                 <br/>
 
-                <h3>Hour unit</h3>
-                <input type="radio" id="quarter" name="units">
-                <label for="quarter">15 min</label>
-                <input type="radio" id="half" name="units">
-                <label for="half">30 min</label>
-                <input type="radio" id="plusQuarter" name="units">
-                <label for="plusQuarter">45 min</label>
-                <input type="radio" id="hour" name="units">
-                <label for="hour">1 hour</label>
-                <input type="radio" id="twoHours" name="units">
-                <label for="twoHours">2 hour</label>
-                <input type="radio" id="threeHours" name="units">
-                <label for="threeHours">3 hour</label>
-                <input type="radio" id="fiveHours" name="units">
-                <label for="fiveHours">5 hour</label>
+                <div id="endDay">
+
+                    <h3>Final Day</h3>
+                    <input type="radio" name="finalDay">
+                    <label for="endM">Monday</label>
+                    <input type="radio" name="finalDay">
+                    <label for="endT">Tuesday</label>
+                    <input type="radio" name="finalDay">
+                    <label for="endW">Wednesday</label>
+                    <input type="radio" name="finalDay">
+                    <label for="endTh">Thursday</label>
+                    <input type="radio" name="finalDay" checked>
+                    <label for="endF">Friday</label>
+                    <input type="radio" name="finalDay">
+                    <label for="endSt">Saturday</label>
+                    <input type="radio" name="finalDay">
+                    <label for="endSn">Sunday</label>
+
+                </div>
+
+                <br/>
+
+                <div id="lapse">
+                    <label for="initTime">Initial Hour</label>
+                    <input type="time" name="initTime" value="07:00">
+                    <label for="endTime">Ending Hour</label>
+                    <input type="time" name="endTime" value="19:00">
+
+                </div>
+
+                <br/>
+
+                <div id="units">
+
+                    <h3>Hour unit</h3>
+                    <input type="radio" name="units">
+                    <label for="quarter">15 min</label>
+                    <input type="radio" name="units">
+                    <label for="half">30 min</label>
+                    <input type="radio" name="units">
+                    <label for="plusQuarter">45 min</label>
+                    <input type="radio" name="units" checked>
+                    <label for="hour">1 hour</label>
+                    <input type="radio" name="units">
+                    <label for="twoHours">2 hour</label>
+                    <input type="radio" name="units">
+                    <label for="threeHours">3 hour</label>
+                    <input type="radio" name="units">
+                    <label for="fiveHours">5 hour</label>
+
+                </div>
+
+                <br/>
+
+                <input type="reset" id="reset" name="reset" value="Reset to default">
                 
 
             </form>
+
         </article>
 
     </body>
 
-    <script src=""></script>
+    <script src="settings.js"></script>
 
 </html>
