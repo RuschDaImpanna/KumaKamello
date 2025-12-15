@@ -1,7 +1,7 @@
 const form = document.getElementById('tableSettings');
 const table = document.querySelector(".table")
 
-const setting = ['', 0, 4, 420, 240, 2, false, true]
+const setting = ['', 0, 4, 420, 1140, 2, false, true]
 
 createTable()
 
@@ -161,61 +161,77 @@ function createTable() {
                 //Next time
                 const rawSecondTime = setting[3]+unit*y
 
+                let firstHour
+                let firstMinute
+
+                let secondHour
+                let secondMinute
+
                 //If it doesn't wraps
                 if (!yWrap) {
 
                     //Parse into undestandable time
-                    let firstHour = Math.floor(rawFirstTime/60)
-                    let firstMinute = (rawFirstTime) % 60
+                    firstHour = Math.floor(rawFirstTime/60)
+                    firstMinute = (rawFirstTime) % 60
 
-                    let secondHour = Math.floor(rawSecondTime/60)
-                    let secondMinute = (rawSecondTime) % 60
-
-                    //Check if it's a.m. of p.m.
-                    const firstSet = rawFirstTime < 720 ? 'a.m.':'p.m'
-                    const secondSet = rawFirstTime < 720 ? 'a.m.':'p.m'
-                    
-                    //Format to 12-hour based time
-                    if (!setting[7]){
-
-                        firstHour = firstHour % 12 || 12
-                        secondHour = secondHour % 12 || 12
-
-                    }
-                    
-                    //Place the text, padStart for 00:00 format, and if !setting[7], place a.m. or p.m.
-                    text.innerText =  `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')} ${!setting[7] ? firstSet:''} - ${String(secondHour).padStart(2, '0')}:${String(secondMinute).padStart(2, '0')} ${!setting[7] ? secondSet:''}`  
+                    secondHour = Math.floor(rawSecondTime/60)
+                    secondMinute = rawSecondTime % 60
 
                 } else {
 
                     //50 min is broken
-
-                    /*
-
-                    console.log(dayStart + ' | ' + dayEnd)
-
-                    let firstHour = Math.floor(dayStart /60) 
-                    let firstMinute = (dayStart) % 60
-
-                    let secondHour = Math.floor(rawSecondTime/60)
-                    let secondMinute = (rawSecondTime) % 60
-
-                    console.log(firstHour + ':' + firstMinute + ' - ' + secondHour + ':' + secondMinute)*/
 
                     //Calculate the relative to 12:00 a.m. by its unit and initTime 
                     const dayStart = Math.ceil((0 - rawFirstTime) / unit) * unit + rawFirstTime
                     //Calculate the relative to 11:00 p.m. by its unit and initTime
                     const dayEnd = Math.floor((1440 - rawFirstTime) / unit) * unit + rawFirstTime
 
-                    console.log(dayStart + ' | ' + dayEnd)
+                    let currentTime
 
-                    const displayTime = rawFirstTime % 1440
-                    console.log(displayTime + ' | ' + y)
+                    // First segment: 12 a.m. → endTime
+                    const firstSegmentLength = Math.floor((setting[4] - dayStart) / unit) + 1
 
-                    //text.innerText =  `${String()}`
+                    if (y <= firstSegmentLength) {
 
+                        currentTime = dayStart + unit * (y - 1)
+
+                    } 
+                    // Second segment: startTime → 11 p.m.
+                    else {
+
+                        currentTime = setting[3] + unit * (y - firstSegmentLength - 1)
+
+                    }
+
+                    const nextTime = currentTime + unit
+
+                    // Normalize
+                    const firstNorm = currentTime % 1440
+                    const secondNorm = nextTime % 1440
+
+                    // Parse into undestandable time
+                    firstHour = Math.floor(firstNorm / 60)
+                    firstMinute = firstNorm % 60
+
+                    secondHour = Math.floor(secondNorm / 60)
+                    secondMinute = secondNorm % 60
 
                 }
+
+                //Check if it's a.m. of p.m.
+                const firstSet = rawFirstTime < 720 ? 'a.m.':'p.m'
+                const secondSet = rawFirstTime < 720 ? 'a.m.':'p.m'
+                    
+                //Format to 12-hour based time
+                if (!setting[7]){
+
+                    firstHour = firstHour % 12 || 12
+                    secondHour = secondHour % 12 || 12
+
+                } 
+
+                //Place the text, padStart for 00:00 format, and if !setting[7], place a.m. or p.m.
+                text.innerText = `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')} ${!setting[7] ? firstSet : ''} - ${String(secondHour).padStart(2, '0')}:${String(secondMinute).padStart(2, '0')} ${!setting[7] ? secondSet : ''}`
 
                 text.style.textAlign = 'center'
                 cell.appendChild(text)
