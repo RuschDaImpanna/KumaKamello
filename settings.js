@@ -84,9 +84,14 @@ function readSettings() {
         newStr =  `${String(Math.floor(setting[modIndex]/60)).padStart(2, '0')}:${String(setting[modIndex] % 60).padStart(2, '0')}`
 
         //Rewrite the form
+        const errorLog = document.getElementById('timeErrorLog');
+
         if(newStr != timeStr){
 
             sendStr.value = newStr
+            
+            errorLog.innerText = 'Only 10 min-based time available'
+            errorLog.hidden = false
 
         }
 
@@ -111,6 +116,7 @@ function createTable() {
     let startTime = setting[3]
     let endTime = setting[4]
 
+    //If wraps 11:00 p.m. 12:00 a.m.
     const yWrap = startTime > endTime
 
     if(yWrap){
@@ -119,14 +125,35 @@ function createTable() {
 
     }
 
-    duration = endTime - startTime
+    //Fix start to fit unit
+    const gridStart = Math.floor(startTime / unit) * unit
+    fitToUnit(gridStart, startTime, form.initTime)
 
-    let gridEnd = Math.ceil(endTime / unit) * unit
+    //If the grid doesn't fit, add +1 unit
+    const gridEnd = Math.ceil(endTime / unit) * unit  
+
+    function fitToUnit (fixed, old, formParam){
+
+        const errorLog = document.getElementById('timeErrorLog');
+
+        if(fixed != old){
+
+            formParam.value = `${String(Math.floor(fixed/60)).padStart(2, '0')}:${String(fixed%60).padStart(2, '0')}`
+            
+            errorLog.innerText = 'Not compatible unit. Time rearranged'
+            errorLog.hidden = false
+
+        }
+
+    }
 
     
+
+    const ySize = ((gridEnd - gridStart) / unit)
 
     console.log(yWrap)
     console.log(startTime + ' | ' + endTime)
     console.log(gridEnd)
+    console.log (ySize)
 
 }
