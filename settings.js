@@ -90,7 +90,6 @@ function readSettings() {
 
             sendStr.value = newStr
             
-            errorLog.innerText = 'Only 10 min-based time available'
             errorLog.hidden = false
 
             setTimeout(() => {
@@ -214,9 +213,6 @@ function createTable() {
     table.style.gridTemplateRows = `repeat(${ySize + 1}, 40px)`
     table.style.gap = '5px'
 
-
-
-
     function calculateSize(){
 
         //Calculate x table
@@ -238,37 +234,34 @@ function createTable() {
 
         }
 
-        //Fix start to fit unit
-        const gridStart = Math.floor(startTime / unit) * unit
-        fitToUnit(gridStart, startTime, form.initTime)
-        setting[3] = gridStart
+        const duration = endTime - startTime
+        const steps = Math.ceil(duration / unit)
 
-        //If the grid doesn't fit, add +1 unit
-        const gridEnd = Math.ceil(endTime / unit) * unit
+        //If the grid doesn't fit, rearrenges the grid
+        const gridEnd = startTime + steps * unit
         fitToUnit(gridEnd % 1440, endTime, form.endTime)
-        setting[4] = gridEnd > 1440 ? setting[4]:gridEnd
+        setting[4] = gridEnd % 1440
 
         //Change the display on the form
         function fitToUnit (fixed, old, formParam){
 
-            const errorLog = document.getElementById('timeErrorLog');
+            const incompLog = document.getElementById('incompErrorLog');
 
             if(fixed != old){
 
                 formParam.value = `${String(Math.floor(fixed/60)).padStart(2, '0')}:${String(fixed%60).padStart(2, '0')}`
             
-                errorLog.innerText = 'Not compatible unit. Time rearranged'
-                errorLog.hidden = false
+                incompLog.hidden = false
 
                 setTimeout(() => {
-                    errorLog.hidden = true;
+                    incompLog.hidden = true;
                 }, 3000)
 
             }
 
         }
 
-        const ySize = ((gridEnd - gridStart) / unit)+1
+        const ySize = steps + 1
         console.log(setting)
 
         return {xSize, ySize, unit, yWrap}
@@ -276,7 +269,7 @@ function createTable() {
     }
 
     console.log(xSize)
-    console.log (ySize)
+    console.log(ySize)
 
     
 
