@@ -156,13 +156,13 @@ function createTable() {
 
                 const text = document.createElement('h4')
 
+                //Actual time
+                const rawFirstTime = setting[3]+unit*(y-1)
+                //Next time
+                const rawSecondTime = setting[3]+unit*y
+
                 //If it doesn't wraps
                 if (!yWrap) {
-                    
-                    //Actual time
-                    const rawFirstTime = setting[3]+unit*(y-1)
-                    //Next time
-                    const rawSecondTime = setting[3]+unit*y
 
                     //Parse into undestandable time
                     let firstHour = Math.floor(rawFirstTime/60)
@@ -187,6 +187,30 @@ function createTable() {
                     text.innerText =  `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')} ${!setting[7] ? firstSet:''} - ${String(secondHour).padStart(2, '0')}:${String(secondMinute).padStart(2, '0')} ${!setting[7] ? secondSet:''}`  
 
                 } else {
+
+                    //50 min is broken
+
+                    /*
+
+                    console.log(dayStart + ' | ' + dayEnd)
+
+                    let firstHour = Math.floor(dayStart /60) 
+                    let firstMinute = (dayStart) % 60
+
+                    let secondHour = Math.floor(rawSecondTime/60)
+                    let secondMinute = (rawSecondTime) % 60
+
+                    console.log(firstHour + ':' + firstMinute + ' - ' + secondHour + ':' + secondMinute)*/
+
+                    //Calculate the relative to 12:00 a.m. by its unit and initTime 
+                    const dayStart = Math.ceil((0 - rawFirstTime) / unit) * unit + rawFirstTime
+                    //Calculate the relative to 11:00 p.m. by its unit and initTime
+                    const dayEnd = Math.floor((1440 - rawFirstTime) / unit) * unit + rawFirstTime
+
+                    console.log(dayStart + ' | ' + dayEnd)
+
+                    const displayTime = rawFirstTime % 1440
+                    console.log(displayTime + ' | ' + y)
 
                     //text.innerText =  `${String()}`
 
@@ -239,7 +263,7 @@ function createTable() {
 
         //If the grid doesn't fit, rearrenges the grid
         const gridEnd = startTime + steps * unit
-        fitToUnit(gridEnd % 1440, endTime, form.endTime)
+        fitToUnit(gridEnd % 1440, endTime % 1440, form.endTime)
         setting[4] = gridEnd % 1440
 
         //Change the display on the form
