@@ -23,17 +23,21 @@ form.addEventListener("reset", () => {
 
 function readSettings() {
 
-    
+    //Title
     setting[0] = form.title.value
+
+    //Days
     setting[1] = [...form.initDay].findIndex(obj => obj.checked)
     setting[2] = [...form.finalDay].findIndex(obj => obj.checked)
 
+    //Time
     setting[3] = form.initTime.value
     setting[4] = form.endTime.value
 
     timeFloor(setting[3], form.initTime)
     timeFloor(setting[4], form.endTime)
 
+    //Unit time
     setting[5] = [...form.units].findIndex(obj => obj.checked)
 
     if (setting[5] < 2){
@@ -47,6 +51,7 @@ function readSettings() {
 
     }
 
+    //Deadtime
     setting[6] = form.deadtime.checked
 
     console.log(setting)
@@ -63,7 +68,7 @@ function readSettings() {
             min = 0
 
         }
-        //In case is 11:55 p.m.
+        //In case is +11:55 p.m.
         if (hour >= 24){
 
             hour = 0
@@ -97,9 +102,31 @@ function createTable() {
     //Calculate x table
     const xSize = ((setting[2] - setting[1] + 7) % 7) + 1;
 
-    //Calculate y table
-
-
     console.log(xSize)
+
+    //Calculate y table
+    const unitSize = [45, 50, 60]
+    const unit = unitSize[setting[5]]
+
+    let startTime = setting[3]
+    let endTime = setting[4]
+
+    const yWrap = startTime > endTime
+
+    if(yWrap){
+
+        endTime = setting[4] + 1440
+
+    }
+
+    duration = endTime - startTime
+
+    let gridEnd = Math.ceil(endTime / unit) * unit
+
+    
+
+    console.log(yWrap)
+    console.log(startTime + ' | ' + endTime)
+    console.log(gridEnd)
 
 }
