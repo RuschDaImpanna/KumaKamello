@@ -1,7 +1,7 @@
 const form = document.getElementById('tableSettings');
 const table = document.querySelector(".table")
 
-const setting = ['', 0, 4, 420, 1140, 2, false, true]
+const setting = ['', 0, 4, 420, 240, 2, false, true]
 
 createTable()
 
@@ -121,11 +121,13 @@ function createTable() {
 
             const cell = document.createElement('div')
 
+            //The useless corner
             if (x === 0 && y === 0) {
 
                 cell.classList.add('corner')
 
             }
+            //Days Header
             else if (y === 0) {
 
                 cell.classList.add('dayHeader')
@@ -148,25 +150,52 @@ function createTable() {
                 cell.appendChild(text)
 
             }
+            //Time Header
             else if (x === 0) {
 
                 cell.classList.add('timeHeader')
 
-                if(!yWrap){
+                const text = document.createElement('h4')
 
-                    const text = document.createElement('h3')
+                //If it doesn't wraps
+                if (!yWrap) {
+                    
+                    //Actual time
+                    const rawFirstTime = setting[3]+unit*(y-1)
+                    //Next time
+                    const rawSecondTime = setting[3]+unit*y
 
-                    let firstHour = Math.floor((setting[3]+unit*(y-1))/60)
-                    let firstMinute = (setting[3]+unit*(y-1))%60
+                    //Parse into undestandable time
+                    let firstHour = Math.floor(rawFirstTime/60)
+                    let firstMinute = (rawFirstTime) % 60
 
-                    console.log(firstHour)
-                    console.log(firstMinute)
+                    let secondHour = Math.floor(rawSecondTime/60)
+                    let secondMinute = (rawSecondTime) % 60
 
-                    text.innerText =  `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')}`
-                    text.style.textAlign = 'center'
-                    cell.appendChild(text)
+                    //Check if it's a.m. of p.m.
+                    const firstSet = rawFirstTime < 720 ? 'a.m.':'p.m'
+                    const secondSet = rawFirstTime < 720 ? 'a.m.':'p.m'
+                    
+                    //Format to 12-hour based time
+                    if (!setting[7]){
+
+                        firstHour = firstHour % 12 || 12
+                        secondHour = secondHour % 12 || 12
+
+                    }
+                    
+                    //Place the text, padStart for 00:00 format, and if !setting[7], place a.m. or p.m.
+                    text.innerText =  `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')} ${!setting[7] ? firstSet:''} - ${String(secondHour).padStart(2, '0')}:${String(secondMinute).padStart(2, '0')} ${!setting[7] ? secondSet:''}`  
+
+                } else {
+
+                    //text.innerText =  `${String()}`
+
 
                 }
+
+                text.style.textAlign = 'center'
+                cell.appendChild(text)
 
             }
             else {
