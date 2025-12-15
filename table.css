@@ -1,0 +1,19 @@
+.table {
+    width: 100%;
+    max-width: 800px;
+}
+.dayHeader{
+
+    background-color: red;
+
+}
+.timeHeader{
+
+    background-color: green;
+
+}
+.slot{
+
+    background-color: gray;
+
+}

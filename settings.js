@@ -1,7 +1,9 @@
 const form = document.getElementById('tableSettings');
-//const schedule = document.querySelector(".schedule");
+const table = document.querySelector(".table")
 
 const setting = ['', 0, 4, 420, 1140, 2, false]
+
+createTable()
 
 form.addEventListener("change", () => {
 
@@ -53,8 +55,6 @@ function readSettings() {
 
     //Deadtime
     setting[6] = form.deadtime.checked
-
-    console.log(setting)
 
     function timeFloor(timeStr, sendStr){
 
@@ -109,19 +109,69 @@ function createTable() {
     document.getElementById('tableTitle').innerHTML = setting[0]
 
     //Calculate size
+    const {xSize, ySize} = calculateSize()
 
-    console.log(yWrap)
-    console.log(unit)
-    console.log(startTime + ' | ' + endTime)
-    console.log(gridEnd)
-    console.log (ySize)
+    //Create table
+    table.innerHTML = ''
+    for (let y = 0; y < ySize+1; y++) {
+        for (let x = 0; x < xSize+1; x++) {
+
+            const cell = document.createElement('div')
+
+            if (x === 0 && y === 0) {
+
+                cell.classList.add('corner')
+
+            }
+            else if (y === 0) {
+
+                cell.classList.add('dayHeader')
+
+                const days = {
+
+                    0:'Monday',
+                    1:'Tuesday',
+                    2:'Wednesday',
+                    3:'Thursday',
+                    4:'Friday',
+                    5:'Saturday',
+                    6:'Sunday'
+
+                }
+
+                const text = document.createElement('h3')
+                text.innerText = days[(setting[1]+(x-1)) % 7]
+                cell.appendChild(text)
+
+            }
+            else if (x === 0) {
+
+                cell.classList.add('timeHeader')
+
+            }
+            else {
+
+                cell.classList.add('slot')
+
+            }
+
+            cell.id = `${String(x)}${String(y).padStart(2, '0')}`
+            table.appendChild(cell)
+        }
+    }
+
+    table.style.display = 'grid'
+    table.style.gridTemplateColumns = `repeat(${xSize + 1}, 1fr)`
+    table.style.gridTemplateRows = `repeat(${ySize + 1}, 40px)`
+    table.style.gap = '5px'
+
+
+
 
     function calculateSize(){
 
         //Calculate x table
         const xSize = ((setting[2] - setting[1] + 7) % 7) + 1;
-
-        console.log(xSize)
 
         //Calculate y table
         const unitSize = [45, 50, 60]
@@ -142,11 +192,14 @@ function createTable() {
         //Fix start to fit unit
         const gridStart = Math.floor(startTime / unit) * unit
         fitToUnit(gridStart, startTime, form.initTime)
+        setting[3] = gridStart
 
         //If the grid doesn't fit, add +1 unit
         const gridEnd = Math.ceil(endTime / unit) * unit
         fitToUnit(gridEnd, endTime, form.endTime)
+        setting[4] = gridEnd
 
+        //Change the display on the form
         function fitToUnit (fixed, old, formParam){
 
             const errorLog = document.getElementById('timeErrorLog');
@@ -166,8 +219,16 @@ function createTable() {
 
         }
 
-        const ySize = ((gridEnd - gridStart) / unit)
+        const ySize = ((gridEnd - gridStart) / unit)+1
+        console.log(setting)
+
+        return {xSize, ySize}
 
     }
+
+    console.log(xSize)
+    console.log (ySize)
+
+    
 
 }
