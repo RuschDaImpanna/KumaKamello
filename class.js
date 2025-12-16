@@ -67,13 +67,18 @@ function createPanel(classData) {
         const title = document.createElement('h3')
         title.innerText = classData.title
 
+        //Add available section
+        const addSctBtn = document.createElement('button')
+        addSctBtn.innerText = 'Add available section'
+        addSctBtn.onclick = () => addSection(classData.id) //Add Section function
+
         //Delete button
         const deleteBtn = document.createElement('button')
         deleteBtn.innerText = 'Delete'
         deleteBtn.onclick = () => deleteClass(classData.id) //Delete function
 
         //Push and title to header
-        header.append(title, deleteBtn)
+        header.append(title, addSctBtn, deleteBtn)
 
     //Settings
     const controls = document.createElement('div')
@@ -183,9 +188,11 @@ function createPanel(classData) {
                     SlI.hidden = true
 
                 }
-
-
-        }
+            }
+        
+        //Available section park to place in
+        const sectionPark = document.createElement('div')
+        sectionPark.classList.add('sectionPark'+classData.id)
         
 
         //Push every setting
@@ -197,11 +204,11 @@ function createPanel(classData) {
             sndLngthH3,
             secondLengthInput,
             splitInput,
-            splitLabel
+            splitLabel,
         )
 
-    //Header + controls
-    panel.append(header, controls)
+    //Header + controls + section park (for available sections)
+    panel.append(header, controls, sectionPark)
 
     //Ship it
     container.appendChild(panel)
@@ -219,5 +226,12 @@ function deleteClass(id) {
     if (panel) panel.remove()
 
     console.log(classController)
+
+}
+
+//This is for new each segment for each class block
+function addSection(id) {
+
+    alert('New section')
 
 }
