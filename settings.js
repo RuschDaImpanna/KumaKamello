@@ -1,5 +1,6 @@
-const form = document.getElementById('tableSettings');
+const form = document.getElementById('tableSettings')
 const table = document.querySelector(".table")
+const tableTitle = document.getElementById('tableTitle')
 
 const setting = ['', 0, 4, 420, 1140, 2, false, true]
 
@@ -23,10 +24,17 @@ form.addEventListener("reset", () => {
 
 })
 
-function readSettings() {
+function dynamicText(){
 
     //Title
     setting[0] = form.title.value
+
+    //Set title
+    tableTitle.innerHTML = setting[0]
+
+}
+
+function readSettings() {
 
     //Days
     setting[1] = [...form.initDay].findIndex(obj => obj.checked)
@@ -106,9 +114,6 @@ function readSettings() {
 }
 
 function createTable() {
-
-    //Set title
-    document.getElementById('tableTitle').innerHTML = setting[0]
 
     //Calculate size
     const {xSize, ySize, unit, yWrap} = calculateSize()
