@@ -254,6 +254,19 @@ function createTable() {
     table.style.gridTemplateRows = `repeat(${ySize + 1}, 40px)`
     table.style.gap = '5px'
 
+    styleTweaks()
+
+    function styleTweaks(){
+
+        document.getElementById('001').style.borderRadius = '15px 0 0 0'
+        document.getElementById('100').style.borderRadius = '15px 0 0 0'
+
+        document.getElementById(xSize+'00').style.borderRadius = '0 15px 0 0'
+        document.getElementById('0'+ySize).style.borderRadius = '0 0 0 15px'
+        document.getElementById(String(xSize)+String(ySize)).style.borderRadius = '0 0 15px 0'
+
+    }
+
     function calculateSize(){
 
         //Calculate x table
