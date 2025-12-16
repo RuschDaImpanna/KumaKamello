@@ -245,6 +245,7 @@ function createTable() {
 
             cell.id = `${String(x)}${String(y).padStart(2, '0')}`
             table.appendChild(cell)
+
         }
     }
 
@@ -298,7 +299,6 @@ function createTable() {
                 }, 3000)
 
             }
-
         }
 
         const ySize = steps + 1
