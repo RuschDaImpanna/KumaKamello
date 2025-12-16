@@ -20,8 +20,8 @@ function addClass(){
         title : 'Class'+ String(nextClassId).padStart(2, '0'),
         color : getRandomColor(),
         firstLength : 2,
-        secondLenght : 0,
-        splitBlock : false
+        secondLength : 1, //This is temporary
+        splitBlock : false //This is temporary
 
     }
 
@@ -50,6 +50,9 @@ function addClass(){
 }
 
 function createPanel(classData) {
+
+    //Find real object instead of looking by index
+    const classObj = classController.find(obj => obj.id === classData.id)
 
     //Create div
     const panel = document.createElement('div')
@@ -87,7 +90,7 @@ function createPanel(classData) {
         nameInput.oninput = () => {
 
             //Rewrite title at classController object
-            classController[classData.id].title = nameInput.value
+            classObj.title = nameInput.value
             //Dynamically, change text on real time
             title.innerText = nameInput.value
 
@@ -101,7 +104,7 @@ function createPanel(classData) {
         colorInput.oninput = () => {
 
             //Rewrite title at classController object
-            classController[classData.id].color = colorInput.value
+            classObj.color = colorInput.value
 
         }
 
@@ -120,54 +123,66 @@ function createPanel(classData) {
         firstLengthInput.oninput = () => {
 
             //Rewrite first lenght at classController object
-            classController[classData.id].firstLength = firstLengthInput.value
+            classObj.firstLength = firstLengthInput.value
 
         }
 
-        //Fancy label for the second lenght
-        const sndLngthH3 = document.createElement('h3')
-        sndLngthH3.innerText = 'Second class segment lenght'
-        sndLngthH3.id = 'Sh3_' + classData.id
+        //This is temporary too
+            //Fancy label for the second lenght
+            const sndLngthH3 = document.createElement('h3')
+            sndLngthH3.innerText = 'Second class segment lenght'
+            sndLngthH3.id = 'Sh3_' + classData.id
+            sndLngthH3.hidden = true
 
-        //First hour lenght
-        const secondLengthInput = document.createElement('input')
-        secondLengthInput.type = 'number'
-        secondLengthInput.min = 1
-        secondLengthInput.max = 3
-        secondLengthInput.value= classData.firstLength
+            //Second hour lenght
+            const secondLengthInput = document.createElement('input')
+            secondLengthInput.id = 'SlI_' + classData.id
+            secondLengthInput.type = 'number'
+            secondLengthInput.min = 1
+            secondLengthInput.max = 3
+            secondLengthInput.value = classData.secondLength
+            secondLengthInput.hidden = true
 
-        secondLengthInput.oninput = () => {
+            secondLengthInput.oninput = () => {
 
-            //Rewrite first lenght at classController object
-            classController[classData.id].secondLength = secondLengthInput.value
-
-        }
-
-        //Splitted class (two classes per weer)
-        const splitInput = document.createElement('input')
-        splitInput.type = 'checkbox'
-        splitInput.id = 'splitFor' + classData.id
-        splitInput.checked = classData.splitBlock
-
-        //The label too
-        const splitLabel = document.createElement('label')
-        splitLabel.htmlFor = 'splitFor'+ classData.id
-        splitLabel.innerText = 'Splitted class (seen twice a week)'
-
-        splitInput.onclick = () => {
-
-            //Rewrite split at classController object
-            classController[classData.id].splitBlock = splitInput.checked
-
-            if(classController[classData.id].splitBlock) {
-
-                document.getElementById('Fh3_' + classData.id).innerText = 'First class segment lenght'
-
-            } else {
-
-                document.getElementById('Fh3_' + classData.id).innerText = 'Class unit lenght'
+                //Rewrite first lenght at classController object
+                classObj.secondLength = secondLengthInput.value
 
             }
+
+            //Splitted class (two classes per weer)
+            const splitInput = document.createElement('input')
+            splitInput.type = 'checkbox'
+            splitInput.id = 'splitFor' + classData.id
+            splitInput.checked = classData.splitBlock
+
+            //The label too
+            const splitLabel = document.createElement('label')
+            splitLabel.htmlFor = 'splitFor'+ classData.id
+            splitLabel.innerText = 'Splitted class (seen twice a week)'
+
+            splitInput.onclick = () => {
+
+                //Rewrite split at classController object
+                classObj.splitBlock = splitInput.checked
+
+                const Fh3 = document.getElementById('Fh3_' + classData.id)
+                const Sh3 = document.getElementById('Sh3_' + classData.id)
+                const SlI = document.getElementById('SlI_' + classData.id)
+
+                if(classObj.splitBlock) {
+
+                    Fh3.innerText = 'First class segment lenght'
+                    Sh3.hidden = false
+                    SlI.hidden = false
+
+                } else {
+
+                    Fh3.innerText = 'Class unit lenght'
+                    Sh3.hidden = true
+                    SlI.hidden = true
+
+                }
 
 
         }
@@ -179,6 +194,8 @@ function createPanel(classData) {
             colorInput,
             fstLngthH3,
             firstLengthInput,
+            sndLngthH3,
+            secondLengthInput,
             splitInput,
             splitLabel
         )
