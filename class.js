@@ -2,13 +2,10 @@
 const container = document.getElementById('classManagement')
 
 //Class container objects
-let classController = []
+export let classController = []
 
-document.addEventListener("change", () => {
-
-    console.log(classController)
-
-})
+const addBtn = document.getElementById('add')
+addBtn.addEventListener('click', addClass)
 
 function addClass(){
 
@@ -44,8 +41,6 @@ function addClass(){
 
     //Assign a panel for a classController object
     createPanel(classController[classController.length-1])
-
-    console.log(classController)
 
 }
 

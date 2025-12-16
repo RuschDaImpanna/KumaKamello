@@ -1,6 +1,12 @@
 .table {
+
     width: 100%;
-    max-width: 800px;
+
+}
+.schedule {
+
+    padding: 0 7%;
+
 }
 .dayHeader{
 

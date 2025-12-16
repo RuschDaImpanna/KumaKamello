@@ -256,19 +256,43 @@ function createTable() {
 
     table.style.display = 'grid'
     table.style.gridTemplateColumns = `repeat(${xSize + 1}, 1fr)`
-    table.style.gridTemplateRows = `repeat(${ySize + 1}, 40px)`
+    table.style.gridTemplateRows = `repeat(${ySize + 1}, 50px)`
     table.style.gap = '5px'
+
+    console.log(xSize)
+    console.log(ySize)
 
     styleTweaks()
 
     function styleTweaks(){
 
         document.getElementById('001').style.borderRadius = '15px 0 0 0'
-        document.getElementById('100').style.borderRadius = '15px 0 0 0'
 
-        document.getElementById(xSize+'00').style.borderRadius = '0 15px 0 0'
-        document.getElementById('0'+ySize).style.borderRadius = '0 0 0 15px'
-        document.getElementById(String(xSize)+String(ySize)).style.borderRadius = '0 0 15px 0'
+        //Right top border
+        if (xSize > 1){
+
+            document.getElementById('100').style.borderRadius = '15px 0 0 0'
+            document.getElementById(xSize + '00').style.borderRadius = '0 15px 0 0'
+
+        } else {
+
+            document.getElementById('100').style.borderRadius = '15px 15px 0 0'
+
+        }
+
+        //Left bottom border
+        if (ySize > 1){
+
+            document.getElementById('0' + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 0 15px'
+
+        } else {
+
+             document.getElementById('001').style.borderRadius = '15px 0 0 15px'
+
+        }
+
+
+        document.getElementById(xSize + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 15px 0'
 
     }
 
@@ -325,10 +349,5 @@ function createTable() {
         return {xSize, ySize, unit, yWrap}
 
     }
-
-    console.log(xSize)
-    console.log(ySize)
-
-    
 
 }
