@@ -79,6 +79,10 @@ function updateAvaliableBlocks () {
 
 function createNewBlock (lastController, lightColor, darkColor){
 
+    //If voucher should be using light or dark on the title
+    const betterContrast = compareContrast(lightColor, lastController.color)
+    console.log(betterContrast)
+
     //Create the block
     const newBlock = document.createElement('div')
     newBlock.id = 'block' + lastController.id
@@ -110,7 +114,7 @@ function createNewBlock (lastController, lightColor, darkColor){
 
             textTitle.innerText = lastController.title
             textTitle.style.textAlign = 'center'
-            textTitle.style.color = String(lightColor)
+            textTitle.style.color = betterContrast ? String(lightColor):String(darkColor)
 
             //Push title to top voucher
             voucherTop.append(textTitle)
@@ -131,11 +135,11 @@ function createNewBlock (lastController, lightColor, darkColor){
             //Create a fucking div bc text won't be placing
             const placedText = document.createElement('div')
             placedText.style.position = 'absolute'
+            placedText.hidden = true
 
                 //Create title for positioned
                 const textTitlePlaced = document.createElement('h3')
                 textTitlePlaced.id = 'titlePlacedBlock' + lastController.id
-                textTitlePlaced.hidden = 'true'
 
                 textTitlePlaced.style.margin = '5px 0'
                 textTitlePlaced.style.textAlign = 'center'
@@ -145,7 +149,6 @@ function createNewBlock (lastController, lightColor, darkColor){
                 //Create label for positioned
                 const labelPlaced = document.createElement('p')
                 labelPlaced.id = 'labelPlacedBlock' + lastController.id
-                labelPlaced.hidden = 'true'
 
                 labelPlaced.style.margin = '5px 0'
                 labelPlaced.style.textAlign = 'center'
@@ -169,7 +172,7 @@ function createNewBlock (lastController, lightColor, darkColor){
                     dottedLine.style.left = '10px'
                     dottedLine.style.right = '10px'
 
-                    dottedLine.style.borderBottom = '3px dashed ' + darkColor
+                    dottedLine.style.borderBottom = '3px dashed ' + (betterContrast ? String(darkColor):String(lightColor))
 
                     voucherBottom.append(dottedLine)
 
@@ -203,6 +206,63 @@ function createDarkColor (original){
     const { h, s, l } = hexToHSL(original);
     return HSLToHex(h, s, Math.max(0, l - 30));
     
+}
+
+function compareContrast(light, original){
+
+    const { h, s, l } = hexToHSL(original)
+    const { l: Ll } = hexToHSL(light)
+
+    //Full dark
+    if (l < 30) {
+
+        return true
+
+    }
+    //Full bright lighter
+    if(Ll > 80){
+
+        return false
+
+    }
+
+    //Base threshold
+    let lightLimit = 60
+
+    //I also needed ChatGPT here
+    // Hue compensation (green & yellow are visually brighter)
+    if (h >= 45 && h <= 150) {
+
+        lightLimit -= 30
+
+    }
+
+    //Against neon colors
+    if (s > 85 && l > 50) {
+
+    lightLimit -= 25
+
+    }
+
+
+    //Very saturated colors appear brighter
+    if (s > 70) {
+
+        lightLimit -= 10
+
+    }
+
+    //Full saturation and medium lighness
+    if (s > 80 && l > 45) {
+
+    lightLimit -= 10
+
+    }
+
+
+    // Decide
+    return Ll > lightLimit
+
 }
 
 function hexToHSL (hex){
