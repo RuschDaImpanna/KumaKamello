@@ -121,9 +121,6 @@ function createTable() {
     //Create table
     table.innerHTML = ''
 
-    
-
-
     for (let y = 0; y < ySize+1; y++) {
 
         //Actual time
@@ -144,8 +141,6 @@ function createTable() {
         for (let x = 0; x < xSize+1; x++) {
 
             const cell = document.createElement('div')
-
-            
 
             //The useless corner
             if (x === 0 && y === 0) {
@@ -189,6 +184,9 @@ function createTable() {
                 let secondHour
                 let secondMinute
 
+                let firstSet
+                let secondSet
+
                 //If it doesn't wraps
                 if (!yWrap) {
 
@@ -198,6 +196,10 @@ function createTable() {
 
                     secondHour = Math.floor(rawSecondTime/60)
                     secondMinute = rawSecondTime % 60
+
+                    //Check if it's a.m. of p.m.
+                    firstSet = rawFirstTime < 720 ? 'a.m.':'p.m'
+                    secondSet = rawFirstTime < 720 ? 'a.m.':'p.m'
 
                 } else {
 
@@ -237,11 +239,12 @@ function createTable() {
                     secondHour = Math.floor(secondNorm / 60)
                     secondMinute = secondNorm % 60
 
-                }
 
-                //Check if it's a.m. of p.m.
-                const firstSet = rawFirstTime < 720 ? 'a.m.':'p.m'
-                const secondSet = rawFirstTime < 720 ? 'a.m.':'p.m'
+                    //Check if it's a.m. of p.m.
+                    firstSet = firstNorm < 720 ? 'a.m.':'p.m'
+                    secondSet = secondNorm < 720 ? 'a.m.':'p.m'
+
+                }
                     
                 //Format to 12-hour based time
                 if (!setting[7]){
