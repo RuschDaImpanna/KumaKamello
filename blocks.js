@@ -13,11 +13,11 @@ document.addEventListener("updateBlock", () => {
     if (availableBlocks.length < classController.length) {
 
         //Light and dark color variants
-        const lightColor = createLightColor(classController.color)
-        const darkColor = createDarkColor(classController.color)
+        const lightColor = createLightColor(lastController.color)
+        const darkColor = createDarkColor(lastController.color)
 
         //Ship it
-        blockPark.appendChild(createNewBlock(lastController))
+        blockPark.appendChild(createNewBlock(lastController, lightColor, darkColor))
 
     } else {
         
@@ -77,7 +77,7 @@ function updateAvaliableBlocks () {
     
 }
 
-function createNewBlock (lastController){
+function createNewBlock (lastController, lightColor, darkColor){
 
     //Create the block
     const newBlock = document.createElement('div')
@@ -110,6 +110,7 @@ function createNewBlock (lastController){
 
             textTitle.innerText = lastController.title
             textTitle.style.textAlign = 'center'
+            textTitle.style.color = String(lightColor)
 
             //Push title to top voucher
             voucherTop.append(textTitle)
@@ -129,7 +130,7 @@ function createNewBlock (lastController){
 
             //Create a fucking div bc text won't be placing
             const placedText = document.createElement('div')
-            placedText.position = 'absolute'
+            placedText.style.position = 'absolute'
 
                 //Create title for positioned
                 const textTitlePlaced = document.createElement('h3')
@@ -168,7 +169,7 @@ function createNewBlock (lastController){
                     dottedLine.style.left = '10px'
                     dottedLine.style.right = '10px'
 
-                    dottedLine.style.borderBottom = '3px dashed black'
+                    dottedLine.style.borderBottom = '3px dashed ' + darkColor
 
                     voucherBottom.append(dottedLine)
 
@@ -183,6 +184,7 @@ function createNewBlock (lastController){
         //Push children into block
         newBlock.append(voucherTop, voucherBottom)
 
+
     console.log('New', newBlock)
 
     return newBlock
@@ -191,21 +193,69 @@ function createNewBlock (lastController){
 
 function createLightColor (original){
 
-    console.log(original)
+    const { h, s, l } = hexToHSL(original)
+    return HSLToHex(h, s, Math.min(100, l + 30))
 
 }
 
 function createDarkColor (original){
 
-    console.log(original)
+    const { h, s, l } = hexToHSL(original);
+    return HSLToHex(h, s, Math.max(0, l - 30));
     
 }
 
-function hexToHSV (){
+function hexToHSL (hex){
+
+    hex = hex.slice(1)
+
+    //Convert into numbers
+    let r = parseInt(hex.substring(0, 2), 16) / 255;
+    let g = parseInt(hex.substring(2, 4), 16) / 255;
+    let b = parseInt(hex.substring(4, 6), 16) / 255;
+
+    //Average value
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    // I gave up. ChatGPT did it
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100)
+    };
     
 }
 
-function HSVToHex (){
+function HSLToHex (h, s, l){
 
+    //Same as this one. I don't understand
+    s /= 100;
+    l /= 100;
+
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n =>
+        l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
+    const toHex = x =>
+        Math.round(x * 255).toString(16).padStart(2, '0');
+
+    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 
 }
