@@ -10,16 +10,12 @@ document.addEventListener("updateBlock", () => {
     //Check last object
     const lastController = classController[classController.length - 1]
 
-    //Check width size
-    const cellWidth = table.querySelector('.slot').getBoundingClientRect().width
-
     if (availableBlocks.length < classController.length) {
 
         //Create the block
         const newBlock = document.createElement('div')
         newBlock.id = 'block' + lastController.id
         newBlock.style.backgroundColor = lastController.color
-        newBlock.style.width = cellWidth + 'px'
         newBlock.style.height = (50 * lastController.firstLength) + 'px'
         newBlock.style.borderRadius = '10px'
 
@@ -63,13 +59,13 @@ document.addEventListener("change", () => {
 
     
 
-    if(JSON.stringify(availableBlocks) === JSON.stringify(classController)){
+    if(JSON.stringify(availableBlocks) != JSON.stringify(classController)){
 
-        console.log(false)
+        console.log(true)
 
     } else {
 
-        console.log(true)
+        console.log(false)
 
     }
 

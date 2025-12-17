@@ -1,6 +1,15 @@
 .table {
 
+    display: grid;
     width: 100%;
+
+}
+.blocks {
+
+    display: grid;
+    padding: 5px;
+    grid-template-columns: repeat(var(--xSize), 1fr);
+    gap: 5px;
 
 }
 .schedule {

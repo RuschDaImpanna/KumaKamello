@@ -254,7 +254,6 @@ function createTable() {
         }
     }
 
-    table.style.display = 'grid'
     table.style.gridTemplateColumns = `repeat(${xSize + 1}, 1fr)`
     table.style.gridTemplateRows = `repeat(${ySize + 1}, 50px)`
     table.style.gap = '5px'
@@ -263,6 +262,9 @@ function createTable() {
     console.log(ySize)
 
     styleTweaks()
+
+    //Get xSize to CSS
+    document.documentElement.style.setProperty('--xSize', xSize+1)
 
     function styleTweaks(){
 
