@@ -135,7 +135,7 @@ function createPanel(classData) {
         firstLengthInput.oninput = () => {
 
             //Rewrite first length at classController object
-            classObj.firstLength = firstLengthInput.value
+            classObj.firstLength = parseFloat(firstLengthInput.value)
 
         }
 
@@ -158,7 +158,7 @@ function createPanel(classData) {
             secondLengthInput.oninput = () => {
 
                 //Rewrite first length at classController object
-                classObj.secondLength = secondLengthInput.value
+                classObj.secondLength = parseFloat(secondLengthInput.value)
 
             }
 
@@ -174,7 +174,7 @@ function createPanel(classData) {
             offsetInput.oninput = () => {
 
                 //Rewrite first length at classController object
-                classObj.offset = String(offsetInput.value)
+                classObj.offset = parseFloat(offsetInput.value)
 
             }
 
