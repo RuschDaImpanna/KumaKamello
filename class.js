@@ -18,11 +18,10 @@ function addClass(){
         color : getRandomColor(),
         firstLength : 2,
         secondLength : 1, //This is temporary
-        splitBlock : false //This is temporary
+        splitBlock : false, //This is temporary
+        offset: 1 //This is temporary
 
     }
-
-    nextClassId++
 
     function getRandomColor() {
 
@@ -37,10 +36,23 @@ function addClass(){
         return color;
     }
 
-    classController.push(basicStructure)
+    if(classController.length < 20){
 
-    //Assign a panel for a classController object
-    createPanel(classController[classController.length-1])
+        nextClassId++
+
+        classController.push(basicStructure)
+
+        //Assign a panel for a classController object
+        createPanel(classController[classController.length-1])
+
+        //For inmedate update to blocks.js
+        document.dispatchEvent(new Event("updateBlock"))
+
+    } else {
+
+        alert('Class limit. Please delete a class to add a new one')
+
+    }
 
 }
 
@@ -108,12 +120,12 @@ function createPanel(classData) {
 
         }
 
-        //Fancy label for the first lenght
+        //Fancy label for the first length
         const fstLngthH3 = document.createElement('h3')
-        fstLngthH3.innerText = 'Class unit lenght'
+        fstLngthH3.innerText = 'Class unit length'
         fstLngthH3.id = 'Fh3_' + classData.id
 
-        //First hour lenght
+        //First hour length
         const firstLengthInput = document.createElement('input')
         firstLengthInput.type = 'number'
         firstLengthInput.min = 1
@@ -122,19 +134,19 @@ function createPanel(classData) {
 
         firstLengthInput.oninput = () => {
 
-            //Rewrite first lenght at classController object
+            //Rewrite first length at classController object
             classObj.firstLength = firstLengthInput.value
 
         }
 
         //This is temporary too
-            //Fancy label for the second lenght
+            //Fancy label for the second length
             const sndLngthH3 = document.createElement('h3')
-            sndLngthH3.innerText = 'Second class segment lenght'
+            sndLngthH3.innerText = 'Second class segment length'
             sndLngthH3.id = 'Sh3_' + classData.id
             sndLngthH3.hidden = true
 
-            //Second hour lenght
+            //Second hour length
             const secondLengthInput = document.createElement('input')
             secondLengthInput.id = 'SlI_' + classData.id
             secondLengthInput.type = 'number'
@@ -145,10 +157,34 @@ function createPanel(classData) {
 
             secondLengthInput.oninput = () => {
 
-                //Rewrite first lenght at classController object
+                //Rewrite first length at classController object
                 classObj.secondLength = secondLengthInput.value
 
             }
+
+            //Offset
+            const offsetInput = document.createElement('input')
+            offsetInput.id = 'offset' + classData.id
+            offsetInput.type = 'number'
+            offsetInput.min = 1
+            offsetInput.max = 6
+            offsetInput.value = classData.offset
+            offsetInput.hidden = true
+
+            offsetInput.oninput = () => {
+
+                //Rewrite first length at classController object
+                classObj.offset = String(offsetInput.value)
+
+            }
+
+            //Offset label
+            const offsetLabel = document.createElement('label')
+            offsetLabel.id = 'ofsLbl' + classData.id
+            offsetLabel.htmlFor = 'offset' + classData.id
+            offsetLabel.innerText = 'Offset'
+            offsetInput.hidden = true
+
 
             //Splitted class (two classes per weer)
             const splitInput = document.createElement('input')
@@ -169,18 +205,24 @@ function createPanel(classData) {
                 const Fh3 = document.getElementById('Fh3_' + classData.id)
                 const Sh3 = document.getElementById('Sh3_' + classData.id)
                 const SlI = document.getElementById('SlI_' + classData.id)
+                const Ofs = document.getElementById('offset' + classData.id)
+                const OfsLbl = document.getElementById('ofsLbl' + classData.id)
 
                 if(classObj.splitBlock) {
 
-                    Fh3.innerText = 'First class segment lenght'
+                    Fh3.innerText = 'First class segment length'
                     Sh3.hidden = false
                     SlI.hidden = false
+                    Ofs.hidden = false
+                    OfsLbl.hidden = false
 
                 } else {
 
-                    Fh3.innerText = 'Class unit lenght'
+                    Fh3.innerText = 'Class unit length'
                     Sh3.hidden = true
                     SlI.hidden = true
+                    Ofs.hidden = true
+                    OfsLbl.hidden = true
 
                 }
             }
@@ -198,6 +240,8 @@ function createPanel(classData) {
             firstLengthInput,
             sndLngthH3,
             secondLengthInput,
+            offsetInput,
+            offsetLabel,
             splitInput,
             splitLabel,
         )
@@ -220,7 +264,8 @@ function deleteClass(id) {
     const panel = document.querySelector(`.classPanel[data-id="${id}"]`)
     if (panel) panel.remove()
 
-    console.log(classController)
+    //For inmedate update to blocks.js
+    document.dispatchEvent(new Event("updateBlock"))
 
 }
 
