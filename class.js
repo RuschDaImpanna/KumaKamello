@@ -23,6 +23,7 @@ function addClass(){
 
     }
 
+    //Stolen from stackoverflow
     function getRandomColor() {
 
         var letters = '0123456789ABCDEF';
