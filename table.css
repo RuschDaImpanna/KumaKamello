@@ -1,22 +1,15 @@
+.schedule {
+
+    padding: 0 7%;
+
+}
 .table {
 
     display: grid;
     width: 100%;
 
 }
-.blocks {
 
-    display: grid;
-    padding: 5px;
-    grid-template-columns: repeat(var(--xSize), 1fr);
-    gap: 5px;
-
-}
-.schedule {
-
-    padding: 0 7%;
-
-}
 .dayHeader{
 
     background-color: #8C8EFF;
@@ -30,5 +23,32 @@
 .slot{
 
     background-color: #EBEEF2;
+
+}
+
+.wrapDivider {
+
+    position: relative;
+
+}
+
+.wrapDivider::before {
+
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 0;
+    right: 0;
+    border-bottom: 5px dashed #8C8EFF;
+
+}
+
+
+.blocks {
+
+    display: grid;
+    padding: 5px;
+    grid-template-columns: repeat(var(--xSize), 1fr);
+    gap: 5px;
 
 }

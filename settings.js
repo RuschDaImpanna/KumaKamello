@@ -120,10 +120,32 @@ function createTable() {
 
     //Create table
     table.innerHTML = ''
+
+    
+
+
     for (let y = 0; y < ySize+1; y++) {
+
+        //Actual time
+        const rawFirstTime = setting[3]+unit*(y-1)
+        //Next time
+        const rawSecondTime = setting[3]+unit*y
+
+        //Calculate the relative to 12:00 a.m. by its unit and initTime
+        const dayStart = Math.ceil((0 - rawFirstTime) / unit) * unit + rawFirstTime
+        //Calculate the relative to 11:00 p.m. by its unit and initTime (unused)
+        //const dayEnd = Math.floor((1440 - rawFirstTime) / unit) * unit + rawFirstTime
+
+        // First segment: 12 a.m. → endTime
+        const firstSegmentLength = Math.floor((setting[4] - dayStart) / unit) + 1
+        //Line gap
+        const hasGap = ((setting[4] + unit) % 1440) !== setting[3]
+
         for (let x = 0; x < xSize+1; x++) {
 
             const cell = document.createElement('div')
+
+            
 
             //The useless corner
             if (x === 0 && y === 0) {
@@ -161,11 +183,6 @@ function createTable() {
 
                 const text = document.createElement('h4')
 
-                //Actual time
-                const rawFirstTime = setting[3]+unit*(y-1)
-                //Next time
-                const rawSecondTime = setting[3]+unit*y
-
                 let firstHour
                 let firstMinute
 
@@ -186,15 +203,7 @@ function createTable() {
 
                     //50 min is broken
 
-                    //Calculate the relative to 12:00 a.m. by its unit and initTime 
-                    const dayStart = Math.ceil((0 - rawFirstTime) / unit) * unit + rawFirstTime
-                    //Calculate the relative to 11:00 p.m. by its unit and initTime
-                    const dayEnd = Math.floor((1440 - rawFirstTime) / unit) * unit + rawFirstTime
-
                     let currentTime
-
-                    // First segment: 12 a.m. → endTime
-                    const firstSegmentLength = Math.floor((setting[4] - dayStart) / unit) + 1
 
                     if (y <= firstSegmentLength) {
 
@@ -205,6 +214,13 @@ function createTable() {
                     else {
 
                         currentTime = setting[3] + unit * (y - firstSegmentLength - 1)
+
+                    }
+
+                    //If yWrap has separation, create a divider
+                    if (hasGap && y === firstSegmentLength + 1) {
+
+                        cell.classList.add('wrapDivider')
 
                     }
 
@@ -246,6 +262,12 @@ function createTable() {
 
                 cell.classList.add('slot')
 
+                if(yWrap && hasGap && y === firstSegmentLength + 1){
+                
+                    cell.classList.add('wrapDivider')
+
+                }
+
             }
 
             cell.id = `${String(x)}${String(y).padStart(2, '0')}`
@@ -265,38 +287,6 @@ function createTable() {
 
     //Get xSize to CSS
     document.documentElement.style.setProperty('--xSize', xSize+1)
-
-    function styleTweaks(){
-
-        document.getElementById('001').style.borderRadius = '15px 0 0 0'
-
-        //Right top border
-        if (xSize > 1){
-
-            document.getElementById('100').style.borderRadius = '15px 0 0 0'
-            document.getElementById(xSize + '00').style.borderRadius = '0 15px 0 0'
-
-        } else {
-
-            document.getElementById('100').style.borderRadius = '15px 15px 0 0'
-
-        }
-
-        //Left bottom border
-        if (ySize > 1){
-
-            document.getElementById('0' + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 0 15px'
-
-        } else {
-
-             document.getElementById('001').style.borderRadius = '15px 0 0 15px'
-
-        }
-
-
-        document.getElementById(xSize + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 15px 0'
-
-    }
 
     function calculateSize(){
 
@@ -349,6 +339,38 @@ function createTable() {
         console.log(setting)
 
         return {xSize, ySize, unit, yWrap}
+
+    }
+
+    function styleTweaks(){
+
+        document.getElementById('001').style.borderRadius = '15px 0 0 0'
+
+        //Right top border
+        if (xSize > 1){
+
+            document.getElementById('100').style.borderRadius = '15px 0 0 0'
+            document.getElementById(xSize + '00').style.borderRadius = '0 15px 0 0'
+
+        } else {
+
+            document.getElementById('100').style.borderRadius = '15px 15px 0 0'
+
+        }
+
+        //Left bottom border
+        if (ySize > 1){
+
+            document.getElementById('0' + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 0 15px'
+
+        } else {
+
+             document.getElementById('001').style.borderRadius = '15px 0 0 15px'
+
+        }
+
+
+        document.getElementById(xSize + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 15px 0'
 
     }
 
