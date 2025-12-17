@@ -15,6 +15,7 @@ function addClass(){
 
         id : nextClassId,
         title : 'Class'+ String(nextClassId).padStart(2, '0'),
+        code: '0000',
         color : getRandomColor(),
         firstLength : 2,
         secondLength : 1, //This is temporary
@@ -118,6 +119,23 @@ function createPanel(classData) {
 
             //Rewrite title at classController object
             classObj.color = colorInput.value
+
+        }
+
+        //Fancy label for code
+        const codeH3 = document.createElement('h3')
+        codeH3.innerText = 'Class code'
+
+        //Code input
+        const codeInput = document.createElement('input')
+        codeInput.type = 'number'
+        codeInput.min = 0
+        codeInput.max = 9999
+
+        codeInput.oninput = () => {
+
+            //Rewrite first length at classController object
+            classObj.code = String(codeInput.value).padStart(4, '0')
 
         }
 
@@ -237,6 +255,8 @@ function createPanel(classData) {
         controls.append(
             nameInput,
             colorInput,
+            codeH3,
+            codeInput,
             fstLngthH3,
             firstLengthInput,
             sndLngthH3,

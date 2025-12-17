@@ -43,8 +43,6 @@ document.addEventListener("updateBlock", () => {
 
 document.addEventListener("change", () => {
 
-    
-
     if(JSON.stringify(availableBlocks) != JSON.stringify(classController)){
 
         console.log(true)
@@ -67,6 +65,7 @@ function updateAvaliableBlocks () {
         //Only block properties
         id: obj.id,
         title: obj.title,
+        code: obj.code,
         color: obj.color,
         firstLength: obj.firstLength,
         secondLength: obj.secondLength, //Temporary
@@ -81,7 +80,6 @@ function createNewBlock (lastController, lightColor, darkColor){
 
     //If voucher should be using light or dark on the title
     const betterContrast = compareContrast(lightColor, lastController.color)
-    console.log(betterContrast)
 
     //Create the block
     const newBlock = document.createElement('div')
@@ -145,6 +143,7 @@ function createNewBlock (lastController, lightColor, darkColor){
                 textTitlePlaced.style.textAlign = 'center'
                 
                 textTitlePlaced.innerText = lastController.title
+                textTitlePlaced.style.color = betterContrast ? String(lightColor):String(darkColor)
 
                 //Create label for positioned
                 const labelPlaced = document.createElement('p')
@@ -153,8 +152,9 @@ function createNewBlock (lastController, lightColor, darkColor){
                 labelPlaced.style.margin = '5px 0'
                 labelPlaced.style.textAlign = 'center'
                 labelPlaced.style.top = '-50px'
+                labelPlaced.style.color = betterContrast ? String(lightColor):String(darkColor)
                 
-                labelPlaced.innerText = '0000'
+                labelPlaced.innerText = lastController.code
                 
                 
                 //Push to div
