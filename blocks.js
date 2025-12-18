@@ -10,6 +10,15 @@ document.addEventListener("updateBlock", () => {
     //Check last object
     const lastController = classController[classController.length - 1]
 
+
+    //Create delete bin space
+    if (availableBlocks.length == 0) {
+
+        //Place before the block park
+        blockPark.parentNode.insertBefore(createBin(), blockPark)
+
+    }
+
     if (availableBlocks.length < classController.length) {
 
         //Light and dark color variants
@@ -35,7 +44,14 @@ document.addEventListener("updateBlock", () => {
 
     }
 
-    updateAvaliableBlocks()
+    updateAvailableBlocks()
+
+    //Delete delete bin space
+    if (availableBlocks.length == 0) {
+
+        console.log(availableBlocks.length)
+    
+    }
 
     console.log("blocks.js updated", availableBlocks)
 
@@ -57,7 +73,7 @@ document.addEventListener("change", () => {
 
 })
 
-function updateAvaliableBlocks () {
+function updateAvailableBlocks () {
 
     //Update available blocks
     availableBlocks = classController.map(obj => ({
@@ -191,6 +207,32 @@ function createNewBlock (lastController, lightColor, darkColor){
     console.log('New', newBlock)
 
     return newBlock
+
+}
+
+function createBin ( ) {
+
+    const deleteBin = document.createElement('div')
+    deleteBin.style.backgroundColor = '#b0becaff'
+
+    deleteBin.style.position = 'relative'
+    deleteBin.style.left = '50%'
+    deleteBin.style.transform = 'translate(-50%)'
+
+
+    deleteBin.style.textAlign = 'center'
+
+        //Text
+        const binText = document.createElement('h3')
+        binText.innerText = 'Delete'
+        deleteBin.append (binText)
+
+    deleteBin.style.width = '50%'
+    deleteBin.style.height = '200px'
+    
+
+    return deleteBin
+
 
 }
 
