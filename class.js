@@ -99,6 +99,7 @@ function createPanel(classData) {
         nameInput.type = 'text'
         nameInput.value = classData.title
         nameInput.placeholder = 'Class title'
+        nameInput.maxLength = 32
 
         //OnInput, changes on real time
         nameInput.oninput = () => {
