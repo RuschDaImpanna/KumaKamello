@@ -49,7 +49,7 @@ document.addEventListener("updateBlock", () => {
     //Delete delete bin space
     if (availableBlocks.length == 0) {
 
-        console.log(availableBlocks.length)
+        document.getElementById('deleteBin').remove()
     
     }
 
@@ -57,11 +57,13 @@ document.addEventListener("updateBlock", () => {
 
 })
 
+
 document.addEventListener("change", () => {
 
     if(JSON.stringify(availableBlocks) != JSON.stringify(classController)){
 
         console.log(true)
+        console.log(JSON.stringify(availableBlocks), JSON.stringify(classController))
 
     } else {
 
@@ -214,6 +216,7 @@ function createBin ( ) {
 
     const deleteBin = document.createElement('div')
     deleteBin.style.backgroundColor = '#b0becaff'
+    deleteBin.id = 'deleteBin'
 
     deleteBin.style.display = 'flex'
     deleteBin.style.justifyContent = 'center'
