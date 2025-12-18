@@ -215,20 +215,19 @@ function createBin ( ) {
     const deleteBin = document.createElement('div')
     deleteBin.style.backgroundColor = '#b0becaff'
 
-    deleteBin.style.position = 'relative'
-    deleteBin.style.left = '50%'
-    deleteBin.style.transform = 'translate(-50%)'
+    deleteBin.style.display = 'flex'
+    deleteBin.style.justifyContent = 'center'
+    deleteBin.style.alignItems = 'center'
 
+    deleteBin.style.margin = '5px'
 
     deleteBin.style.textAlign = 'center'
 
         //Text
         const binText = document.createElement('h3')
         binText.innerText = 'Delete'
-        deleteBin.append (binText)
 
-    deleteBin.style.width = '50%'
-    deleteBin.style.height = '200px'
+        deleteBin.append (binText)
     
 
     return deleteBin

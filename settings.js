@@ -289,7 +289,7 @@ function createTable() {
     styleTweaks()
 
     //Get xSize to CSS
-    document.documentElement.style.setProperty('--xSize', xSize+1)
+    document.documentElement.style.setProperty('--xSize', Math.round((xSize+1)*0.9))
 
     function calculateSize(){
 
