@@ -62,8 +62,79 @@ document.addEventListener("change", () => {
 
     if(JSON.stringify(availableBlocks) != JSON.stringify(classController)){
 
-        console.log(true)
-        console.log(JSON.stringify(availableBlocks), JSON.stringify(classController))
+        classController.forEach((element, i) => {
+
+            //Convert object → array of [key, value]
+            const arrMod = Object.entries(element)
+
+            arrMod.forEach(([key, value]) => {
+
+                //Find to availableBlocks in the index the value of the key being evaluated
+                const oldValue = availableBlocks[i][key]
+                console.log(oldValue)
+                console.log(value)
+
+                if (value != oldValue){
+
+                    console.log('Cambió', key, oldValue, '→', value)
+
+                    if (key == 'firstLength'){
+
+                        //Change block size
+                        const block = document.getElementById('block'+i)
+                        block.style.height = (50*value) + 40 + 'px'
+
+                        //Change voucherBottom size
+                        const voucherBottom = document.querySelector(`#block${i} .voucherBottom`)
+
+                        voucherBottom.style.height = 50*value + 'px'
+
+                        //Get the divs, including the last one
+                        //This will help to make the dotted lines and recreating the hidden stuff
+                        const bottomObjs = [...document.querySelectorAll(`#block${i} .voucherBottom div`)]
+
+                        //The hidden stuff
+                        const placedDiv = bottomObjs.pop()
+
+                        //Delete everything
+                        voucherBottom.innerHTML = ''
+
+                        //Light and dark color variants
+                        const lightColor = createLightColor(classController[i].color)
+                        const darkColor = createDarkColor(classController[i].color)
+
+                        //If voucher should be using light or dark on the title
+                        const betterContrast = compareContrast(lightColor, lightColor)
+
+                        for (let x = 1; x < ((50*value)/50); x++) {
+                            
+                            const dottedLine = document.createElement('div')
+                            dottedLine.style.position = 'absolute'
+
+                            dottedLine.style.top = 50 * x + 'px'
+                            dottedLine.style.left = '10px'
+                            dottedLine.style.right = '10px'
+
+                            dottedLine.style.borderBottom = '3px dashed ' + (betterContrast ? String(darkColor):String(lightColor))
+
+                            voucherBottom.append(dottedLine)
+
+                            
+                        }
+
+                    }
+
+                } else {
+
+                    console.log('Evaluó', key, oldValue, '→', value)
+
+                }
+
+            })
+            
+        });
+
+        updateAvailableBlocks()
 
     } else {
 
@@ -109,6 +180,8 @@ function createNewBlock (lastController, lightColor, darkColor){
 
         //Create top voucher
         const voucherTop = document.createElement('div')
+        voucherTop.classList.add('voucherTop')
+
         voucherTop.style.position = 'relative'
         voucherTop.style.height = '40px'
 
@@ -137,6 +210,8 @@ function createNewBlock (lastController, lightColor, darkColor){
 
         //Create bottom voucher
         const voucherBottom = document.createElement('div')
+        voucherBottom.classList.add('voucherBottom')
+
         voucherBottom.style.position = 'relative'
         voucherBottom.style.height = (50 * lastController.firstLength) + 'px'
 
@@ -209,6 +284,41 @@ function createNewBlock (lastController, lightColor, darkColor){
     console.log('New', newBlock)
 
     return newBlock
+
+}
+
+export function updateVoucherColor (newColor, id){
+
+    console.log(newColor, id)
+
+    const newLight = createLightColor(newColor)
+    const newDark = createDarkColor(newColor)
+
+    //If voucher should be using light or dark on the title
+    const betterContrast = compareContrast(newLight, newColor)
+
+    console.log(newColor)
+
+    //Normal color
+    document.querySelector(`#block${id} .voucherTop`).style.backgroundColor = newColor
+    document.querySelector(`#block${id} .voucherBottom`).style.backgroundColor = newColor
+
+    //Title colors
+    const textObjs = document.querySelectorAll(`#block${id} h3`)
+    textObjs.forEach(element => {
+
+        element.style.color = betterContrast ? String(newLight):String(newDark)
+
+    });
+
+    //Dotted lines
+    const lineObjs = [... document.querySelectorAll(`#block${id} .voucherBottom div`)]
+    lineObjs.pop()
+    lineObjs.forEach(element => {
+
+        element.style.borderColor = betterContrast ? String(newDark):String(newLight)
+        
+    });
 
 }
 
