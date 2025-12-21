@@ -54,7 +54,7 @@ document.addEventListener("updateBlock", () => {
     
     }
 
-    console.log("blocks.js updated", availableBlocks)
+    console.log("Changed blocks", availableBlocks)
 
 })
 
@@ -72,8 +72,6 @@ document.addEventListener("change", () => {
 
                 //Find to availableBlocks in the index the value of the key being evaluated
                 const oldValue = availableBlocks[i][key]
-                console.log(oldValue)
-                console.log(value)
 
                 const block = document.getElementById('block'+i)
                 const voucherTop = document.querySelector(`#block${i} .voucherTop`)
@@ -132,6 +130,26 @@ document.addEventListener("change", () => {
                     //Change size of second voucher
                     else if (key == 'secondLength'){
 
+                        const splitVoucher = document.querySelector(`#block${i} .splitVoucher`)
+
+                        splitVoucher.style.height = 25*value + 'px'
+
+                        for (let x = 1; x < ((50*value)/50); x++) {
+                            
+                            const dottedLine = document.createElement('div')
+                            dottedLine.style.position = 'absolute'
+
+                            dottedLine.style.top = 25 * x + 'px'
+                            dottedLine.style.left = '10px'
+                            dottedLine.style.right = '10px'
+
+                            dottedLine.style.borderBottom = '3px dashed ' + lightColor
+
+                            splitVoucher.append(dottedLine)
+
+                            
+                        }
+
 
                     }
                     //Create split block (two vouchers)
@@ -166,13 +184,9 @@ document.addEventListener("change", () => {
 
         updateAvailableBlocks()
 
-    } else {
-
-        console.log(false)
-
     }
 
-    console.log("blocks.js settings", classController, availableBlocks)
+    console.log("Controller changed", classController, availableBlocks)
 
 })
 
@@ -358,10 +372,10 @@ function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightC
     splitVoucher.style.right = '5%'
     splitVoucher.style.top = '65px'
 
-    splitVoucher.style.width = '35%'
+    splitVoucher.style.width = '37%'
     splitVoucher.style.height = (25*classController[id].secondLength) + 'px'
 
-    splitVoucher.style.borderRadius = '0 5px 5px 0'
+    splitVoucher.style.borderRadius = '0 5px 5px 5px'
 
     splitVoucher.style.backgroundColor = darkColor
 
@@ -410,15 +424,11 @@ function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightC
 
 export function updateVoucherColor (newColor, id) {
 
-    console.log(newColor, id)
-
     const newLight = createLightColor(newColor)
     const newDark = createDarkColor(newColor)
 
     //If voucher should be using light or dark on the title
     const betterContrast = compareContrast(newLight, newColor)
-
-    console.log(newColor)
 
     //Normal color
     document.querySelector(`#block${id} .voucherTop`).style.backgroundColor = newColor
