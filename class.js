@@ -1,3 +1,5 @@
+import { updateVoucherColor } from "./blocks.js"
+
 //Get the panel container
 const container = document.getElementById('classManagement')
 
@@ -108,6 +110,8 @@ function createPanel(classData) {
             classObj.title = nameInput.value
             //Dynamically, change text on real time
             title.innerText = nameInput.value
+            document.getElementById('titleBlock'+classData.id).innerText = nameInput.value
+            document.getElementById('titlePlacedBlock'+classData.id).innerText = nameInput.value
 
         }
 
@@ -120,6 +124,8 @@ function createPanel(classData) {
 
             //Rewrite title at classController object
             classObj.color = colorInput.value
+
+            updateVoucherColor(colorInput.value, classData.id)
 
         }
 
@@ -137,6 +143,8 @@ function createPanel(classData) {
 
             //Rewrite first length at classController object
             classObj.code = String(codeInput.value).padStart(4, '0')
+            //Dynamically, change text on real time
+            document.getElementById('labelPlacedBlock'+classData.id).innerText = codeInput.value
 
         }
 
