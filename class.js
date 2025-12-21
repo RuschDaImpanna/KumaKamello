@@ -142,7 +142,22 @@ function createPanel(classData) {
         codeInput.oninput = () => {
 
             //Rewrite first length at classController object
-            classObj.code = String(codeInput.value).padStart(4, '0')
+            const inputValue = Number(codeInput.value)
+
+            //In case it's an invalid input, use the last value
+            if (Number.isNaN(inputValue) || inputValue == ''){
+
+                codeInput.value = classObj.code
+
+            }
+
+            //Take the value between 0 to 9999
+            const clampValue = Math.min(Math.max(inputValue, 0), 9999)
+
+            //Change the controller and the display
+            codeInput.value = String(clampValue).padStart(4, '0')
+            classObj.code = String(clampValue).padStart(4, '0')
+
             //Dynamically, change text on real time
             document.getElementById('labelPlacedBlock'+classData.id).innerText = codeInput.value
 
@@ -163,7 +178,21 @@ function createPanel(classData) {
         firstLengthInput.oninput = () => {
 
             //Rewrite first length at classController object
-            classObj.firstLength = parseFloat(firstLengthInput.value)
+            const inputValue = Number(firstLengthInput.value)
+
+            //In case it's an invalid input, use the last value
+            if (Number.isNaN(inputValue) || inputValue == ''){
+
+                firstLengthInput.value = classObj.firstLength
+
+            }
+
+            //Take the value between 1 to 3
+            const clampValue = Math.min(Math.max(inputValue, 1), 3)
+
+            //Change the controller and the display
+            firstLengthInput.value = clampValue
+            classObj.firstLength = clampValue
 
         }
 
@@ -186,7 +215,21 @@ function createPanel(classData) {
             secondLengthInput.oninput = () => {
 
                 //Rewrite first length at classController object
-                classObj.secondLength = parseFloat(secondLengthInput.value)
+                const inputValue = Number(secondLengthInput.value)
+
+                //In case it's an invalid input, use the last value
+                if (Number.isNaN(inputValue) || inputValue == ''){
+
+                    secondLengthInput.value = classObj.secondLength
+
+                }
+
+                //Take the value between 1 to 3
+                const clampValue = Math.min(Math.max(inputValue, 1), 3)
+
+                //Change the controller and the display
+                secondLengthInput.value = clampValue
+                classObj.secondLength = clampValue
 
             }
 
@@ -202,7 +245,21 @@ function createPanel(classData) {
             offsetInput.oninput = () => {
 
                 //Rewrite first length at classController object
-                classObj.offset = parseFloat(offsetInput.value)
+                const inputValue = Number(offsetInput.value)
+
+                //In case it's an invalid input, use the last value
+                if (Number.isNaN(inputValue) || inputValue == ''){
+
+                    offsetInput.value = classObj.offset
+
+                }
+
+                //Take the value between 1 to 6
+                const clampValue = Math.min(Math.max(inputValue, 1), 6)
+
+                //Change the controller and the display
+                offsetInput.value = clampValue
+                classObj.offset = clampValue
 
             }
 
