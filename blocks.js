@@ -5,6 +5,7 @@ let availableBlocks = []
 //Block park
 const blockPark = document.querySelector('.blocks')
 
+//For create/destroy block
 document.addEventListener("updateBlock", () => {
 
     //Check last object
@@ -57,7 +58,7 @@ document.addEventListener("updateBlock", () => {
 
 })
 
-
+//For any change
 document.addEventListener("change", () => {
 
     if(JSON.stringify(availableBlocks) != JSON.stringify(classController)){
@@ -74,19 +75,28 @@ document.addEventListener("change", () => {
                 console.log(oldValue)
                 console.log(value)
 
+                const block = document.getElementById('block'+i)
+                const voucherTop = document.querySelector(`#block${i} .voucherTop`)
+                const voucherBottom = document.querySelector(`#block${i} .voucherBottom`)
+
+                //Light and dark color variants
+                const lightColor = createLightColor(classController[i].color)
+                const darkColor = createDarkColor(classController[i].color)
+
+                //If voucher should be using light or dark on the title
+                const betterContrast = compareContrast(lightColor, classController[i].color)
+
                 if (value != oldValue){
 
                     console.log('Cambió', key, oldValue, '→', value)
 
+                    //Change size of first voucher
                     if (key == 'firstLength'){
 
                         //Change block size
-                        const block = document.getElementById('block'+i)
                         block.style.height = (50*value) + 40 + 'px'
 
                         //Change voucherBottom size
-                        const voucherBottom = document.querySelector(`#block${i} .voucherBottom`)
-
                         voucherBottom.style.height = 50*value + 'px'
 
                         //Get the divs, including the last one
@@ -98,13 +108,6 @@ document.addEventListener("change", () => {
 
                         //Delete everything
                         voucherBottom.innerHTML = ''
-
-                        //Light and dark color variants
-                        const lightColor = createLightColor(classController[i].color)
-                        const darkColor = createDarkColor(classController[i].color)
-
-                        //If voucher should be using light or dark on the title
-                        const betterContrast = compareContrast(lightColor, lightColor)
 
                         for (let x = 1; x < ((50*value)/50); x++) {
                             
@@ -122,11 +125,38 @@ document.addEventListener("change", () => {
                             
                         }
 
+                        //Recreate the hidden stuff
+                        voucherBottom.append(placedDiv)
+
                     }
+                    //Change size of second voucher
+                    else if (key == 'secondLength'){
 
-                } else {
 
-                    console.log('Evaluó', key, oldValue, '→', value)
+                    }
+                    //Create split block (two vouchers)
+                    else if (key == 'splitBlock'){
+
+                        //If splitBlock
+                        if (value){
+
+                            block.innerHTML = ''
+                            block.append(splitBlockToDoubleVoucher(voucherTop, voucherBottom, darkColor, lightColor, i))
+
+                        } 
+                        //If not splitBlock
+                        else {
+
+                            document.querySelector(`#block${i} .splitTag`).remove()
+                            document.querySelector(`#block${i} .splitVoucher`).remove()
+
+                            voucherTop.style.width = '100%'
+                            voucherBottom.style.width = '100%'
+
+                        }
+
+
+                    }
 
                 }
 
@@ -165,7 +195,7 @@ function updateAvailableBlocks () {
     
 }
 
-function createNewBlock (lastController, lightColor, darkColor){
+function createNewBlock (lastController, lightColor, darkColor) {
 
     //If voucher should be using light or dark on the title
     const betterContrast = compareContrast(lightColor, lastController.color)
@@ -287,7 +317,98 @@ function createNewBlock (lastController, lightColor, darkColor){
 
 }
 
-export function updateVoucherColor (newColor, id){
+function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightColor, id) {
+
+    const container = document.createDocumentFragment()
+
+    //Create split tag
+    const splitTag = document.createElement('div')
+    splitTag.classList.add('splitTag')
+
+    splitTag.style.position = 'absolute'
+    splitTag.style.right = '0'
+    splitTag.style.top = '25px'
+
+    splitTag.style.width = '40%'
+    splitTag.style.height = 0
+
+    //Bookmark borders
+    splitTag.style.borderRight = '10px solid transparent'
+    splitTag.style.borderTop = `20px solid ${darkColor}`
+    splitTag.style.borderBottom = `20px solid ${darkColor}`
+
+        //Create split tag text
+        const tagText = document.createElement('h3')
+        tagText.style.position = 'relative'
+        tagText.style.bottom = '10px'
+
+        tagText.innerText = 'SPLIT'
+        tagText.style.color = lightColor
+
+        tagText.style.marginLeft = '10px'
+
+
+    splitTag.append(tagText)
+
+    //Create double voucher
+    const splitVoucher = document.createElement('div')
+    splitVoucher.classList.add('splitVoucher')
+
+    splitVoucher.style.position = 'absolute'
+    splitVoucher.style.right = '5%'
+    splitVoucher.style.top = '65px'
+
+    splitVoucher.style.width = '35%'
+    splitVoucher.style.height = (25*classController[id].secondLength) + 'px'
+
+    splitVoucher.style.borderRadius = '0 5px 5px 0'
+
+    splitVoucher.style.backgroundColor = darkColor
+
+        //Create offset text
+        const offsetTxt = document.createElement('p')
+        offsetTxt.id = 'offsetTxt' + id
+
+        offsetTxt.innerText = classController[id].offset + 'd'
+        offsetTxt.style.color = lightColor
+
+        offsetTxt.style.position = 'absolute'
+        offsetTxt.style.right = 0
+        offsetTxt.style.margin = '0 5px'
+
+        //Create dotted lines
+        for (let i = 0; i < classController[id].secondLength; i++) {
+
+            if (i != 0){
+
+                const dottedLine = document.createElement('div')
+                dottedLine.style.position = 'absolute'
+
+                dottedLine.style.top = 25 * i + 'px'
+                dottedLine.style.left = '0px'
+                dottedLine.style.right = '10px'
+
+                dottedLine.style.borderBottom = '3px dashed ' + lightColor
+
+                splitVoucher.append(dottedLine)
+
+            }
+                
+        }
+    
+    splitVoucher.append(offsetTxt)
+
+    //Original voucher
+    voucherTop.style.width = '60%'
+    voucherBottom.style.width = '60%'
+
+    container.append(splitTag, splitVoucher, voucherTop, voucherBottom)
+
+    return (container)
+
+}
+
+export function updateVoucherColor (newColor, id) {
 
     console.log(newColor, id)
 
@@ -322,7 +443,7 @@ export function updateVoucherColor (newColor, id){
 
 }
 
-function createBin ( ) {
+function createBin () {
 
     const deleteBin = document.createElement('div')
     deleteBin.style.backgroundColor = '#b0becaff'
@@ -348,21 +469,21 @@ function createBin ( ) {
 
 }
 
-function createLightColor (original){
+function createLightColor (original) {
 
     const { h, s, l } = hexToHSL(original)
     return HSLToHex(h, s, Math.min(100, l + 30))
 
 }
 
-function createDarkColor (original){
+function createDarkColor (original) {
 
     const { h, s, l } = hexToHSL(original);
     return HSLToHex(h, s, Math.max(0, l - 30));
     
 }
 
-function compareContrast(light, original){
+function compareContrast(light, original) {
 
     const { h, s, l } = hexToHSL(original)
     const { l: Ll } = hexToHSL(light)
@@ -419,7 +540,7 @@ function compareContrast(light, original){
 
 }
 
-function hexToHSL (hex){
+function hexToHSL (hex) {
 
     hex = hex.slice(1)
 
@@ -456,7 +577,7 @@ function hexToHSL (hex){
     
 }
 
-function HSLToHex (h, s, l){
+function HSLToHex (h, s, l) {
 
     //Same as this one. I don't understand
     s /= 100;

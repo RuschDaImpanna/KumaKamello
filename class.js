@@ -261,6 +261,9 @@ function createPanel(classData) {
                 offsetInput.value = clampValue
                 classObj.offset = clampValue
 
+                //Dynamically, change text on real time
+                document.getElementById('offsetTxt'+classData.id).innerText = offsetInput.value + 'd'
+
             }
 
             //Offset label
@@ -334,7 +337,7 @@ function createPanel(classData) {
         )
 
     //Header + controls + section park (for available sections)
-    panel.append(header, controls, sectionPark)
+    panel.append(document.createElement('br'), header, controls, sectionPark)
 
     //Ship it
     container.appendChild(panel)
