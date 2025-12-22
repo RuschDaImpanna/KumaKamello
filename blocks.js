@@ -227,6 +227,9 @@ function createNewBlock (lastController, lightColor, darkColor) {
     newBlock.style.position = 'relative'
     newBlock.style.height = (50 * lastController.firstLength) + 40 +'px'
 
+    //Mark as a block that ocuppies space
+    newBlock.setAttribute('data-draggable', '')
+
     //Child objects
 
         //Create top voucher
