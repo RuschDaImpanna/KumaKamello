@@ -1,5 +1,5 @@
 //Import all settings from classController
-import { classController } from "./class.js";
+import { classController, deleteClass } from "./class.js";
 
 document.addEventListener("updateBlock", () => {
 
@@ -8,13 +8,13 @@ document.addEventListener("updateBlock", () => {
         const block = document.getElementById('block' + element.id)
 
 
-        makeDraggable(block, i)
+        makeDraggable(block, element)
 
     })
 
 })
 
-function makeDraggable (block, id) {
+function makeDraggable (block, element) {
 
     if (block.dataset.draggableInit) return
     block.dataset.draggableInit = 'true'
@@ -63,7 +63,7 @@ function makeDraggable (block, id) {
         //Create ghost block
         const blocksContainer = document.querySelector('.blocks')
         const blockIndex = Array.from(blocksContainer.children).indexOf(block)
-        ghostBlock = createGhost(block, classController[id].color, classController[id].title)
+        ghostBlock = createGhost(block, element.color, element.title)
 
         blocksContainer.insertBefore(ghostBlock, blocksContainer.children[blockIndex])
 
@@ -101,7 +101,8 @@ function makeDraggable (block, id) {
         block.style.top = `${e.pageY - offsetY}px`
 
         const zone = isDroppable(e)
-        if (zone) {
+
+        if (zone){
 
             moveGhost(ghostBlock, block, zone)
 
@@ -123,6 +124,13 @@ function makeDraggable (block, id) {
 
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
+
+        //If placed to be deleted
+        if (block.parentNode.id == 'deleteBin'){
+
+            deleteClass(element.id)
+            
+        }
 
         //Take to normal
         block.style.position = 'relative'
@@ -179,7 +187,15 @@ function makeDraggable (block, id) {
     //ChatGPt did this
     function moveGhost (ghost, block, container){
 
-        if (!ghost || !container.contains(ghost)) return
+        if (!ghost) return
+
+        if (ghost.parentNode !== container) {
+
+            container.appendChild(ghost)
+
+        }
+
+        container.id == 'deleteBin' ? container.setAttribute('selected', ''):document.getElementById('deleteBin').removeAttribute('selected')
 
         //Get center of moving block to know how block will rearrange if needed
         const dragRect = block.getBoundingClientRect()
@@ -213,11 +229,11 @@ function makeDraggable (block, id) {
 
             }
 
-        }
+            if (ghost !== container.lastElementChild) {
 
-        if (ghost !== container.lastElementChild) {
+                container.appendChild(ghost)
 
-            container.appendChild(ghost)
+            }
 
         }
 

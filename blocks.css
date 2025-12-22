@@ -17,12 +17,29 @@
     user-select: none;
 
 }
-
-
-
 .splitTag, .splitVoucher {
 
     user-select: none;
+
+}
+
+#deleteBin[selected] {
+
+    background-color: #FC2003; 
+    animation: colorShift 1200ms infinite alternate linear;
+
+}
+@keyframes colorShift {
+
+    0% {
+        background-color: #FC2003;
+    }
+    50% {
+        background-color: #A21402;
+    }
+    100% {
+        background-color: #740F01;
+    }
 
 }
 

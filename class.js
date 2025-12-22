@@ -345,7 +345,7 @@ function createPanel(classData) {
 }
 
 //This is for deleting a class at the delete class button
-function deleteClass(id) {
+export function deleteClass(id) {
 
     // Array delete
     classController = classController.filter(del => del.id !== id)
