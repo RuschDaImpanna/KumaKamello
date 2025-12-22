@@ -468,6 +468,7 @@ function createBin () {
     const deleteBin = document.createElement('div')
     deleteBin.style.backgroundColor = '#b0becaff'
     deleteBin.id = 'deleteBin'
+    deleteBin.classList.add('drop')
 
     deleteBin.style.display = 'flex'
     deleteBin.style.justifyContent = 'center'
