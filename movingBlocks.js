@@ -16,6 +16,9 @@ document.addEventListener("updateBlock", () => {
 
 function makeDraggable (block, id) {
 
+    if (block.dataset.draggableInit) return
+    block.dataset.draggableInit = 'true'
+
     const voucherTop = block.querySelector('.voucherTop')
     const voucherBottom = block.querySelector('.voucherBottom')
 
@@ -32,7 +35,13 @@ function makeDraggable (block, id) {
     voucherTop?.addEventListener('mousedown', onMouseDown)
     voucherBottom?.addEventListener('mousedown', onMouseDown)
 
+    let ghostBlock = null
+
     function onMouseDown (e) {
+
+        if (isDragging) return
+
+        document.body.style.cursor = 'grabbing'
 
         //e is mouse properties
         //No non-expected dragging and text
@@ -52,13 +61,14 @@ function makeDraggable (block, id) {
         offsetY = startY - rect.top - window.scrollY
 
         //Create ghost block
-        const ghostBlock = createGhost(block, classController[id].color, classController[id].title)
         const blocksContainer = document.querySelector('.blocks')
+        const blockIndex = Array.from(blocksContainer.children).indexOf(block)
+        ghostBlock = createGhost(block, classController[id].color, classController[id].title)
 
-        blocksContainer.insertBefore(ghostBlock, block)
+        blocksContainer.insertBefore(ghostBlock, blocksContainer.children[blockIndex])
 
         //Move to body so doesn't have a parent
-        document.body.appendChild(block, voucherTop)
+        document.body.appendChild(block)
 
         //Make class styles
         block.classList.add('dragging')
@@ -75,6 +85,7 @@ function makeDraggable (block, id) {
 
         block.style.opacity = 0.7
 
+        block.style.pointerEvents = 'none'
 
         //While grabbing, you can move or drop
         document.addEventListener('mousemove', onMouseMove)
@@ -89,22 +100,42 @@ function makeDraggable (block, id) {
         block.style.left = `${e.pageX - offsetX}px`
         block.style.top = `${e.pageY - offsetY}px`
 
-        ghostMove(ghostBlock, block, blocksContainer)
+        const zone = isDroppable(e)
+        if (zone) {
+
+            moveGhost(ghostBlock, block, zone)
+
+        }
 
     }
 
     function onMouseUp() {
 
+        if (!ghostBlock) return
+
+        document.body.style.cursor = ''
+
         //Stop dragging
         isDragging = false
-        block.classList.remove('dragging')
-        block.style.zIndex = ''
-        block.style.opacity = 1
 
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
 
-        snapBackToBlocks(block)
+        //Place block to ghostBlock
+        ghostBlock.replaceWith(block)
+
+        //Take to normal
+        block.style.position = 'relative'
+        block.style.left = ''
+        block.style.top = ''
+
+        block.classList.remove('dragging')
+        block.style.zIndex = ''
+        block.style.opacity = 1
+
+        block.style.pointerEvents = ''
+
+        ghostBlock = null
 
     }
 
@@ -123,6 +154,8 @@ function makeDraggable (block, id) {
         ghost.style.justifyContent = 'center'
         ghost.style.alignItems = 'center'
 
+        ghost.dataset.ghost = 'true'
+
             //Create text
             const ghostText = document.createElement('h3')
             ghostText.innerText = title
@@ -131,20 +164,65 @@ function makeDraggable (block, id) {
             ghostText.style.textAlign = 'center'
 
         ghost.append(ghostText)
-
+        
 
         return ghost
 
     }
 
-    function snapBackToBlocks(block) {
+    function isDroppable (e){
 
-        block.style.position = 'relative'
-        block.style.left = ''
-        block.style.top = ''
+        return document.elementFromPoint(e.clientX, e.clientY)?.closest('.drop')
 
     }
 
+    //ChatGPt did this
+    function moveGhost (ghost, block, container){
+
+        if (!ghost || !container.contains(ghost)) return
+
+        //Get center of moving block to know how block will rearrange if needed
+        const dragRect = block.getBoundingClientRect()
+        const dragCenterX = dragRect.left + dragRect.width / 2
+        const dragCenterY = dragRect.top  + dragRect.height / 2
+
+        //Get all blocks except the one being drag and the ghost
+        const items = container.querySelectorAll('[data-draggable]:not(.dragging)')
+
+
+        for (const item of items) {
+
+            //Get the center of each item
+            const rect = item.getBoundingClientRect()
+            const itemCenterX = rect.left + rect.width / 2
+            const itemCenterY = rect.top  + rect.height / 2
+
+            //Get same row size
+            const sameRow = Math.abs(dragCenterY - itemCenterY) < rect.height / 2
+
+            const shouldInsertBefore = dragCenterY < itemCenterY || (sameRow && dragCenterX < itemCenterX)
+
+            if (shouldInsertBefore) {
+
+                if (ghost.nextSibling !== item) {
+
+                    container.insertBefore(ghost, item)
+                    
+                }
+                return
+
+            }
+
+        }
+
+        if (ghost !== container.lastElementChild) {
+
+            container.appendChild(ghost)
+
+        }
+
+
+    }
 
 
 }

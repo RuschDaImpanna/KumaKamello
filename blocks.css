@@ -18,11 +18,7 @@
 
 }
 
-.dragging .voucherTop, .dragging .voucherBottom {
 
-    cursor: grabbing;
-
-}
 
 .splitTag, .splitVoucher {
 
@@ -31,6 +27,8 @@
 }
 
 .ghost {
+
+    user-select: none;
 
     /*animation: march 0.5s linear infinite;*/
 
