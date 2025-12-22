@@ -18,6 +18,12 @@
 
 }
 
+.dragging .voucherTop, .dragging .voucherBottom {
+
+    cursor: grabbing;
+
+}
+
 .splitTag, .splitVoucher {
 
     user-select: none;

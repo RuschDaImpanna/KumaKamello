@@ -178,6 +178,10 @@ document.addEventListener("change", () => {
 
                     }
 
+                } else {
+
+                    return
+
                 }
 
             })
