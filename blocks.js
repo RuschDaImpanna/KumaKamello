@@ -1,5 +1,7 @@
 //Import all settings from classController
 import { classController } from "./class.js";
+
+//Current blocks
 let availableBlocks = []
 
 //Block park
@@ -182,11 +184,11 @@ document.addEventListener("change", () => {
             
         });
 
+        console.log("Controller changed", classController, availableBlocks)
+
         updateAvailableBlocks()
 
     }
-
-    console.log("Controller changed", classController, availableBlocks)
 
 })
 
