@@ -1,0 +1,25 @@
+.blocks {
+
+    flex: 1;
+
+    min-width: 840px;
+
+    display: grid;
+    padding: 5px;
+    grid-template-columns: repeat(var(--xSize), 1fr);
+    gap: 5px;
+
+}
+
+.voucherTop, .voucherBottom {
+
+    cursor: grab;
+    user-select: none;
+
+}
+
+.splitTag, .splitVoucher {
+
+    user-select: none;
+
+}

@@ -217,6 +217,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
     //Create the block
     const newBlock = document.createElement('div')
     newBlock.id = 'block' + lastController.id
+
     newBlock.style.position = 'relative'
     newBlock.style.height = (50 * lastController.firstLength) + 40 +'px'
 
@@ -235,6 +236,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
         voucherTop.style.justifyContent = 'center'
 
         voucherTop.style.backgroundColor = lastController.color
+        voucherTop.style.boxShadow = '0 10px 8px 0 ' + (darkColor+'B2')
 
         voucherTop.style.borderRadius = '10px'
 
@@ -264,6 +266,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
         voucherBottom.style.alignItems = 'center'
         voucherBottom.style.justifyContent = 'center'
         
+        voucherBottom.style.boxShadow = '0 10px 8px 0 ' + (darkColor+'B2')
         voucherBottom.style.backgroundColor = lastController.color
         voucherBottom.style.borderRadius = '10px 10px 0 0'
 
@@ -378,6 +381,7 @@ function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightC
     splitVoucher.style.borderRadius = '0 5px 5px 5px'
 
     splitVoucher.style.backgroundColor = darkColor
+    splitVoucher.style.boxShadow = '-10px 10px 8px 0 ' + (darkColor+'B2')
 
         //Create offset text
         const offsetTxt = document.createElement('p')
