@@ -133,8 +133,20 @@ document.addEventListener("change", () => {
                     else if (key == 'secondLength'){
 
                         const splitVoucher = document.querySelector(`#block${i} .splitVoucher`)
+                        const oldLines = [...splitVoucher.children]
+
+                        oldLines.forEach(element => {
+
+                            if (element.tagName  == 'DIV') {
+
+                                element.remove()
+
+                            } 
+                            
+                        });
 
                         splitVoucher.style.height = 25*value + 'px'
+                        
 
                         for (let x = 1; x < ((50*value)/50); x++) {
                             
@@ -170,8 +182,8 @@ document.addEventListener("change", () => {
                             document.querySelector(`#block${i} .splitTag`).remove()
                             document.querySelector(`#block${i} .splitVoucher`).remove()
 
-                            voucherTop.style.width = '100%'
-                            voucherBottom.style.width = '100%'
+                            voucherTop.style.width = ''
+                            voucherBottom.style.width = ''
 
                         }
 
@@ -404,7 +416,7 @@ function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightC
         offsetTxt.style.margin = '0 5px'
 
         //Create dotted lines
-        for (let i = 0; i < classController[id].secondLength; i++) {
+        for (let i = 0; i < classController[id].secondLength-1; i++) {
 
             if (i != 0){
 

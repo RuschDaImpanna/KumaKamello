@@ -137,6 +137,8 @@ function makeDraggable (block, element) {
         block.style.left = ''
         block.style.top = ''
 
+        block.style.width = ''
+
         block.classList.remove('dragging')
         block.style.zIndex = ''
         block.style.opacity = 1

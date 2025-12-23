@@ -23,12 +23,18 @@
 
 }
 
-#deleteBin[selected] {
+#deleteBin {
+
+    min-height: 90px;
+
+}
+#deleteBin[selected]{
 
     background-color: #FC2003; 
     animation: colorShift 1200ms infinite alternate linear;
-
+    
 }
+
 @keyframes colorShift {
 
     0% {
