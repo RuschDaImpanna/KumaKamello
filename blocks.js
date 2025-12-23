@@ -455,9 +455,16 @@ export function updateVoucherColor (newColor, id) {
     //If voucher should be using light or dark on the title
     const betterContrast = compareContrast(newLight, newColor)
 
+    const voucherTop = document.querySelector(`#block${id} .voucherTop`)
+    const voucherBottom = document.querySelector(`#block${id} .voucherBottom`)
+
     //Normal color
-    document.querySelector(`#block${id} .voucherTop`).style.backgroundColor = newColor
-    document.querySelector(`#block${id} .voucherBottom`).style.backgroundColor = newColor
+    voucherTop.style.backgroundColor = newColor
+    voucherBottom.style.backgroundColor = newColor
+
+    //Dark color
+    voucherTop.style.dropShadow = '0 10px 8px 0 ' + (newDark+'B2')
+    voucherBottom.style.dropShadow = '0 10px 8px 0 ' + (newDark+'B2')
 
     //Title colors
     const textObjs = document.querySelectorAll(`#block${id} h3`)
