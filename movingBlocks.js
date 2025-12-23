@@ -97,6 +97,8 @@ function makeDraggable (block, element) {
 
         if (!isDragging) return
 
+        placeInCalendarFix(block, block.parentNode)
+
         block.style.left = `${e.pageX - offsetX}px`
         block.style.top = `${e.pageY - offsetY}px`
 
@@ -130,7 +132,9 @@ function makeDraggable (block, element) {
 
             deleteClass(element.id)
             
-        }
+        } 
+        
+        placeInCalendarFix(block, block.parentNode)
 
         //Take to normal
         block.style.position = 'relative'
@@ -154,6 +158,9 @@ function makeDraggable (block, element) {
         //Create ghost
         const ghost = document.createElement('div')
         ghost.classList.add('ghost')
+
+        ghost.style.position = 'relative'
+        ghost.style.zindex = 2
 
         ghost.style.height = block.offsetHeight + 'px'
         
@@ -186,7 +193,7 @@ function makeDraggable (block, element) {
 
     }
 
-    //ChatGPt did this
+    //ChatGPT did this
     function moveGhost (ghost, block, container){
 
         if (!ghost) return
@@ -197,7 +204,11 @@ function makeDraggable (block, element) {
 
         }
 
+        //If it's at the delete bin
         container.id == 'deleteBin' ? container.setAttribute('selected', ''):document.getElementById('deleteBin').removeAttribute('selected')
+
+        //If it's at any slot
+        container.classList.contains('slot') ? ghost.style.height = block.offsetHeight - 40 + 'px':ghost.style.height = block.offsetHeight + 'px'
 
         //Get center of moving block to know how block will rearrange if needed
         const dragRect = block.getBoundingClientRect()
@@ -239,6 +250,28 @@ function makeDraggable (block, element) {
 
         }
 
+
+    }
+
+    function placeInCalendarFix (block, container) {
+
+        //Get the info div (which is normally hidden)
+        const voucherChildren = Array.from(block.querySelector('.voucherBottom').children)
+        const placedInfo = voucherChildren[voucherChildren.length-1]
+
+        if(container.classList.contains('slot')){
+
+            //Delete the top of the voucher
+            block.querySelector('.voucherTop').remove()
+            placedInfo.hidden = false
+
+        } else {
+
+            //Recreate the top of the voucher
+            block.insertBefore(voucherTop, voucherBottom)
+            placedInfo.hidden = true
+
+        }
 
     }
 
