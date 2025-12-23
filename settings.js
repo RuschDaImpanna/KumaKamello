@@ -115,6 +115,9 @@ function readSettings() {
 
 function createTable() {
 
+    //For inmedate update to movingBlocks.js
+    document.dispatchEvent(new Event("updateTable"))
+
     //Calculate size
     const {xSize, ySize, unit, yWrap} = calculateSize()
 

@@ -1,12 +1,11 @@
 //Import all settings from classController
 import { classController, deleteClass } from "./class.js";
 
-document.addEventListener("updateBlock", () => {
+document.addEventListener('updateBlock', () => {
 
-    classController.forEach((element, i) => {
+    classController.forEach(element => {
 
         const block = document.getElementById('block' + element.id)
-
 
         makeDraggable(block, element)
 
@@ -97,7 +96,7 @@ function makeDraggable (block, element) {
 
         if (!isDragging) return
 
-        placeInCalendarFix(block, block.parentNode)
+        placeInCalendarFix(block, block.parentNode, voucherTop)
 
         block.style.left = `${e.pageX - offsetX}px`
         block.style.top = `${e.pageY - offsetY}px`
@@ -124,8 +123,13 @@ function makeDraggable (block, element) {
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
 
+        //const = 
+
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
+
+        //If placed in calendar
+        placeInCalendarFix(block, block.parentNode)
 
         //If placed to be deleted
         if (block.parentNode.id == 'deleteBin'){
@@ -133,8 +137,6 @@ function makeDraggable (block, element) {
             deleteClass(element.id)
             
         } 
-        
-        placeInCalendarFix(block, block.parentNode)
 
         //Take to normal
         block.style.position = 'relative'
@@ -255,25 +257,91 @@ function makeDraggable (block, element) {
 
     function placeInCalendarFix (block, container) {
 
-        //Get the info div (which is normally hidden)
-        const voucherChildren = Array.from(block.querySelector('.voucherBottom').children)
-        const placedInfo = voucherChildren[voucherChildren.length-1]
+    //Get the info div (which is normally hidden)
+    const voucherChildren = Array.from(block.querySelector('.voucherBottom').children)
+    const placedInfo = voucherChildren[voucherChildren.length-1]
 
-        if(container.classList.contains('slot')){
+    if(container.classList.contains('slot')){
 
-            //Delete the top of the voucher
-            block.querySelector('.voucherTop').remove()
-            placedInfo.hidden = false
+        //Delete the top of the voucher
+        block.querySelector('.voucherTop').remove()
+        placedInfo.hidden = false
 
-        } else {
+    } else {
 
-            //Recreate the top of the voucher
-            block.insertBefore(voucherTop, voucherBottom)
+        //Recreate the top of the voucher
+        block.insertBefore(voucherTop, voucherBottom)
+        placedInfo.hidden = true
+
+    }
+
+}
+
+
+}
+
+document.addEventListener(('updateTable'), () => {
+
+    classController.forEach(element =>{
+
+        const block = document.getElementById('block' + element.id)
+        const voucherBottom = block.querySelector('.voucherBottom')
+
+        if(block.parentNode.classList.contains('slot')){
+
+            //Move to .blocks
+            const blocksContainer = document.querySelector('.blocks')
+            blocksContainer.append(block)
+
+            //Recreate top voucher
+            block.insertBefore(createVoucherTop(), voucherBottom)
+
+            const voucherChildren = Array.from(voucherBottom.children)
+            const placedInfo = voucherChildren[voucherChildren.length-1]
+
+            //Hide placed information
             placedInfo.hidden = true
 
         }
 
-    }
+        function createVoucherTop(){
+
+            //Create top voucher
+            const voucherTop = document.createElement('div')
+            voucherTop.classList.add('voucherTop')
+
+            voucherTop.style.position = 'relative'
+            voucherTop.style.height = '40px'
+
+            voucherTop.style.display = 'flex'
+            voucherTop.style.flexDirection = 'column'
+            voucherTop.style.alignItems = 'center'
+            voucherTop.style.justifyContent = 'center'
+
+            voucherTop.style.backgroundColor = element.color
+            voucherTop.style.boxShadow = '0 10px 8px 0 ' + voucherBottom.style.boxShadow
+
+            voucherTop.style.borderRadius = '10px'
+
+                //Create the title
+                const textTitle = document.createElement('h3')
+
+                textTitle.id = 'titleBlock' + element.id
+
+                textTitle.style.margin = '0'
+
+                textTitle.innerText = element.title
+                textTitle.style.textAlign = 'center'
+                textTitle.style.color = voucherBottom.querySelector('h3').style.color
+
+            //Push title to top voucher
+            voucherTop.append(textTitle)
+
+            return voucherTop
+
+        }
+
+    })
 
 
-}
+})
