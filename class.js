@@ -6,7 +6,7 @@ const container = document.getElementById('classManagement')
 //Class container objects
 export let classController = []
 
-const addBtn = document.getElementById('add')
+const addBtn = document.getElementById('addClass')
 addBtn.addEventListener('click', addClass)
 
 function addClass(){
