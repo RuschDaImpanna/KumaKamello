@@ -65,10 +65,18 @@ h3, h4 {
 
 }
 
-.bottomArea {
+input[type="radio"],
+input[type="checkbox"],
+input[type="reset"],
+button
+{
 
-    display: grid;
-    grid-template-columns: 20% 1fr;
-    gap: 10px;
+    cursor: pointer;
+
+}
+
+input[type="time"]{
+
+    cursor: text;
 
 }
