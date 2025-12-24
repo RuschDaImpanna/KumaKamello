@@ -1,6 +1,8 @@
 //Import all settings from classController
 import { classController, deleteClass } from "./class.js";
 
+const blocksContainer = document.querySelector('.blocks')
+
 document.addEventListener('updateBlock', () => {
 
     classController.forEach(element => {
@@ -22,6 +24,9 @@ function makeDraggable (block, element) {
     const voucherBottom = block.querySelector('.voucherBottom')
 
     let isDragging = false
+    let isDropping = false
+
+    let currentDropContainer
 
     //Mouse position
     let startX = 0
@@ -47,6 +52,7 @@ function makeDraggable (block, element) {
         e.preventDefault()
 
         isDragging = true
+        isDropping = false
 
         //Get position of block
         const rect = block.getBoundingClientRect()
@@ -60,7 +66,6 @@ function makeDraggable (block, element) {
         offsetY = startY - rect.top - window.scrollY
 
         //Create ghost block
-        const blocksContainer = document.querySelector('.blocks')
         const blockIndex = Array.from(blocksContainer.children).indexOf(block)
         ghostBlock = createGhost(block, element.color, element.title)
 
@@ -94,9 +99,7 @@ function makeDraggable (block, element) {
 
     function onMouseMove(e) {
 
-        if (!isDragging) return
-
-        placeInCalendarFix(block, block.parentNode, voucherTop)
+        if (!isDragging || isDropping) return
 
         block.style.left = `${e.pageX - offsetX}px`
         block.style.top = `${e.pageY - offsetY}px`
@@ -105,7 +108,11 @@ function makeDraggable (block, element) {
 
         if (zone){
 
+            currentDropContainer = zone
+
             moveGhost(ghostBlock, block, zone)
+
+            placeInCalendarFix(block, currentDropContainer, voucherTop, voucherBottom)
 
         }
 
@@ -113,30 +120,58 @@ function makeDraggable (block, element) {
 
     function onMouseUp() {
 
-        if (!ghostBlock) return
+        if (!isDragging || isDropping || !ghostBlock) return
 
         document.body.style.cursor = ''
 
         //Stop dragging
         isDragging = false
+        isDropping = true
 
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
 
-        //const = 
+
+        //Where is it now?
+        const finalContainer = currentDropContainer || ghostBlock.parentNode
 
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
 
+        console.log(Array.from(finalContainer.children).length, currentDropContainer)
+
+        //If there was something there before
+        if (Array.from(finalContainer.children).length >= 2 && finalContainer.classList.contains('slot')) {
+
+            const prevBlock = finalContainer.lastElementChild
+            const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
+            let prevElement
+
+            for (const control in classController){
+
+                if (classController[control].id == Number(prevBlock.id.slice(5))){
+
+                    prevElement = classController[control]
+                    break
+
+                }
+
+            }
+
+            placeInCalendarFix(prevBlock, blocksContainer, createVoucherTop(prevVouchBtm, prevElement), prevVouchBtm)
+            blocksContainer.append(finalContainer.lastElementChild)
+
+        }
+
         //If placed in calendar
-        placeInCalendarFix(block, block.parentNode)
+        placeInCalendarFix(block, block.parentNode, voucherTop, voucherBottom)
 
         //If placed to be deleted
-        if (block.parentNode.id == 'deleteBin'){
+        if (finalContainer.id == 'deleteBin'){
 
             deleteClass(element.id)
             
-        } 
+        }
 
         //Take to normal
         block.style.position = 'relative'
@@ -255,22 +290,28 @@ function makeDraggable (block, element) {
 
     }
 
-    function placeInCalendarFix (block, container) {
+    function placeInCalendarFix (block, container, localTop, localBottom) {
 
     //Get the info div (which is normally hidden)
-    const voucherChildren = Array.from(block.querySelector('.voucherBottom').children)
-    const placedInfo = voucherChildren[voucherChildren.length-1]
+    const placedInfo = localBottom.lastElementChild
 
-    if(container.classList.contains('slot')){
+    //Delete the top of the voucher
+    const tops = [...block.querySelectorAll('.voucherTop')]
 
-        //Delete the top of the voucher
-        block.querySelector('.voucherTop').remove()
+    tops.forEach(element => {
+
+        element.remove()
+            
+    });
+
+    if (container.classList.contains('slot')){
+
         placedInfo.hidden = false
 
     } else {
 
         //Recreate the top of the voucher
-        block.insertBefore(voucherTop, voucherBottom)
+        block.insertBefore(localTop, localBottom)
         placedInfo.hidden = true
 
     }
@@ -290,58 +331,55 @@ document.addEventListener(('updateTable'), () => {
         if(block.parentNode.classList.contains('slot')){
 
             //Move to .blocks
-            const blocksContainer = document.querySelector('.blocks')
             blocksContainer.append(block)
 
             //Recreate top voucher
-            block.insertBefore(createVoucherTop(), voucherBottom)
+            block.insertBefore(createVoucherTop(voucherBottom), voucherBottom)
 
-            const voucherChildren = Array.from(voucherBottom.children)
-            const placedInfo = voucherChildren[voucherChildren.length-1]
+            const placedInfo = voucherBottom.lastElementChild
 
             //Hide placed information
             placedInfo.hidden = true
 
         }
 
-        function createVoucherTop(){
-
-            //Create top voucher
-            const voucherTop = document.createElement('div')
-            voucherTop.classList.add('voucherTop')
-
-            voucherTop.style.position = 'relative'
-            voucherTop.style.height = '40px'
-
-            voucherTop.style.display = 'flex'
-            voucherTop.style.flexDirection = 'column'
-            voucherTop.style.alignItems = 'center'
-            voucherTop.style.justifyContent = 'center'
-
-            voucherTop.style.backgroundColor = element.color
-            voucherTop.style.boxShadow = '0 10px 8px 0 ' + voucherBottom.style.boxShadow
-
-            voucherTop.style.borderRadius = '10px'
-
-                //Create the title
-                const textTitle = document.createElement('h3')
-
-                textTitle.id = 'titleBlock' + element.id
-
-                textTitle.style.margin = '0'
-
-                textTitle.innerText = element.title
-                textTitle.style.textAlign = 'center'
-                textTitle.style.color = voucherBottom.querySelector('h3').style.color
-
-            //Push title to top voucher
-            voucherTop.append(textTitle)
-
-            return voucherTop
-
-        }
-
     })
 
-
 })
+
+function createVoucherTop(voucherBottom, element){
+
+    //Create top voucher
+    const voucherTop = document.createElement('div')
+    voucherTop.classList.add('voucherTop')
+
+    voucherTop.style.position = 'relative'
+    voucherTop.style.height = '40px'
+
+    voucherTop.style.display = 'flex'
+    voucherTop.style.flexDirection = 'column'
+    voucherTop.style.alignItems = 'center'
+    voucherTop.style.justifyContent = 'center'
+
+    voucherTop.style.backgroundColor = element.color
+    voucherTop.style.boxShadow = '0 10px 8px 0 ' + voucherBottom.style.boxShadow
+
+    voucherTop.style.borderRadius = '10px'
+
+        //Create the title
+        const textTitle = document.createElement('h3')
+
+        textTitle.id = 'titleBlock' + element.id
+
+        textTitle.style.margin = '0'
+
+        textTitle.innerText = element.title
+        textTitle.style.textAlign = 'center'
+        textTitle.style.color = voucherBottom.querySelector('h3').style.color
+
+    //Push title to top voucher
+    voucherTop.append(textTitle)
+
+    return voucherTop
+
+}
