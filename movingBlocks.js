@@ -138,8 +138,6 @@ function makeDraggable (block, element) {
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
 
-        console.log(Array.from(finalContainer.children).length, currentDropContainer)
-
         //If there was something there before
         if (Array.from(finalContainer.children).length >= 2 && finalContainer.classList.contains('slot')) {
 
@@ -197,12 +195,10 @@ function makeDraggable (block, element) {
         ghost.classList.add('ghost')
 
         ghost.style.position = 'relative'
-        ghost.style.zindex = 2
 
         ghost.style.height = block.offsetHeight + 'px'
         
-        ghost.style.border = '3px dashed ' + color
-        ghost.style.borderRadius = '5px'
+        ghost.style.color = color
 
         ghost.style.display = 'flex'
         ghost.style.justifyContent = 'center'
@@ -213,7 +209,6 @@ function makeDraggable (block, element) {
             //Create text
             const ghostText = document.createElement('h3')
             ghostText.innerText = title
-            ghostText.style.color = color
 
             ghostText.style.textAlign = 'center'
 

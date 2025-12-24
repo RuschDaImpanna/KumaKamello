@@ -51,8 +51,72 @@
 
 .ghost {
 
+    z-index: 2;
+
     user-select: none;
 
-    /*animation: march 0.5s linear infinite;*/
+    border-radius: 5px;
+    
+    /*Border dashed properties*/
+    --border-width: 3px;
+    --dash: 10px;
+    --gap: 6px;
 
+    /*Border redrawn by ChatGPT as a background*/
+    background:
+        repeating-linear-gradient(
+
+            90deg,
+            currentColor 0 var(--dash),
+            transparent 0 calc(var(--dash) + var(--gap))
+
+        ) top,
+        repeating-linear-gradient(
+
+            90deg,
+            currentColor 0 var(--dash),
+            transparent 0 calc(var(--dash) + var(--gap))
+
+        ) bottom,
+        repeating-linear-gradient(
+
+            0deg,
+            currentColor 0 var(--dash),
+            transparent 0 calc(var(--dash) + var(--gap))
+
+        ) left,
+        repeating-linear-gradient(
+
+            0deg,
+            currentColor 0 var(--dash),
+            transparent 0 calc(var(--dash) + var(--gap))
+
+        ) right;
+
+    background-size:
+
+        calc(var(--dash) + var(--gap)) var(--border-width),
+        calc(var(--dash) + var(--gap)) var(--border-width),
+        var(--border-width) calc(var(--dash) + var(--gap)),
+        var(--border-width) calc(var(--dash) + var(--gap));
+
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+
+    animation: ghostMarch 0.6s linear infinite;
+
+}
+
+/*Animation by ChatGPT rewrited by this code https://codepen.io/OEvgeny/pen/BagaVLQ*/
+/*I ask AI to rewrite the code from that place*/
+@keyframes ghostMarch {
+    to {
+
+        background-position:
+            calc(var(--dash) + var(--gap)) 0,
+            calc(var(--dash) + var(--gap)) 100%,
+            0 calc(var(--dash) + var(--gap)),
+            100% calc(var(--dash) + var(--gap));
+
+    }
 }
