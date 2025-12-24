@@ -1,5 +1,6 @@
 //Import all settings from classController
 import { classController, deleteClass } from "./class.js";
+import { splitBlockToDoubleVoucher } from "./blocks.js";
 
 const blocksContainer = document.querySelector('.blocks')
 
@@ -22,6 +23,9 @@ function makeDraggable (block, element) {
 
     const voucherTop = block.querySelector('.voucherTop')
     const voucherBottom = block.querySelector('.voucherBottom')
+
+    let splitTag
+    let splitVoucher
 
     let isDragging = false
     let isDropping = false
@@ -53,6 +57,13 @@ function makeDraggable (block, element) {
 
         isDragging = true
         isDropping = false
+
+        //Get split tags if it has
+        const oldTag = splitTag
+        const oldVoucher = splitVoucher
+
+        splitTag = !oldTag && block.querySelector('.splitTag') ? block.querySelector('.splitTag'):oldTag
+        splitVoucher = !oldVoucher && block.querySelector('.splitVoucher') ? block.querySelector('.splitVoucher'):oldVoucher
 
         //Get position of block
         const rect = block.getBoundingClientRect()
@@ -112,7 +123,7 @@ function makeDraggable (block, element) {
 
             moveGhost(ghostBlock, block, zone)
 
-            placeInCalendarFix(block, currentDropContainer, voucherTop, voucherBottom)
+            placeInCalendarFix(block, currentDropContainer, voucherTop, voucherBottom, element, splitTag, splitVoucher)
 
         }
 
@@ -138,11 +149,8 @@ function makeDraggable (block, element) {
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
 
-        const controllerId = element.id
-        const disableRef = document.getElementById(`Fh3_${controllerId}`)
-
+        let disableRef = document.getElementById(`Fh3_${element.id}`)
         let sibling = disableRef.nextElementSibling
-
         
         if (finalContainer.classList.contains('slot')){
 
@@ -177,8 +185,33 @@ function makeDraggable (block, element) {
 
                 }
 
-                placeInCalendarFix(prevBlock, blocksContainer, createVoucherTop(prevVouchBtm, prevElement), prevVouchBtm)
+                const prevVouchTop = createVoucherTop(prevVouchBtm, prevElement)
+
+                //In case it's double
+                const prevTaggers = splitBlockToDoubleVoucher(prevVouchTop, prevVouchBtm, prevElement.color, prevElement.id).childNodes
+
+
+                //Previous block, .blocks, The top of the previous block, The previous block bottom voucher, The previous controller, The previous split tag, The previous split voucher
+                placeInCalendarFix(prevBlock, blocksContainer, prevVouchTop, prevVouchBtm, prevElement, prevTaggers[0], prevTaggers[1])
                 blocksContainer.append(finalContainer.lastElementChild)
+
+
+                //Update the disable form
+                disableRef = document.getElementById(`Fh3_${prevElement.id}`)
+                sibling = disableRef.nextElementSibling
+
+                while (sibling) {
+
+                    // Each input after the disableRef, enable
+                    if (sibling.matches('input, select, textarea')) {
+
+                        sibling.disabled = false
+
+                    }
+
+                    sibling = sibling.nextElementSibling
+
+                }
 
             }
 
@@ -198,10 +231,9 @@ function makeDraggable (block, element) {
             }
 
         }
-        
 
         //If placed in calendar
-        placeInCalendarFix(block, finalContainer, voucherTop, voucherBottom)
+        placeInCalendarFix(block, finalContainer, voucherTop, voucherBottom, element, splitTag, splitVoucher)
 
         //If placed to be deleted
         if (finalContainer.id == 'deleteBin'){
@@ -324,33 +356,98 @@ function makeDraggable (block, element) {
 
     }
 
-    function placeInCalendarFix (block, container, localTop, localBottom) {
+    function placeInCalendarFix (block, container, localTop, localBottom, controller, sT, sV) {
 
-    //Get the info div (which is normally hidden)
-    const placedInfo = localBottom.lastElementChild
+        //Get the info div (which is normally hidden)
+        const placedInfo = localBottom.lastElementChild
 
-    //Delete the top of the voucher
-    const tops = [...block.querySelectorAll('.voucherTop')]
+        //Delete the top of the voucher
+        const tops = [...block.querySelectorAll('.voucherTop')]
 
-    tops.forEach(element => {
+        tops.forEach(element => {
 
-        element.remove()
+            element.remove()
             
-    });
+        });
 
-    if (container.classList.contains('slot')){
+        //If it's at a slot
+        if (container.classList.contains('slot')){
 
-        placedInfo.hidden = false
+            placedInfo.hidden = false
 
-    } else {
+            //If it's split
+            if(controller.splitBlock){
 
-        //Recreate the top of the voucher
-        block.insertBefore(localTop, localBottom)
-        placedInfo.hidden = true
+                localBottom.style.width = ''
+
+                splitCalendarFix(controller, localTop, true, sT, sV, block)
+
+            }
+
+        } 
+        // If it's anywhere else
+        else {
+
+            //Recreate the top of the voucher
+            if (block.contains(localBottom)) {
+
+                block.insertBefore(localTop, localBottom)
+                localTop.addEventListener('mousedown', onMouseDown)
+
+            }
+            placedInfo.hidden = true
+
+            //If it's split
+            if(controller.splitBlock){
+
+                localBottom.style.width = '60%'
+
+                splitCalendarFix(controller, localTop, false,  sT, sV, block)
+
+            } else {
+
+                localTop.style.width = ''
+                localBottom.style.width = ''
+
+            }
+
+        }
 
     }
 
-}
+    function splitCalendarFix (controller, localTop, atSlot, localsT, localsV, block){
+
+        let localTag = [...block.querySelectorAll('.splitTag')]
+        let localVoucher = [...block.querySelectorAll('.splitVoucher')]
+
+        if(atSlot){
+
+            localTag.forEach(element => {
+
+            element.remove()
+                    
+            });
+            localVoucher.forEach(element => {
+
+                element.remove()
+                    
+            });
+
+        } else {
+
+            //Recreate the split tags
+            if (block.contains(localTop)) {
+                
+                block.insertBefore(localsV, localTop)
+                block.insertBefore(localsT, localsV)
+
+            }
+
+        }
+
+
+
+    }
 
 }
 

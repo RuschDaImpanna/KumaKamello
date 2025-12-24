@@ -172,8 +172,7 @@ document.addEventListener("change", () => {
                         //If splitBlock
                         if (value){
 
-                            block.innerHTML = ''
-                            block.append(splitBlockToDoubleVoucher(voucherTop, voucherBottom, darkColor, lightColor, i))
+                            block.insertBefore(splitBlockToDoubleVoucher(voucherTop, voucherBottom, classController[i].color, i), voucherTop)
 
                         } 
                         //If not splitBlock
@@ -355,7 +354,10 @@ function createNewBlock (lastController, lightColor, darkColor) {
 
 }
 
-function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightColor, id) {
+export function splitBlockToDoubleVoucher (voucherTop, voucherBottom, color, id) {
+
+    const lightColor = createLightColor(color)
+    const darkColor = createDarkColor(color)
 
     const container = document.createDocumentFragment()
 
@@ -416,22 +418,18 @@ function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightC
         offsetTxt.style.margin = '0 5px'
 
         //Create dotted lines
-        for (let i = 0; i < classController[id].secondLength-1; i++) {
+        for (let i = 1; i < classController[id].secondLength; i++) {
 
-            if (i != 0){
+            const dottedLine = document.createElement('div')
+            dottedLine.style.position = 'absolute'
 
-                const dottedLine = document.createElement('div')
-                dottedLine.style.position = 'absolute'
+            dottedLine.style.top = 25 * i + 'px'
+            dottedLine.style.left = '0px'
+            dottedLine.style.right = '10px'
 
-                dottedLine.style.top = 25 * i + 'px'
-                dottedLine.style.left = '0px'
-                dottedLine.style.right = '10px'
+            dottedLine.style.borderBottom = '3px dashed ' + lightColor
 
-                dottedLine.style.borderBottom = '3px dashed ' + lightColor
-
-                splitVoucher.append(dottedLine)
-
-            }
+            splitVoucher.append(dottedLine)
                 
         }
     
@@ -441,7 +439,7 @@ function splitBlockToDoubleVoucher (voucherTop, voucherBottom, darkColor, lightC
     voucherTop.style.width = '60%'
     voucherBottom.style.width = '60%'
 
-    container.append(splitTag, splitVoucher, voucherTop, voucherBottom)
+    container.append(splitTag, splitVoucher)
 
     return (container)
 
