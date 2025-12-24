@@ -318,7 +318,6 @@ function makeDraggable (block, element) {
 
 }
 
-
 }
 
 document.addEventListener(('updateTable'), () => {
@@ -328,13 +327,15 @@ document.addEventListener(('updateTable'), () => {
         const block = document.getElementById('block' + element.id)
         const voucherBottom = block.querySelector('.voucherBottom')
 
+        console.log(block)
+
         if(block.parentNode.classList.contains('slot')){
 
             //Move to .blocks
             blocksContainer.append(block)
 
             //Recreate top voucher
-            block.insertBefore(createVoucherTop(voucherBottom), voucherBottom)
+            block.insertBefore(createVoucherTop(voucherBottom, element), voucherBottom)
 
             const placedInfo = voucherBottom.lastElementChild
 
