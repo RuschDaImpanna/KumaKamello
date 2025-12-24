@@ -138,31 +138,70 @@ function makeDraggable (block, element) {
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
 
-        //If there was something there before
-        if (Array.from(finalContainer.children).length >= 2 && finalContainer.classList.contains('slot')) {
+        const controllerId = element.id
+        const disableRef = document.getElementById(`Fh3_${controllerId}`)
 
-            const prevBlock = finalContainer.lastElementChild
-            const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
-            let prevElement
+        let sibling = disableRef.nextElementSibling
 
-            for (const control in classController){
+        
+        if (finalContainer.classList.contains('slot')){
 
-                if (classController[control].id == Number(prevBlock.id.slice(5))){
+            while (sibling) {
 
-                    prevElement = classController[control]
-                    break
+                // Each input after the disableRef, disable
+                if (sibling.matches('input, select, textarea')) {
+
+                    sibling.disabled = true
 
                 }
 
+                sibling = sibling.nextElementSibling
+
             }
 
-            placeInCalendarFix(prevBlock, blocksContainer, createVoucherTop(prevVouchBtm, prevElement), prevVouchBtm)
-            blocksContainer.append(finalContainer.lastElementChild)
+            //If there was something there before
+            if (Array.from(finalContainer.children).length >= 2) {
+
+                const prevBlock = finalContainer.lastElementChild
+                const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
+                let prevElement
+
+                for (const control in classController){
+
+                    if (classController[control].id == Number(prevBlock.id.slice(5))){
+
+                        prevElement = classController[control]
+                        break
+
+                    }
+
+                }
+
+                placeInCalendarFix(prevBlock, blocksContainer, createVoucherTop(prevVouchBtm, prevElement), prevVouchBtm)
+                blocksContainer.append(finalContainer.lastElementChild)
+
+            }
+
+        } else {
+
+            while (sibling) {
+
+                // Each input after the disableRef, enable
+                if (sibling.matches('input, select, textarea')) {
+
+                    sibling.disabled = false
+
+                }
+
+                sibling = sibling.nextElementSibling
+
+            }
 
         }
+        
 
         //If placed in calendar
-        placeInCalendarFix(block, block.parentNode, voucherTop, voucherBottom)
+        placeInCalendarFix(block, finalContainer, voucherTop, voucherBottom)
 
         //If placed to be deleted
         if (finalContainer.id == 'deleteBin'){
