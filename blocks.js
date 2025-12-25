@@ -91,7 +91,7 @@ document.addEventListener("change", () => {
                     console.log('Cambió', key, oldValue, '→', value)
 
                     //Change size of first voucher
-                    if (key == 'firstLength'){
+                    if (key == 'unitLength'){
 
                         //Change block size
                         block.style.height = (50*value) + 40 + 'px'
@@ -217,7 +217,7 @@ function updateAvailableBlocks () {
         title: obj.title,
         code: obj.code,
         color: obj.color,
-        firstLength: obj.firstLength,
+        unitLength: obj.unitLength,
         secondLength: obj.secondLength, //Temporary
         splitBlock: obj.splitBlock, //Temporary
         offset: obj.offset
@@ -236,7 +236,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
     newBlock.id = 'block' + lastController.id
 
     newBlock.style.position = 'relative'
-    newBlock.style.height = (50 * lastController.firstLength) + 40 +'px'
+    newBlock.style.height = (50 * lastController.unitLength) + 40 +'px'
 
     //Mark as a block that ocuppies space
     newBlock.setAttribute('data-draggable', '')
@@ -279,7 +279,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
         voucherBottom.classList.add('voucherBottom')
 
         voucherBottom.style.position = 'relative'
-        voucherBottom.style.height = (50 * lastController.firstLength) + 'px'
+        voucherBottom.style.height = (50 * lastController.unitLength) + 'px'
 
         voucherBottom.style.display = 'flex'
         voucherBottom.style.flexDirection = 'column'
@@ -321,7 +321,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
                 placedText.append(textTitlePlaced, labelPlaced)
 
             //Create dotted lines
-            for (let i = 0; i < lastController.firstLength; i++) {
+            for (let i = 0; i < lastController.unitLength; i++) {
 
                 if (i != 0){
 
