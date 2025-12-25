@@ -22,7 +22,6 @@ function addClass(){
         unitLength : 2,
         secondLength : 1, //This is temporary
         splitBlock : false, //This is temporary
-        offset: 1 //This is temporary
 
     }
 

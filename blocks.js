@@ -220,7 +220,6 @@ function updateAvailableBlocks () {
         unitLength: obj.unitLength,
         secondLength: obj.secondLength, //Temporary
         splitBlock: obj.splitBlock, //Temporary
-        offset: obj.offset
 
     }))
     
@@ -406,17 +405,6 @@ export function splitBlockToDoubleVoucher (voucherTop, voucherBottom, color, id)
     splitVoucher.style.backgroundColor = darkColor
     splitVoucher.style.boxShadow = '-10px 10px 8px 0 ' + (darkColor+'B2')
 
-        //Create offset text
-        const offsetTxt = document.createElement('p')
-        offsetTxt.id = 'offsetTxt' + id
-
-        offsetTxt.innerText = classController[id].offset + 'd'
-        offsetTxt.style.color = lightColor
-
-        offsetTxt.style.position = 'absolute'
-        offsetTxt.style.right = 0
-        offsetTxt.style.margin = '0 5px'
-
         //Create dotted lines
         for (let i = 1; i < classController[id].secondLength; i++) {
 
@@ -432,8 +420,6 @@ export function splitBlockToDoubleVoucher (voucherTop, voucherBottom, color, id)
             splitVoucher.append(dottedLine)
                 
         }
-    
-    splitVoucher.append(offsetTxt)
 
     //Original voucher
     voucherTop.style.width = '60%'
