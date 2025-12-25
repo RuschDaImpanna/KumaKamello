@@ -238,6 +238,7 @@ function makeDraggable (block, element) {
         //If placed to be deleted
         if (finalContainer.id == 'deleteBin'){
 
+            document.getElementById('deleteBin').removeAttribute('selected')
             deleteClass(element.id)
             
         }
@@ -380,7 +381,7 @@ function makeDraggable (block, element) {
 
                 localBottom.style.width = ''
 
-                splitCalendarFix(controller, localTop, true, sT, sV, block)
+                splitCalendarFix(localTop, true, sT, sV, block)
 
             }
 
@@ -401,8 +402,9 @@ function makeDraggable (block, element) {
             if(controller.splitBlock){
 
                 localBottom.style.width = '60%'
+                localTop.style.width = '60%'
 
-                splitCalendarFix(controller, localTop, false,  sT, sV, block)
+                splitCalendarFix(localTop, false,  sT, sV, block)
 
             } else {
 
@@ -415,7 +417,7 @@ function makeDraggable (block, element) {
 
     }
 
-    function splitCalendarFix (controller, localTop, atSlot, localsT, localsV, block){
+    function splitCalendarFix (localTop, atSlot, localsT, localsV, block){
 
         let localTag = [...block.querySelectorAll('.splitTag')]
         let localVoucher = [...block.querySelectorAll('.splitVoucher')]
