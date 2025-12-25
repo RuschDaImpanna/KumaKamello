@@ -17,11 +17,11 @@ function addClass(){
 
         id : nextClassId,
         title : 'Class'+ String(nextClassId).padStart(2, '0'),
-        code: '0000',
         color : getRandomColor(),
         unitLength : 2,
         secondLength : 1, //This is temporary
         splitBlock : false, //This is temporary
+        sections : []
 
     }
 
@@ -59,15 +59,12 @@ function addClass(){
 
 }
 
-function createPanel(classData) {
-
-    //Find real object instead of looking by index
-    const classObj = classController.find(obj => obj.id === classData.id)
+function createPanel (classObj) {
 
     //Create div
     const panel = document.createElement('div')
     panel.classList.add('classPanel')
-    panel.dataset.id = classData.id
+    panel.dataset.id = classObj.id
 
     //Header
     const header = document.createElement('div')
@@ -75,17 +72,17 @@ function createPanel(classData) {
 
         //Title
         const title = document.createElement('h3')
-        title.innerText = classData.title
+        title.innerText = classObj.title
 
         //Add available section
         const addSctBtn = document.createElement('button')
         addSctBtn.innerText = 'Add available section'
-        addSctBtn.onclick = () => addSection(classData.id) //Add Section function
+        addSctBtn.onclick = () => addSection(classObj) //Add Section function
 
         //Delete button
         const deleteBtn = document.createElement('button')
         deleteBtn.innerText = 'Delete'
-        deleteBtn.onclick = () => deleteClass(classData.id) //Delete function
+        deleteBtn.onclick = () => deleteClass(classObj.id) //Delete function
 
         //Push and title to header
         header.append(title, addSctBtn, deleteBtn)
@@ -98,7 +95,7 @@ function createPanel(classData) {
         //Title input
         const nameInput = document.createElement('input')
         nameInput.type = 'text'
-        nameInput.value = classData.title
+        nameInput.value = classObj.title
         nameInput.placeholder = 'Class title'
         nameInput.maxLength = 32
 
@@ -109,70 +106,36 @@ function createPanel(classData) {
             classObj.title = nameInput.value
             //Dynamically, change text on real time
             title.innerText = nameInput.value
-            document.getElementById('titleBlock'+classData.id).innerText = nameInput.value
-            document.getElementById('titlePlacedBlock'+classData.id).innerText = nameInput.value
+            document.getElementById('titleBlock'+classObj.id).innerText = nameInput.value
+            document.getElementById('titlePlacedBlock'+classObj.id).innerText = nameInput.value
 
         }
 
         //Color input
         const colorInput = document.createElement('input')
         colorInput.type = 'color'
-        colorInput.value = classData.color
+        colorInput.value = classObj.color
 
         colorInput.oninput = () => {
 
             //Rewrite title at classController object
             classObj.color = colorInput.value
 
-            updateVoucherColor(colorInput.value, classData.id)
-
-        }
-
-        //Fancy label for code
-        const codeH3 = document.createElement('h3')
-        codeH3.innerText = 'Class code'
-
-        //Code input
-        const codeInput = document.createElement('input')
-        codeInput.type = 'number'
-        codeInput.min = 0
-        codeInput.max = 9999
-
-        codeInput.oninput = () => {
-
-            //Rewrite first length at classController object
-            const inputValue = Number(codeInput.value)
-
-            //In case it's an invalid input, use the last value
-            if (Number.isNaN(inputValue) || inputValue == ''){
-
-                codeInput.value = classObj.code
-
-            }
-
-            //Take the value between 0 to 9999
-            const clampValue = Math.min(Math.max(inputValue, 0), 9999)
-
-            //Change the controller and the display
-            codeInput.value = String(clampValue).padStart(4, '0')
-            classObj.code = String(clampValue).padStart(4, '0')
-
-            //Dynamically, change text on real time
-            document.getElementById('labelPlacedBlock'+classData.id).innerText = codeInput.value
+            updateVoucherColor(colorInput.value, classObj.id)
 
         }
 
         //Fancy label for the first length
         const fstLngthH3 = document.createElement('h3')
         fstLngthH3.innerText = 'Class unit length'
-        fstLngthH3.id = 'Fh3_' + classData.id
+        fstLngthH3.id = 'Fh3_' + classObj.id
 
         //First hour length
         const unitLengthInput = document.createElement('input')
         unitLengthInput.type = 'number'
         unitLengthInput.min = 1
         unitLengthInput.max = 3
-        unitLengthInput.value= classData.unitLength
+        unitLengthInput.value= classObj.unitLength
 
         unitLengthInput.oninput = () => {
 
@@ -197,15 +160,13 @@ function createPanel(classData) {
         
         //Available section park to place in
         const sectionPark = document.createElement('div')
-        sectionPark.classList.add('sectionPark'+classData.id)
+        sectionPark.classList.add('sectionPark'+classObj.id)
         
 
         //Push every setting
         controls.append(
             nameInput,
             colorInput,
-            codeH3,
-            codeInput,
             fstLngthH3,
             unitLengthInput
         )
@@ -233,8 +194,85 @@ export function deleteClass(id) {
 
 }
 
+function createSectionPanel (id, sectionObj) {
+
+    //Create div
+    const panel = document.createElement('div')
+    panel.classList.add('sectionPanel')
+    panel.dataset.id = sectionObj.id
+
+    //Create settings
+    const controls = document.createElement('div')
+    controls.classList.add('sectionPanelControlls')
+
+        //Fancy label for code
+        const codeH3 = document.createElement('h3')
+        codeH3.innerText = 'Class code'
+
+        //Code input - This has to move
+        const codeInput = document.createElement('input')
+        codeInput.type = 'number'
+        codeInput.min = 0
+        codeInput.max = 999999
+
+        codeInput.oninput = () => {
+
+            //Rewrite first length at classController object
+            const inputValue = Number(codeInput.value)
+
+            //In case it's an invalid input, use the last value
+            if (Number.isNaN(inputValue) || inputValue == ''){
+
+                codeInput.value = sectionObj.code
+
+            }
+
+            //Take the value between 0 to 9999
+            const clampValue = Math.min(Math.max(inputValue, 0), 999999)
+
+            //Change the controller and the display
+            codeInput.value = String(clampValue).padStart(6, '0')
+            sectionObj.code = String(clampValue).padStart(6, '0')
+
+        }
+    controls.append(codeH3, codeInput)
+
+    panel.append(controls)
+
+    //Ship it
+    const sectionPark = document.querySelector('.sectionPark'+id)
+
+    console.log(sectionPark)
+    sectionPark.appendChild(panel)
+
+}
+
 //This is for new each segment for each class block
-function addSection(id) {
+function addSection(controller) {
+
+    const sections = controller.sections
+
+    let nextSectionId = sections[sections.length-1] === undefined ? 0:sections[sections.length-1].id+1
+
+    const basicSection = {
+
+        id : nextSectionId,
+        code :'000000',
+        teacher : '',
+        aDay: 'monday',
+        aInitHour : 420,
+        aEndHour : 540,
+        splitSection : false,
+        bDay: 'tuesday',
+        bInitHour : 420,
+        bEndHour : 540,
+
+    }
+
+    sections.push(basicSection)
+
+    createSectionPanel(controller.id,sections[sections.length-1])
+
 
     alert('New section')
 

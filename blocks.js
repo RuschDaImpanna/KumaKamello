@@ -22,7 +22,7 @@ document.addEventListener("updateBlock", () => {
 
     }
 
-    if (availableBlocks.length < classController.length) {
+    if (availableBlocks.length <= classController.length) {
 
         //Light and dark color variants
         const lightColor = createLightColor(lastController.color)
