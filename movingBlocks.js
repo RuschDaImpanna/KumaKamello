@@ -1,4 +1,4 @@
-//Import all settings from classController
+//Import all settings
 import { classController, deleteClass } from "./class.js";
 import { splitBlockToDoubleVoucher } from "./blocks.js";
 

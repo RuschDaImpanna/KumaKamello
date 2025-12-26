@@ -68,7 +68,11 @@ h3, h4 {
 input[type="radio"],
 input[type="checkbox"],
 input[type="reset"],
-button
+button, 
+#initDay label,
+#endDay label,
+.ADays label,
+.BDays label
 {
 
     cursor: pointer;

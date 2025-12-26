@@ -1,4 +1,5 @@
 import { updateVoucherColor } from "./blocks.js"
+import { addSection } from "./section.js"
 
 //Get the panel container
 const container = document.getElementById('classManagement')
@@ -180,100 +181,25 @@ function createPanel (classObj) {
 }
 
 //This is for deleting a class at the delete class button
-export function deleteClass(id) {
+export function deleteClass(id, section, controller) {
 
     // Array delete
-    classController = classController.filter(del => del.id !== id)
+    if(!section){
+
+        classController = classController.filter(del => del.id !== id)
+
+    } else {
+
+        console.log(section, controller)
+        controller.sections = controller.sections.filter(del => del.id !== id)
+
+    }
 
     // Panel delete
-    const panel = document.querySelector(`.classPanel[data-id="${id}"]`)
+    const panel = !section ? document.querySelector(`.classPanel[data-id="${id}"]`):document.querySelector(`.sectionPanel[data-id="${id}"]`)
     if (panel) panel.remove()
 
     //For inmedate update to blocks.js
     document.dispatchEvent(new Event("updateBlock"))
-
-}
-
-function createSectionPanel (id, sectionObj) {
-
-    //Create div
-    const panel = document.createElement('div')
-    panel.classList.add('sectionPanel')
-    panel.dataset.id = sectionObj.id
-
-    //Create settings
-    const controls = document.createElement('div')
-    controls.classList.add('sectionPanelControlls')
-
-        //Fancy label for code
-        const codeH3 = document.createElement('h3')
-        codeH3.innerText = 'Class code'
-
-        //Code input - This has to move
-        const codeInput = document.createElement('input')
-        codeInput.type = 'number'
-        codeInput.min = 0
-        codeInput.max = 999999
-
-        codeInput.oninput = () => {
-
-            //Rewrite first length at classController object
-            const inputValue = Number(codeInput.value)
-
-            //In case it's an invalid input, use the last value
-            if (Number.isNaN(inputValue) || inputValue == ''){
-
-                codeInput.value = sectionObj.code
-
-            }
-
-            //Take the value between 0 to 9999
-            const clampValue = Math.min(Math.max(inputValue, 0), 999999)
-
-            //Change the controller and the display
-            codeInput.value = String(clampValue).padStart(6, '0')
-            sectionObj.code = String(clampValue).padStart(6, '0')
-
-        }
-    controls.append(codeH3, codeInput)
-
-    panel.append(controls)
-
-    //Ship it
-    const sectionPark = document.querySelector('.sectionPark'+id)
-
-    console.log(sectionPark)
-    sectionPark.appendChild(panel)
-
-}
-
-//This is for new each segment for each class block
-function addSection(controller) {
-
-    const sections = controller.sections
-
-    let nextSectionId = sections[sections.length-1] === undefined ? 0:sections[sections.length-1].id+1
-
-    const basicSection = {
-
-        id : nextSectionId,
-        code :'000000',
-        teacher : '',
-        aDay: 'monday',
-        aInitHour : 420,
-        aEndHour : 540,
-        splitSection : false,
-        bDay: 'tuesday',
-        bInitHour : 420,
-        bEndHour : 540,
-
-    }
-
-    sections.push(basicSection)
-
-    createSectionPanel(controller.id,sections[sections.length-1])
-
-
-    alert('New section')
 
 }
