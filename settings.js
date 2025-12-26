@@ -2,7 +2,7 @@ const form = document.getElementById('tableSettings')
 const table = document.querySelector(".table")
 const tableTitle = document.getElementById('tableTitle')
 
-const setting = ['', 0, 4, 420, 1140, 2, false, true]
+export const setting = ['', 0, 4, 420, 1140, 2, false, true]
 
 createTable()
 
@@ -34,6 +34,8 @@ function dynamicText(){
 
 }
 
+window.dynamicText = dynamicText;
+
 function readSettings() {
 
     //Days
@@ -44,73 +46,85 @@ function readSettings() {
     setting[3] = form.initTime.value
     setting[4] = form.endTime.value
 
-    timeFloor(setting[3], form.initTime)
-    timeFloor(setting[4], form.endTime)
+    timeFloor(setting, 3, setting[3], form.initTime)
+    timeFloor(setting, 4, setting[4], form.endTime)
 
     //Unit time
     setting[5] = [...form.units].findIndex(obj => obj.checked)
 
+    const deadTimeChk = document.getElementById('deadtime')
+
     if (setting[5] < 2){
 
-        document.getElementById('deadtime').disabled = false
+        deadTimeChk.disabled = false
 
     } else {
 
-        document.getElementById('deadtime').checked = false
-        document.getElementById('deadtime').disabled = true
+        deadTimeChk.checked = false
+        deadTimeChk.disabled = true
 
     }
 
     //Deadtime
     setting[6] = form.deadtime.checked
 
-    function timeFloor(timeStr, sendStr){
-
-        let hour = parseInt(timeStr.slice(0,2))
-        let min = parseInt(timeStr.slice(-2))
-
-        //In case it floors to 55 min, add +1 hour
-        if (Math.floor((min+5)/10) >= 6){
-
-            hour++
-            min = 0
-
-        }
-        //In case is +11:55 p.m.
-        if (hour >= 24){
-
-            hour = 0
-
-        }
-
-        let modIndex = setting.indexOf(timeStr)
-        //Convert into a number and snap it to 10 min
-        setting[modIndex] = hour*60 + Math.floor(((min+5)/10))*10
-
-        //Remake the string by diving by 60 (hour) and the % with 60 (minutes)
-        //The padStart creates 0's if there's space for it by two characters
-        newStr =  `${String(Math.floor(setting[modIndex]/60)).padStart(2, '0')}:${String(setting[modIndex] % 60).padStart(2, '0')}`
-
-        //Rewrite the form
-        const errorLog = document.getElementById('timeErrorLog');
-
-        if(newStr != timeStr){
-
-            sendStr.value = newStr
-            
-            errorLog.hidden = false
-
-            setTimeout(() => {
-                errorLog.hidden = true;
-            }, 3000)
-
-        }
-
-    }
-
     //24-hour based format
     setting[7] = form.format.checked
 
+}
+
+export function timeFloor(arr, i, timeStr, sendStr){
+
+    let hour = parseInt(timeStr.slice(0,2))
+    let min = parseInt(timeStr.slice(-2))
+
+    //In case it floors to 55 min, add +1 hour
+    if (Math.floor((min+5)/10) >= 6){
+
+        hour++
+        min = 0
+
+    }
+    //In case is +11:55 p.m.
+    if (hour >= 24){
+
+        hour = 0
+
+    }
+
+    //Convert into a number and snap it to 10 min
+    arr[i] = hour*60 + Math.floor(((min+5)/10))*10
+
+    //Remake the string by diving by 60 (hour) and the % with 60 (minutes)
+    //The padStart creates 0's if there's space for it by two characters
+    const newStr =  `${String(Math.floor(arr[i]/60)).padStart(2, '0')}:${String(arr[i] % 60).padStart(2, '0')}`
+
+    //Rewrite the form
+    sendStr.value = newStr
+
+    if(newStr != timeStr){
+
+        alert('Only 10 min-based time available')
+            
+    }
+
+}
+
+function fitToUnit (fixed, old, formParam){
+
+    const incompLog = document.getElementById('incompErrorLog');
+
+    if(fixed != old){
+
+        formParam.value = `${String(Math.floor(fixed/60)).padStart(2, '0')}:${String(fixed%60).padStart(2, '0')}`
+            
+        incompLog.hidden = false
+
+        setTimeout(() => {
+            incompLog.hidden = true;
+        }, 3000)
+
+    }
 }
 
 function createTable() {
@@ -322,24 +336,6 @@ function createTable() {
         const gridEnd = startTime + steps * unit
         fitToUnit(gridEnd % 1440, endTime % 1440, form.endTime)
         setting[4] = gridEnd % 1440
-
-        //Change the display on the form
-        function fitToUnit (fixed, old, formParam){
-
-            const incompLog = document.getElementById('incompErrorLog');
-
-            if(fixed != old){
-
-                formParam.value = `${String(Math.floor(fixed/60)).padStart(2, '0')}:${String(fixed%60).padStart(2, '0')}`
-            
-                incompLog.hidden = false
-
-                setTimeout(() => {
-                    incompLog.hidden = true;
-                }, 3000)
-
-            }
-        }
 
         const ySize = steps + 1
         console.log(setting)

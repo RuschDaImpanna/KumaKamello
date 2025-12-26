@@ -126,9 +126,9 @@ function createPanel (classObj) {
         }
 
         //Fancy label for the first length
-        const fstLngthH3 = document.createElement('h3')
-        fstLngthH3.innerText = 'Class unit length'
-        fstLngthH3.id = 'Fh3_' + classObj.id
+        const unitLngthH3 = document.createElement('h3')
+        unitLngthH3.innerText = 'Class unit length'
+        unitLngthH3.id = 'Fh3_' + classObj.id
 
         //First hour length
         const unitLengthInput = document.createElement('input')
@@ -161,16 +161,16 @@ function createPanel (classObj) {
         //Fancy label for the second length
         const sndLngthH3 = document.createElement('h3')
         sndLngthH3.innerText = 'Second class segment length'
-        sndLngthH3.id = 'Sh3_' + classData.id
+        sndLngthH3.id = 'Sh3_' + classObj.id
         sndLngthH3.hidden = true
 
         //Second hour length
         const secondLengthInput = document.createElement('input')
-        secondLengthInput.id = 'SlI_' + classData.id
+        secondLengthInput.id = 'SlI_' + classObj.id
         secondLengthInput.type = 'number'
         secondLengthInput.min = 1
         secondLengthInput.max = 3
-        secondLengthInput.value = classData.secondLength
+        secondLengthInput.value = classObj.secondLength
         secondLengthInput.hidden = true
 
         secondLengthInput.oninput = () => {
@@ -203,8 +203,10 @@ function createPanel (classObj) {
         controls.append(
             nameInput,
             colorInput,
-            fstLngthH3,
-            unitLengthInput
+            unitLngthH3,
+            unitLengthInput,
+            sndLngthH3,
+            secondLengthInput
         )
 
     //Header + controls + section park (for available sections)
