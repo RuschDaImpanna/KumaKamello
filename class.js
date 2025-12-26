@@ -20,8 +20,8 @@ function addClass(){
         title : 'Class'+ String(nextClassId).padStart(2, '0'),
         color : getRandomColor(),
         unitLength : 2,
-        secondLength : 1, //This is temporary
-        splitBlock : false, //This is temporary
+        secondLength : 1,
+        splitBlock : false,
         sections : []
 
     }
@@ -92,7 +92,6 @@ function createPanel (classObj) {
     const controls = document.createElement('div')
     controls.classList.add('panelControls')
 
-
         //Title input
         const nameInput = document.createElement('input')
         nameInput.type = 'text'
@@ -156,6 +155,42 @@ function createPanel (classObj) {
             //Change the controller and the display
             unitLengthInput.value = clampValue
             classObj.unitLength = clampValue
+
+        }
+
+        //Fancy label for the second length
+        const sndLngthH3 = document.createElement('h3')
+        sndLngthH3.innerText = 'Second class segment length'
+        sndLngthH3.id = 'Sh3_' + classData.id
+        sndLngthH3.hidden = true
+
+        //Second hour length
+        const secondLengthInput = document.createElement('input')
+        secondLengthInput.id = 'SlI_' + classData.id
+        secondLengthInput.type = 'number'
+        secondLengthInput.min = 1
+        secondLengthInput.max = 3
+        secondLengthInput.value = classData.secondLength
+        secondLengthInput.hidden = true
+
+        secondLengthInput.oninput = () => {
+
+            //Rewrite first length at classController object
+            const inputValue = Number(secondLengthInput.value)
+
+            //In case it's an invalid input, use the last value
+            if (Number.isNaN(inputValue) || inputValue == ''){
+
+                secondLengthInput.value = classObj.secondLength
+
+            }
+
+            //Take the value between 1 to 3
+            const clampValue = Math.min(Math.max(inputValue, 1), 3)
+
+            //Change the controller and the display
+            secondLengthInput.value = clampValue
+            classObj.secondLength = clampValue
 
         }
         
