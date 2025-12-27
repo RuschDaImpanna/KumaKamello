@@ -148,24 +148,12 @@ function makeDraggable (block, element) {
 
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
-
-        let disableRef = document.getElementById(`Fh3_${element.id}`)
-        let sibling = disableRef.nextElementSibling
         
         if (finalContainer.classList.contains('slot')){
 
-            while (sibling) {
-
-                // Each input after the disableRef, disable
-                if (sibling.matches('input, select, textarea')) {
-
-                    sibling.disabled = true
-
-                }
-
-                sibling = sibling.nextElementSibling
-
-            }
+            disableForm('Fh3_',element.id, false)
+            disableForm('ATitle',element.id, false)
+            disableForm('splitFor',element.sections.id, true)
 
             //If there was something there before
             if (Array.from(finalContainer.children).length >= 2) {
@@ -197,38 +185,16 @@ function makeDraggable (block, element) {
 
 
                 //Update the disable form
-                disableRef = document.getElementById(`Fh3_${prevElement.id}`)
-                sibling = disableRef.nextElementSibling
-
-                while (sibling) {
-
-                    // Each input after the disableRef, enable
-                    if (sibling.matches('input, select, textarea')) {
-
-                        sibling.disabled = false
-
-                    }
-
-                    sibling = sibling.nextElementSibling
-
-                }
+                disableForm('Fh3_', prevElement.id, false)
 
             }
 
         } else {
 
-            while (sibling) {
+            disableForm('Fh3_', element.id, true)
+            disableForm('ATitle',element.sections.id, true)
+            disableForm('splitFor',element.sections.id, true)
 
-                // Each input after the disableRef, enable
-                if (sibling.matches('input, select, textarea')) {
-
-                    sibling.disabled = false
-
-                }
-
-                sibling = sibling.nextElementSibling
-
-            }
 
         }
 
@@ -447,6 +413,30 @@ function makeDraggable (block, element) {
 
         }
 
+
+
+    }
+
+    function disableForm(string, id, enable){
+
+        let disableRef = document.getElementById(string+id)
+        let sibling = disableRef.nextElementSibling
+
+        while (sibling) {
+
+            // Each input after the disableRef, disable
+            if (sibling.matches('input, select, textarea')) {
+
+                sibling.disabled = !enable
+
+            }
+
+            sibling.querySelectorAll('input, select, textarea')
+                    .forEach(el => el.disabled = !enable)
+
+            sibling = sibling.nextElementSibling
+
+        }
 
 
     }
