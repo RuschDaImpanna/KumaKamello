@@ -151,17 +151,27 @@ function createSectionPanel (controller, sectionObj) {
 
                 timeFloor(sectionObj, 'aInitHour', AInitTime.value, AInitTime)
 
-                const modHour = (Number(AInitTime.value.slice(0,2))+controller.unitLength)%24
-                const modTime = `${modHour}:${AInitTime.value.slice(-2)}`
+                const time = {
+
+                    0:45,
+                    1:50,
+                    2:60
+
+                }
+
+                const addTime = time[setting[5]]*controller.unitLength
+
+                let hour = parseInt(AInitTime.value.slice(0,2))
+                let min = parseInt(AInitTime.value.slice(-2))
+
+                const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
+                const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
                 
-                console.log(AInitTime.value.slice(0,2))
-                console.log(modTime)
+                console.log(AInitTime.value)
+                console.log(timeStr, controller.unitLength)
 
-                AEndTime.disabled = false
+                timeFloor(sectionObj, 'aEndHour', timeStr, AEndTime)
 
-                timeFloor(sectionObj, 'aEndHour', modTime, AEndTime)
-
-                AEndTime.disabled = true
 
             }
 

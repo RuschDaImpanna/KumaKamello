@@ -93,7 +93,40 @@ export function timeFloor(arr, i, timeStr, sendStr){
     }
 
     //Convert into a number and snap it to 10 min
-    arr[i] = hour*60 + Math.floor(((min+5)/10))*10
+    const minutes = hour*60 + Math.floor(((min+5)/10))*10
+    let fixedMinutes = minutes;
+
+    //If array has this property, this mean it comes from the sections
+    if(arr.id != undefined){
+
+        const time = {
+
+            0:45,
+            1:50,
+            2:60
+
+        }
+
+        const calendarStart = setting[3]
+        const calendarEnd = setting[4]
+
+        const deadTime = setting[6] ? 60 - time[setting[5]]:0
+        const unit = time[setting[5]] + deadTime
+
+        const maxStart = calendarEnd - unit;
+
+        //Clamp between initHour and endHour
+        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, maxStart));
+
+        //Find nearest to replace
+        const offset = fixedMinutes - calendarStart;
+        fixedMinutes = calendarStart + Math.round(offset / unit) * unit;
+
+        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, maxStart));
+
+    }
+
+    arr[i] = fixedMinutes
 
     //Remake the string by diving by 60 (hour) and the % with 60 (minutes)
     //The padStart creates 0's if there's space for it by two characters
@@ -102,10 +135,10 @@ export function timeFloor(arr, i, timeStr, sendStr){
     //Rewrite the form
     sendStr.value = newStr
 
-    if(newStr != timeStr){
+    if (fixedMinutes !== minutes){
 
-        alert('Only 10 min-based time available')
-            
+        alert('Time adjusted to nearest available slot');
+        
     }
 
 }
