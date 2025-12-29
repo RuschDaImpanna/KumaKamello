@@ -1,5 +1,5 @@
 //Import all settings
-import { deleteClass } from "./class.js";
+import { classController, deleteClass } from "./class.js";
 import { setting, timeFloor } from "./settings.js";
 
 const daysParse = {
@@ -108,27 +108,7 @@ function createSectionPanel (controller, sectionObj) {
             ADays.classList.add(`ADays`)
 
                 //All days
-                for (let i = setting[1]-1; i < setting[2]; i++) {
-
-                    const radio = document.createElement('input')
-                    radio.type = 'radio'
-                    radio.id = `ADay${sectionObj.id}-${i}`
-                    radio.name = `ADays${sectionObj.id}`
-                    radio.value = i+1
-                    
-                    const label = document.createElement('label')
-                    label.htmlFor = `ADay${sectionObj.id}-${i}`
-                    label.innerHTML = daysParse[i+1]
-
-                    radio.onclick = () => {
-
-                        sectionObj.aDay = Number(radio.value)
-
-                    }
-
-                    ADays.append(radio, label)
-
-                }
+                daysCreation(ADays, sectionObj)
 
             //A Initial time
             const AInitTimeLabel = document.createElement('label')
@@ -207,27 +187,7 @@ function createSectionPanel (controller, sectionObj) {
             BDays.classList.add(`BDays`)
 
                 //All days
-                for (let i = setting[1]-1; i < setting[2]; i++) {
-
-                    const radio = document.createElement('input')
-                    radio.type = 'radio'
-                    radio.id = `BDay${sectionObj.id}-${i}`
-                    radio.name = `BDays${sectionObj.id}`
-                    radio.value = i+1
-                    
-                    const label = document.createElement('label')
-                    label.htmlFor = `BDay${sectionObj.id}-${i}`
-                    label.innerHTML = daysParse[i+1]
-
-                    radio.onclick = () => {
-
-                        sectionObj.bDay = Number(radio.value)
-
-                    }
-
-                    BDays.append(radio, label)
-
-                }
+                daysCreation(BDays, sectionObj)
 
             //B Initial time
             const BInitTimeLabel = document.createElement('label')
@@ -352,3 +312,70 @@ export function addSection(controller) {
     alert('New section')
 
 }
+
+function daysCreation (container, sectionObj){
+
+    for (let i = setting[1]-1; i < setting[2]; i++) {
+
+        const radio = document.createElement('input')
+        radio.type = 'radio'
+        radio.id = `ADay${sectionObj.id}-${i}`
+        radio.name = `ADays${sectionObj.id}`
+        radio.value = i+1
+                    
+        const label = document.createElement('label')
+        label.htmlFor = `ADay${sectionObj.id}-${i}`
+        label.innerHTML = daysParse[i+1]
+
+        radio.onclick = () => {
+
+            sectionObj.aDay = Number(radio.value)
+
+        }
+
+        container.append(radio, label)
+
+    }
+
+}
+
+//If the table refreshes
+document.addEventListener(('updateTable'), () => {
+
+    const sectionPanel =  [...document.querySelectorAll('.sectionPanel')]
+
+    sectionPanel.forEach(element => {
+
+        const textId = element.parentNode.classList[0]
+
+        const id = Number(textId.slice(11))
+        const subId = Number(element.dataset.id)
+
+        const ADays = element.querySelector('.ADays')
+        const BDays = element.querySelector('.BDays')
+        const ATimes = [...element.querySelectorAll('.ATime input[name=ATime]')]
+        const BTimes = [...element.querySelectorAll('.BTime input[name=BTime]')]
+
+        const section = classController[id].sections.find((s) => s.id === subId)
+
+        ADays.innerHTML = ''
+        daysCreation(ADays, section)
+
+        BDays.innerHTML = ''
+        daysCreation(BDays, section)
+
+        ATimes.forEach(element => {
+
+            element.value = ''
+        
+        });
+        BTimes.forEach(element => {
+
+            element.value = ''
+        
+        });
+
+        
+    });
+
+})
