@@ -151,6 +151,7 @@ function makeDraggable (block, element) {
         
         if (finalContainer.classList.contains('slot')){
 
+            //Disable forms
             disableForm('Fh3_',element.id, false)
 
             element.sections.forEach(segment => {
@@ -195,7 +196,9 @@ function makeDraggable (block, element) {
 
             }
 
-        } else {
+        } 
+        //Enable forms
+        else {
 
             disableForm('Fh3_', element.id, true)
 
@@ -205,7 +208,6 @@ function makeDraggable (block, element) {
                 disableForm('splitLabel_',segment.id, true)
                 
             });
-
 
         }
 
@@ -425,36 +427,6 @@ function makeDraggable (block, element) {
         }
 
     }
-
-    function disableForm(string, id, enable){
-
-        let disableRef = document.getElementById(string+id)
-
-        console.log(disableRef, string+id)
-
-        if (!disableRef) return
-
-        let sibling = disableRef.nextElementSibling
-
-        while (sibling) {
-
-            // Each input after the disableRef, disable
-            if (sibling.matches('input, select, textarea')) {
-
-                sibling.disabled = !enable
-
-            }
-
-            sibling.querySelectorAll('input, select, textarea')
-                    .forEach(el => el.disabled = !enable)
-
-            sibling = sibling.nextElementSibling
-
-        }
-
-
-    }
-
 }
 
 document.addEventListener(('updateTable'), () => {
@@ -492,11 +464,51 @@ document.addEventListener(('updateTable'), () => {
 
             }
 
+            //Enable forms
+            disableForm('Fh3_', element.id, true)
+
+            element.sections.forEach(segment => {
+
+                disableForm('ATitle',segment.id, true)
+                disableForm('splitLabel_',segment.id, true)
+                
+            });
+
         }
 
     })
 
 })
+
+function disableForm(string, id, enable){
+
+    let disableRef = document.getElementById(string+id)
+
+    console.log(disableRef, string+id)
+
+    if (!disableRef) return
+
+    let sibling = disableRef.nextElementSibling
+
+    while (sibling) {
+
+        // Each input after the disableRef, disable
+        if (sibling.matches('input, select, textarea')) {
+
+            sibling.disabled = !enable
+
+        }
+
+        sibling.querySelectorAll('input, select, textarea')
+                .forEach(el => el.disabled = !enable)
+
+        sibling = sibling.nextElementSibling
+
+    }
+
+
+}
+
 
 function createVoucherTop(voucherBottom, element){
 
