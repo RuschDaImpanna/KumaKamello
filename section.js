@@ -184,7 +184,6 @@ function createSectionPanel (controller, sectionObj) {
         const splitBtn = document.createElement('input')
         splitBtn.type = 'checkbox'
         splitBtn.id = 'splitFor' + sectionObj.id
-        splitBtn.checked = controller.splitBlock
 
         //B Time
         const BTime = document.createElement('div')
@@ -268,11 +267,15 @@ function createSectionPanel (controller, sectionObj) {
 
         BTime.append(BTitle, BDays, BInitTimeLabel, BInitTime, BEndTimeLabel, BEndTime)
 
-        //Checkbox actions
+        //Section park
+        const sectionPark = document.querySelector('.sectionPark'+controller.id)
 
+        //Checkbox actions
         splitBtn.onclick = () => {
 
-            controller.splitBlock = splitBtn.checked
+            const splitsChk = sectionPark.querySelectorAll('.sectionPanelControlls input[type=checkbox]')
+            controller.splitBlock = [...splitsChk].some(chk => chk.checked)
+
             const secondHourInput = document.getElementById('SlI_'+controller.id)
 
             if (controller.splitBlock){
@@ -285,7 +288,7 @@ function createSectionPanel (controller, sectionObj) {
             } else {
 
                 BTime.hidden = true
-                secondHourInput.hidden = false
+                secondHourInput.hidden = true
 
                 ATitle.innerText = 'Section class schedule'
 
@@ -299,8 +302,6 @@ function createSectionPanel (controller, sectionObj) {
     panel.append(document.createElement('br'), header, controls)
 
     //Ship it
-    const sectionPark = document.querySelector('.sectionPark'+controller.id)
-
     console.log(sectionPark)
     sectionPark.appendChild(panel)
 
