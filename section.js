@@ -114,10 +114,17 @@ function createSectionPanel (controller, sectionObj) {
                     radio.type = 'radio'
                     radio.id = `ADay${sectionObj.id}-${i}`
                     radio.name = `ADays${sectionObj.id}`
+                    radio.value = i+1
                     
                     const label = document.createElement('label')
                     label.htmlFor = `ADay${sectionObj.id}-${i}`
                     label.innerHTML = daysParse[i+1]
+
+                    radio.onclick = () => {
+
+                        sectionObj.aDay = Number(radio.value)
+
+                    }
 
                     ADays.append(radio, label)
 
@@ -204,12 +211,19 @@ function createSectionPanel (controller, sectionObj) {
 
                     const radio = document.createElement('input')
                     radio.type = 'radio'
-                    radio.id = `ADay${sectionObj.id}-${i}`
+                    radio.id = `BDay${sectionObj.id}-${i}`
                     radio.name = `BDays${sectionObj.id}`
+                    radio.value = i+1
                     
                     const label = document.createElement('label')
-                    label.htmlFor = `ADay${sectionObj.id}-${i}`
+                    label.htmlFor = `BDay${sectionObj.id}-${i}`
                     label.innerHTML = daysParse[i+1]
+
+                    radio.onclick = () => {
+
+                        sectionObj.bDay = Number(radio.value)
+
+                    }
 
                     BDays.append(radio, label)
 
@@ -319,11 +333,11 @@ export function addSection(controller) {
         id : nextSectionId,
         code :'000000',
         teacher : `Teacher's name`,
-        aDay: 0,
+        aDay: -1,
         aInitHour : 0,
         aEndHour : 0,
         splitSection : false,
-        bDay: 0,
+        bDay: -1,
         bInitHour : 0,
         bEndHour : 0,
         selected: false
