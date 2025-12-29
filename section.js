@@ -167,11 +167,8 @@ function createSectionPanel (controller, sectionObj) {
                 const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
                 const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
                 
-                console.log(AInitTime.value)
-                console.log(timeStr, controller.unitLength)
-
-                timeFloor(sectionObj, 'aEndHour', timeStr, AEndTime)
-
+                sectionObj.aEndHour = modTime
+                AEndTime.value = timeStr
 
             }
 
@@ -262,11 +259,9 @@ function createSectionPanel (controller, sectionObj) {
 
                 const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
                 const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
-                
-                console.log(BInitTime.value)
-                console.log(timeStr, controller.secondLength)
 
-                timeFloor(sectionObj, 'aEndHour', timeStr, BEndTime)
+                sectionObj.bEndHour = modTime
+                BEndTime.value = timeStr
 
 
             }
@@ -330,6 +325,7 @@ export function addSection(controller) {
         bDay: 0,
         bInitHour : 0,
         bEndHour : 0,
+        selected: false
 
     }
 

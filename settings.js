@@ -113,16 +113,14 @@ export function timeFloor(arr, i, timeStr, sendStr){
         const deadTime = setting[6] ? 60 - time[setting[5]]:0
         const unit = time[setting[5]] + deadTime
 
-        const maxStart = calendarEnd - unit;
-
         //Clamp between initHour and endHour
-        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, maxStart));
+        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, calendarEnd));
 
         //Find nearest to replace
         const offset = fixedMinutes - calendarStart;
         fixedMinutes = calendarStart + Math.round(offset / unit) * unit;
 
-        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, maxStart));
+        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, calendarEnd));
 
     }
 
