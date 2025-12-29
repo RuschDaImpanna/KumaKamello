@@ -424,8 +424,6 @@ function makeDraggable (block, element) {
 
         }
 
-
-
     }
 
     function disableForm(string, id, enable){
@@ -474,12 +472,25 @@ document.addEventListener(('updateTable'), () => {
             blocksContainer.append(block)
 
             //Recreate top voucher
-            block.insertBefore(createVoucherTop(voucherBottom, element), voucherBottom)
+            const voucherTop = createVoucherTop(voucherBottom, element)
+            block.insertBefore(voucherTop, voucherBottom)
 
             const placedInfo = voucherBottom.lastElementChild
 
             //Hide placed information
             placedInfo.hidden = true
+
+            console.log(element.splitBlock)
+
+            if (element.splitBlock){
+
+                const taggers = splitBlockToDoubleVoucher(voucherTop, voucherBottom, element.color, element.id).childNodes
+
+                console.log(taggers[0], taggers[1])
+                block.insertBefore(taggers[1], voucherTop)
+                block.insertBefore(taggers[0], document.querySelector('.splitVoucher'))
+
+            }
 
         }
 
