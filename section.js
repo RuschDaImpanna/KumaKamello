@@ -276,7 +276,6 @@ function createSectionPanel (controller, sectionObj) {
     panel.append(document.createElement('br'), header, controls)
 
     //Ship it
-    console.log(sectionPark)
     sectionPark.appendChild(panel)
 
 }
@@ -304,12 +303,16 @@ export function addSection(controller) {
 
     }
 
-    sections.push(basicSection)
+    if(sections.length < 50){
 
-    createSectionPanel(controller,sections[sections.length-1])
+        sections.push(basicSection)
+        createSectionPanel(controller,sections[sections.length-1])
 
+    } else {
 
-    alert('New section')
+        alert('Class section limit. Please, delete a section to add a new one')
+
+    }
 
 }
 
