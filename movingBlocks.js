@@ -152,8 +152,14 @@ function makeDraggable (block, element) {
         if (finalContainer.classList.contains('slot')){
 
             disableForm('Fh3_',element.id, false)
-            disableForm('ATitle',element.id, false)
-            disableForm('splitFor',element.sections.id, true)
+
+            element.sections.forEach(segment => {
+
+                disableForm('ATitle',segment.id, false)
+                disableForm('splitLabel_',segment.id, false)
+                
+            });
+            
 
             //If there was something there before
             if (Array.from(finalContainer.children).length >= 2) {
@@ -192,8 +198,13 @@ function makeDraggable (block, element) {
         } else {
 
             disableForm('Fh3_', element.id, true)
-            disableForm('ATitle',element.sections.id, true)
-            disableForm('splitFor',element.sections.id, true)
+
+            element.sections.forEach(segment => {
+
+                disableForm('ATitle',segment.id, true)
+                disableForm('splitLabel_',segment.id, true)
+                
+            });
 
 
         }
@@ -420,6 +431,11 @@ function makeDraggable (block, element) {
     function disableForm(string, id, enable){
 
         let disableRef = document.getElementById(string+id)
+
+        console.log(disableRef, string+id)
+
+        if (!disableRef) return
+
         let sibling = disableRef.nextElementSibling
 
         while (sibling) {

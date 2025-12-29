@@ -179,6 +179,7 @@ function createSectionPanel (controller, sectionObj) {
 
         //For splitBlock
         const splitLabel = document.createElement('label')
+        splitLabel.id = 'splitLabel_' + sectionObj.id
         splitLabel.htmlFor = 'splitFor' + sectionObj.id
         splitLabel.innerText = 'Split to double class'
 
@@ -198,7 +199,7 @@ function createSectionPanel (controller, sectionObj) {
             BTitle.innerText = 'Second segment schedule'
             BTitle.id = `BTitle${sectionObj.id}`
 
-            //A days
+            //B days
             const BDays = document.createElement('div')
             BDays.classList.add(`BDays`)
 
@@ -218,7 +219,7 @@ function createSectionPanel (controller, sectionObj) {
 
                 }
 
-            //A Initial time
+            //B Initial time
             const BInitTimeLabel = document.createElement('label')
             BInitTimeLabel.htmlFor = `BInitTime${sectionObj.id}`
             BInitTimeLabel.innerText = 'Initial time'
@@ -229,7 +230,7 @@ function createSectionPanel (controller, sectionObj) {
             BInitTime.name = 'BTime'
             BInitTime.id = `BInitTime${sectionObj.id}`
 
-            //A End time
+            //B End time
             const BEndTimeLabel = document.createElement('label')
             BEndTimeLabel.htmlFor = `AEndTime${sectionObj.id}`
             BEndTimeLabel.innerText = 'End time'
