@@ -108,7 +108,7 @@ function createSectionPanel (controller, sectionObj) {
             ADays.classList.add(`ADays`)
 
                 //All days
-                daysCreation(ADays, sectionObj)
+                daysCreation(ADays, sectionObj, controller)
 
             //A Initial time
             const AInitTimeLabel = document.createElement('label')
@@ -187,7 +187,7 @@ function createSectionPanel (controller, sectionObj) {
             BDays.classList.add(`BDays`)
 
                 //All days
-                daysCreation(BDays, sectionObj)
+                daysCreation(BDays, sectionObj, controller)
 
             //B Initial time
             const BInitTimeLabel = document.createElement('label')
@@ -299,7 +299,8 @@ export function addSection(controller) {
         bDay: -1,
         bInitHour : 0,
         bEndHour : 0,
-        selected: false
+        selected: false,
+        disabled: false
 
     }
 
@@ -316,18 +317,18 @@ export function addSection(controller) {
 
 }
 
-function daysCreation (container, sectionObj){
+function daysCreation (container, sectionObj, controller){
 
     for (let i = setting[1]-1; i < setting[2]; i++) {
 
         const radio = document.createElement('input')
         radio.type = 'radio'
-        radio.id = `ADay${sectionObj.id}-${i}`
+        radio.id = `ADay${sectionObj.id}-${i+1}.${controller.id}`
         radio.name = `ADays${sectionObj.id}`
         radio.value = i+1
                     
         const label = document.createElement('label')
-        label.htmlFor = `ADay${sectionObj.id}-${i}`
+        label.htmlFor = `ADay${sectionObj.id}-${i+1}.${controller.id}`
         label.innerHTML = daysParse[i+1]
 
         radio.onclick = () => {
@@ -382,3 +383,14 @@ document.addEventListener(('updateTable'), () => {
     });
 
 })
+
+//If something new is placed
+document.addEventListener('change', e => {
+
+    //Find if the form update is from any sectionPanel
+    const sectionPanel = e.target.closest('.sectionPanel');
+
+    if (!sectionPanel) return;
+
+})
+
