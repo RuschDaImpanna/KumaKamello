@@ -311,7 +311,7 @@ function createTable() {
             }
             else {
 
-                cell.classList.add('slot', 'drop')
+                cell.classList.add('slot')
 
                 if(yWrap && hasGap && y === firstSegmentLength + 1){
                 
