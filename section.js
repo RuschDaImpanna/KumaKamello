@@ -14,6 +14,8 @@ const daysParse = {
 
 }
 
+const classSlots = []
+
 function createSectionPanel (controller, sectionObj) {
 
     //Create div
@@ -101,7 +103,7 @@ function createSectionPanel (controller, sectionObj) {
             //A title
             const ATitle = document.createElement('h3')
             ATitle.innerText = 'Section class schedule'
-            ATitle.id = `ATitle${sectionObj.id}`
+            ATitle.id = `ATitle${sectionObj.id}.${controller.id}`
 
             //A days
             const ADays = document.createElement('div')
@@ -112,18 +114,18 @@ function createSectionPanel (controller, sectionObj) {
 
             //A Initial time
             const AInitTimeLabel = document.createElement('label')
-            AInitTimeLabel.htmlFor = `AInitTime${sectionObj.id}`
+            AInitTimeLabel.htmlFor = `AInitTime${sectionObj.id}.${controller.id}`
             AInitTimeLabel.innerText = 'Initial time'
 
             const AInitTime = document.createElement('input')
             AInitTime.type = 'time'
 
             AInitTime.name = 'ATime'
-            AInitTime.id = `AInitTime${sectionObj.id}`
+            AInitTime.id = `AInitTime${sectionObj.id}.${controller.id}`
 
             //A End time
             const AEndTimeLabel = document.createElement('label')
-            AEndTimeLabel.htmlFor = `AEndTime${sectionObj.id}`
+            AEndTimeLabel.htmlFor = `AEndTime${sectionObj.id}.${controller.id}`
             AEndTimeLabel.innerText = 'End time'
 
             const AEndTime = document.createElement('input')
@@ -131,7 +133,7 @@ function createSectionPanel (controller, sectionObj) {
             AEndTime.disabled = true
 
             AEndTime.name = 'ATime'
-            AEndTime.id = `AEndTime${sectionObj.id}`
+            AEndTime.id = `AEndTime${sectionObj.id}.${controller.id}`
 
             //Time fixes
             AInitTime.onblur = () => {
@@ -163,14 +165,14 @@ function createSectionPanel (controller, sectionObj) {
 
         //For splitBlock
         const splitLabel = document.createElement('label')
-        splitLabel.id = 'splitLabel_' + sectionObj.id
-        splitLabel.htmlFor = 'splitFor' + sectionObj.id
+        splitLabel.id = `splitLabel_${sectionObj.id}.${controller.id}`
+        splitLabel.htmlFor = `splitFor${sectionObj.id}.${controller.id}`
         splitLabel.innerText = 'Split to double class'
 
 
         const splitBtn = document.createElement('input')
         splitBtn.type = 'checkbox'
-        splitBtn.id = 'splitFor' + sectionObj.id
+        splitBtn.id = `splitFor${sectionObj.id}.${controller.id}`
 
         //B Time
         const BTime = document.createElement('div')
@@ -180,7 +182,7 @@ function createSectionPanel (controller, sectionObj) {
             //B title
             const BTitle = document.createElement('h3')
             BTitle.innerText = 'Second segment schedule'
-            BTitle.id = `BTitle${sectionObj.id}`
+            BTitle.id = `BTitle${sectionObj.id}.${controller.id}`
 
             //B days
             const BDays = document.createElement('div')
@@ -191,18 +193,18 @@ function createSectionPanel (controller, sectionObj) {
 
             //B Initial time
             const BInitTimeLabel = document.createElement('label')
-            BInitTimeLabel.htmlFor = `BInitTime${sectionObj.id}`
+            BInitTimeLabel.htmlFor = `BInitTime${sectionObj.id}.${controller.id}`
             BInitTimeLabel.innerText = 'Initial time'
 
             const BInitTime = document.createElement('input')
             BInitTime.type = 'time'
 
             BInitTime.name = 'BTime'
-            BInitTime.id = `BInitTime${sectionObj.id}`
+            BInitTime.id = `BInitTime${sectionObj.id}.${controller.id}`
 
             //B End time
             const BEndTimeLabel = document.createElement('label')
-            BEndTimeLabel.htmlFor = `AEndTime${sectionObj.id}`
+            BEndTimeLabel.htmlFor = `BEndTime${sectionObj.id}.${controller.id}`
             BEndTimeLabel.innerText = 'End time'
 
             const BEndTime = document.createElement('input')
@@ -210,7 +212,7 @@ function createSectionPanel (controller, sectionObj) {
             BEndTime.disabled = true
 
             BEndTime.name = 'BTime'
-            BEndTime.id = `BEndTime${sectionObj.id}`
+            BEndTime.id = `BEndTime${sectionObj.id}.${controller.id}`
 
             //Time fixes
             BInitTime.onblur = () => {
@@ -319,16 +321,18 @@ export function addSection(controller) {
 
 function daysCreation (container, sectionObj, controller){
 
+    const name = container.classList[0]
+
     for (let i = setting[1]-1; i < setting[2]; i++) {
 
         const radio = document.createElement('input')
         radio.type = 'radio'
-        radio.id = `ADay${sectionObj.id}-${i+1}.${controller.id}`
-        radio.name = `ADays${sectionObj.id}`
+        radio.id = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
+        radio.name = `${name}${sectionObj.id}`
         radio.value = i+1
                     
         const label = document.createElement('label')
-        label.htmlFor = `ADay${sectionObj.id}-${i+1}.${controller.id}`
+        label.htmlFor = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
         label.innerHTML = daysParse[i+1]
 
         radio.onclick = () => {
@@ -389,8 +393,7 @@ document.addEventListener('change', e => {
 
     //Find if the form update is from any sectionPanel
     const sectionPanel = e.target.closest('.sectionPanel');
-
     if (!sectionPanel) return;
-
+    
 })
 
