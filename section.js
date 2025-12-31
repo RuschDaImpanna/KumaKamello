@@ -364,13 +364,13 @@ document.addEventListener(('updateTable'), () => {
         const ATimes = [...element.querySelectorAll('.ATime input[name=ATime]')]
         const BTimes = [...element.querySelectorAll('.BTime input[name=BTime]')]
 
-        const section = classController[id].sections.find((s) => s.id === subId)
+        const section = classController[id].sections.find(s => s.id === subId)
 
         ADays.innerHTML = ''
-        daysCreation(ADays, section)
+        daysCreation(ADays, section, element.dataset)
 
         BDays.innerHTML = ''
-        daysCreation(BDays, section)
+        daysCreation(BDays, section, element.dataset)
 
         ATimes.forEach(element => {
 
@@ -386,14 +386,73 @@ document.addEventListener(('updateTable'), () => {
         
     });
 
+    classController.forEach(element => {
+
+        const sectionObj = element.sections
+
+        sectionObj.forEach(segment => {
+
+            segment.aDay = -1
+            segment.bDay = -1
+
+            segment.aInitHour = 0
+            segment.bInitHour = 0
+
+            segment.aEndHour = 0
+            segment.bEndHour = 0
+
+            console.log(segment)
+            
+        });
+        
+    });
+
 })
 
 //If something new is placed
 document.addEventListener('change', e => {
 
     //Find if the form update is from any sectionPanel
-    const sectionPanel = e.target.closest('.sectionPanel');
-    if (!sectionPanel) return;
+    const sectionPanel = e.target.closest('.sectionPanel')
+
+    if (!sectionPanel) return
+
+    const formObj = e.target
+
+    if(formObj.type !== 'radio' && formObj.type !== 'time') return
+
+    let classId
+    let sectionId
+
+    if (formObj.type == 'radio'){
+
+        classId = Number(formObj.id.substring(formObj.id.indexOf('.')+1))
+        sectionId = Number(formObj.id.substring(formObj.id.indexOf('y')+1, formObj.id.indexOf('-')))
+
+    } else {
+
+        classId = Number(formObj.id.substring(formObj.id.indexOf('.')+1))
+        sectionId = Number(formObj.id.substring(formObj.id.indexOf('e')+1, formObj.id.indexOf('.')))
+
+    }
+
+    const target = formObj.id[0]
+
+    const controller = classController.find(c => c.id == classId)
+    const sectionObj = controller.sections.find(c => c.id == sectionId)
+
+    const day = sectionObj
+
+    console.log(sectionObj)
+    console.log(classId, sectionId, target)
+
+    //Create a tag
+    const tag = document.createElement('div')
+    tag.style.position = 'relative'
+
+    document.getElementById(`${day+1}01`).append(tag)
     
+    
+
 })
 
