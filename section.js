@@ -559,11 +559,6 @@ document.addEventListener('change', e => {
         slot.style.left = 0
         slot.style.right = 0
 
-        slot.style.display = 'flex'
-        slot.style.alignItems = 'center'
-        slot.style.justifyContent = 'center'
-
-
         slot.style.backgroundColor = controller.color + '4D' 
 
         slot.style.height = (50*length - (5 * (3 - length))) + 'px'
@@ -573,7 +568,12 @@ document.addEventListener('change', e => {
 
             const info = document.createElement('div')
             info.classList.add('dropInfo')
-            info.style.position = 'relative'
+
+            info.style.position = 'absolute'
+            info.style.top = '50%'
+            info.style.left = '50%'
+            info.style.transform = 'translate(-50%, -50%)'
+
 
                 const teacherTitle = document.createElement('h3')
                 teacherTitle.id = `teacherTitle${sectionObj.id}.${controller.id}`
