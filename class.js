@@ -121,10 +121,11 @@ function createPanel (classObj) {
             //Rewrite title at classController object
             classObj.color = colorInput.value
 
+            //Change voucher color
             updateVoucherColor(colorInput.value, classObj.id)
 
+            //Change drop color
             const slot = document.querySelectorAll('.slot')
-
             slot.forEach(element => {
 
                 const children = element.childNodes
@@ -137,7 +138,7 @@ function createPanel (classObj) {
 
                             for (const section of sections) {
 
-                                if (child.id == `A${section.id}.${classObj.id}`){
+                                if (child.id == `A${section.id}.${classObj.id}` || child.id == `B${section.id}.${classObj.id}`){
 
                                     child.style.backgroundColor = classObj.color + '4D'
                                     child.style.border = '5px solid ' + classObj.color
