@@ -556,15 +556,16 @@ document.addEventListener('change', e => {
         slot.id = `${target}${sectionObj.id}.${controller.id}`
 
         slot.style.position = 'absolute'
+        slot.style.left = 0
+        slot.style.right = 0
 
-        slot.style.backgroundColor = 'red'
+        slot.style.backgroundColor = controller.color + '4D' 
 
-        slot.style.width = '100%'
-        slot.style.height = (50*length + 5*(length-1)) + 'px'
+        slot.style.height = 50*length + 'px'
 
         slot.style.borderRadius = '5px'
+        slot.style.border = '5px solid ' + controller.color
     
-
         onPlaceTag.replaceWith(slot)
 
     }

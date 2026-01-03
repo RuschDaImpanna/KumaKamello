@@ -123,6 +123,36 @@ function createPanel (classObj) {
 
             updateVoucherColor(colorInput.value, classObj.id)
 
+            const slot = document.querySelectorAll('.slot')
+
+            slot.forEach(element => {
+
+                const children = element.childNodes
+
+                    for (const child of children) {
+
+                        if (child.classList?.contains('drop')) {
+
+                            const sections = classObj.sections
+
+                            for (const section of sections) {
+
+                                if (child.id == `A${section.id}.${classObj.id}`){
+
+                                    child.style.backgroundColor = classObj.color + '4D'
+                                    child.style.border = '5px solid ' + classObj.color
+
+                                }
+                                
+                            }
+
+
+                        }
+
+                    }
+                
+            });
+
         }
 
         //Fancy label for the first length
