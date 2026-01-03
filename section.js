@@ -336,7 +336,7 @@ function daysCreation (container, sectionObj, controller){
         const radio = document.createElement('input')
         radio.type = 'radio'
         radio.id = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
-        radio.name = `${name}${sectionObj.id}`
+        radio.name = `${name}${sectionObj.id}.${controller.id}`
         radio.value = i+1
                     
         const label = document.createElement('label')
