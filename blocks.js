@@ -195,7 +195,6 @@ document.addEventListener("change", () => {
 
                                 sectionObj.aEndHour = modTime
                                 form.value = timeStr
-                                console.log('Impar', form, initDay.value)
 
                             }
 
@@ -208,6 +207,7 @@ document.addEventListener("change", () => {
                         const splitVoucher = document.querySelector(`#block${i} .splitVoucher`)
                         const oldLines = [...splitVoucher.children]
 
+                        //Remove old lines
                         oldLines.forEach(element => {
 
                             if (element.tagName  == 'DIV') {
@@ -218,9 +218,10 @@ document.addEventListener("change", () => {
                             
                         });
 
+                        //Change size
                         splitVoucher.style.height = 25*value + 'px'
                         
-
+                        //Create new lines
                         for (let x = 1; x < ((50*value)/50); x++) {
                             
                             const dottedLine = document.createElement('div')
@@ -236,6 +237,70 @@ document.addEventListener("change", () => {
 
                             
                         }
+
+
+
+                        //Change size of drops
+                        const slots = document.querySelectorAll('.slot')
+                        slots.forEach(slot => {
+
+                            const children = slot.childNodes
+
+                            for (const child of children) {
+
+                                if (child.classList?.contains('drop')) {
+
+                                    const sections = element.sections
+
+                                    for (const section of sections) {
+
+                                        if (child.id == `B${section.id}.${element.id}`){
+
+                                            child.style.height = (50*value - (5 * (3 - value))) + 'px'
+
+                                        }
+                                
+                                    }
+
+
+                                }
+
+                             }
+                
+                        });
+
+                        //Change endTime of B
+                        const sectionPark = document.querySelector('.sectionPark'+element.id)
+                        const bTimes = sectionPark.querySelectorAll('.sectionPanelControlls input[name=BTime]')
+
+                        bTimes.forEach((form, index) => {
+
+                            if (!form.value) return
+
+                            //Always gets endTime
+                            if (index % 2 != 0) {
+
+                                const initDay = bTimes[index - 1]
+
+                                const addTime = timeParse[setting[5]]*value
+                                let hour = parseInt(initDay.value.slice(0,2))
+                                let min = parseInt(initDay.value.slice(-2))
+
+                                const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
+                                const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
+
+                                const classId = Number(form.id.substring(form.id.indexOf('.')+1))
+                                const sectionId = Number(form.id.substring(form.id.indexOf('e')+1, form.id.indexOf('.')))
+
+                                const controller = classController.find(c => c.id == classId)
+                                const sectionObj = controller.sections.find(c => c.id == sectionId)
+
+                                sectionObj.bEndHour = modTime
+                                form.value = timeStr
+
+                            }
+
+                        });
 
 
                     }
