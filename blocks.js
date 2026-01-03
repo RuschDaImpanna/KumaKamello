@@ -447,8 +447,8 @@ export function updateVoucherColor (newColor, id) {
     voucherBottom.style.backgroundColor = newColor
 
     //Dark color
-    voucherTop.style.dropShadow = '0 10px 8px 0 ' + (newDark+'B2')
-    voucherBottom.style.dropShadow = '0 10px 8px 0 ' + (newDark+'B2')
+    voucherTop.style.boxShadow = '0 10px 8px 0 ' + (newDark+'B2')
+    voucherBottom.style.boxShadow = '0 10px 8px 0 ' + (newDark+'B2')
 
     //Title colors
     const textObjs = document.querySelectorAll(`#block${id} h3`)
