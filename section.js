@@ -14,6 +14,14 @@ const daysParse = {
 
 }
 
+const timeParse = {
+
+    0:45,
+    1:50,
+    2:60
+
+}
+
 const classSlots = []
 
 function createSectionPanel (controller, sectionObj) {
@@ -217,7 +225,7 @@ function createSectionPanel (controller, sectionObj) {
             //Time fixes
             BInitTime.onblur = () => {
 
-                timeFloor(sectionObj, 'aInitHour', BInitTime.value, BInitTime)
+                timeFloor(sectionObj, 'bInitHour', BInitTime.value, BInitTime)
 
                 const time = {
 
@@ -337,7 +345,8 @@ function daysCreation (container, sectionObj, controller){
 
         radio.onclick = () => {
 
-            sectionObj.aDay = Number(radio.value)
+            const key = name[0] === 'A' ? 'aDay':'bDay'
+            sectionObj[key] = Number(radio.value)
 
         }
 
@@ -492,6 +501,13 @@ document.addEventListener('change', e => {
 
     }
 
+    //Find if it's A or B
+    const day = target == 'A' ? sectionObj.aDay:sectionObj.bDay
+    const time = target == 'A' ? sectionObj.aInitHour:sectionObj.bInitHour
+    const length = target == 'A' ? controller.unitLength:controller.secondLength
+
+    let fixedTag = false
+
     //Remove the old slots
     oldSlot:
     for (const element of slot) {
@@ -503,6 +519,10 @@ document.addEventListener('change', e => {
             if (child.classList?.contains('drop') && child.id == `${target}${sectionObj.id}.${controller.id}`) {
 
                 child.remove()
+                createTag()
+
+                fixedTag = true
+
                 break oldSlot
 
             }
@@ -511,35 +531,25 @@ document.addEventListener('change', e => {
 
     }
 
-    //Find if it's A or B
-    const day = target == 'A' ? sectionObj.aDay:sectionObj.bDay
-    const time = target == 'A' ? sectionObj.aInitHour:sectionObj.bInitHour
-    const length = target == 'A' ? controller.unitLength:controller.secondLength
-
     console.log(sectionObj)
     console.log(classId, sectionId, target)
+    console.log(day, time, length)
 
-    if (formObj.type == 'radio') {
+    if (!fixedTag && formObj.type == 'radio') {
 
-        //Create a place tag
-        const placeTag = document.createElement('div')
-        placeTag.style.position = 'relative'
-        placeTag.classList.add('placeTag')
-        placeTag.id = `${target}${sectionObj.id}.${controller.id}`
-
-        document.getElementById(`${day+1}01`).append(placeTag)
-
-        //If time was already set, use that tag as the reference
-        if (time) {
-
-            onPlaceTag = placeTag
-
-        }
+        createTag()
         
     }
 
+    console.log('onPlaceTag:', onPlaceTag);
+
     //Onces there's a tag, the slot should be created
     if (onPlaceTag) {
+
+        //Move the tag
+        const yMove = (time - setting[3]) / timeParse[setting[5]]
+        const availableSlot = document.getElementById(`${day+1}${String(yMove+1).padStart(2, '0')}`)
+        availableSlot.appendChild(onPlaceTag)
 
         const slot = document.createElement('div')
         slot.classList.add('drop')
@@ -556,6 +566,27 @@ document.addEventListener('change', e => {
     
 
         onPlaceTag.replaceWith(slot)
+
+    }
+
+    function createTag () {
+
+        //Create a place tag
+        const placeTag = document.createElement('div')
+        placeTag.style.position = 'relative'
+        placeTag.classList.add('placeTag')
+        placeTag.id = `${target}${sectionObj.id}.${controller.id}`
+
+        document.getElementById(`${day+1}01`).append(placeTag)
+
+        console.log(document.getElementById(`${day+1}01`))
+
+        //If time was already set, use that tag as the reference
+        if (time) {
+
+            onPlaceTag = placeTag
+
+        }
 
     }
 
