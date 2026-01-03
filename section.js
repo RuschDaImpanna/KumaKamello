@@ -421,38 +421,143 @@ document.addEventListener('change', e => {
 
     if(formObj.type !== 'radio' && formObj.type !== 'time') return
 
+    const target = formObj.id[0]
+
     let classId
     let sectionId
 
+    let controller
+    let sectionObj
+
+    let onPlaceTag
+
+
+    const slot = document.querySelectorAll('.slot')
+
+    //If it's a day, this should delete any placeTag available
     if (formObj.type == 'radio'){
 
         classId = Number(formObj.id.substring(formObj.id.indexOf('.')+1))
         sectionId = Number(formObj.id.substring(formObj.id.indexOf('y')+1, formObj.id.indexOf('-')))
 
-    } else {
+        controller = classController.find(c => c.id == classId)
+        sectionObj = controller.sections.find(c => c.id == sectionId)
+
+        outerLoop:
+        for (const element of slot) {
+
+            const children = element.childNodes
+
+            for (const child of children) {
+
+                if (child.classList?.contains('placeTag') && child.id == `${target}${sectionObj.id}.${controller.id}`) {
+
+                    child.remove()
+                    break outerLoop
+
+                }
+
+            }
+
+        }
+
+
+    }
+    //If it's time, should check if any tag is placed 
+    else {
 
         classId = Number(formObj.id.substring(formObj.id.indexOf('.')+1))
         sectionId = Number(formObj.id.substring(formObj.id.indexOf('e')+1, formObj.id.indexOf('.')))
 
+        controller = classController.find(c => c.id == classId)
+        sectionObj = controller.sections.find(c => c.id == sectionId)
+
+        outerLoop:
+        for (const element of slot) {
+
+            const children = element.childNodes
+
+            for (const child of children) {
+
+                if (child.classList?.contains('placeTag') && child.id == `${target}${sectionObj.id}.${controller.id}`) {
+
+                    onPlaceTag = child
+                    break outerLoop
+
+                }
+
+            }
+
+        }
+
     }
 
-    const target = formObj.id[0]
+    //Remove the old slots
+    oldSlot:
+    for (const element of slot) {
 
-    const controller = classController.find(c => c.id == classId)
-    const sectionObj = controller.sections.find(c => c.id == sectionId)
+        const children = element.childNodes
 
-    const day = sectionObj
+        for (const child of children) {
+
+            if (child.classList?.contains('drop') && child.id == `${target}${sectionObj.id}.${controller.id}`) {
+
+                child.remove()
+                break oldSlot
+
+            }
+
+        }
+
+    }
+
+    //Find if it's A or B
+    const day = target == 'A' ? sectionObj.aDay:sectionObj.bDay
+    const time = target == 'A' ? sectionObj.aInitHour:sectionObj.bInitHour
+    const length = target == 'A' ? controller.unitLength:controller.secondLength
 
     console.log(sectionObj)
     console.log(classId, sectionId, target)
 
-    //Create a tag
-    const tag = document.createElement('div')
-    tag.style.position = 'relative'
+    if (formObj.type == 'radio') {
 
-    document.getElementById(`${day+1}01`).append(tag)
+        //Create a place tag
+        const placeTag = document.createElement('div')
+        placeTag.style.position = 'relative'
+        placeTag.classList.add('placeTag')
+        placeTag.id = `${target}${sectionObj.id}.${controller.id}`
+
+        document.getElementById(`${day+1}01`).append(placeTag)
+
+        //If time was already set, use that tag as the reference
+        if (time) {
+
+            onPlaceTag = placeTag
+
+        }
+        
+    }
+
+    //Onces there's a tag, the slot should be created
+    if (onPlaceTag) {
+
+        const slot = document.createElement('div')
+        slot.classList.add('drop')
+        slot.id = `${target}${sectionObj.id}.${controller.id}`
+
+        slot.style.position = 'absolute'
+
+        slot.style.backgroundColor = 'red'
+
+        slot.style.width = '100%'
+        slot.style.height = (50*length + 5*(length-1)) + 'px'
+
+        slot.style.borderRadius = '5px'
     
-    
+
+        onPlaceTag.replaceWith(slot)
+
+    }
 
 })
 
