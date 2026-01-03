@@ -1,6 +1,7 @@
 //Import all settings
 import { classController, deleteClass } from "./class.js";
 import { setting, timeFloor } from "./settings.js";
+import { createDarkColor } from "./blocks.js";
 
 const daysParse = {
 
@@ -69,6 +70,12 @@ function createSectionPanel (controller, sectionObj) {
             //Dynamically, change text on real time
             title.innerText = nameInput.value
 
+            const dropTitle = document.getElementById(`teacherTitle${sectionObj.id}.${controller.id}`)
+
+            if (!dropTitle) return
+
+            dropTitle.innerText = nameInput.value
+
         }
 
         //Code input
@@ -100,6 +107,12 @@ function createSectionPanel (controller, sectionObj) {
             //Dynamically, change text on real time
             codeDisplay.innerText = codeInput.value
             //document.getElementById('labelPlacedBlock'+controller.id).innerText = codeInput.value
+
+            const dropCode = document.getElementById(`codeTitle${sectionObj.id}.${controller.id}`)
+
+            if (!dropCode) return
+
+            dropCode.innerText = codeInput.value
 
 
         }
@@ -535,6 +548,7 @@ document.addEventListener('change', e => {
         const availableSlot = document.getElementById(`${day+1}${String(yMove+1).padStart(2, '0')}`)
         availableSlot.appendChild(onPlaceTag)
 
+        //Create the tag
         const slot = document.createElement('div')
         slot.classList.add('drop')
         slot.id = `${target}${sectionObj.id}.${controller.id}`
@@ -545,12 +559,41 @@ document.addEventListener('change', e => {
         slot.style.left = 0
         slot.style.right = 0
 
+        slot.style.display = 'flex'
+        slot.style.alignItems = 'center'
+        slot.style.justifyContent = 'center'
+
+
         slot.style.backgroundColor = controller.color + '4D' 
 
         slot.style.height = (50*length - (5 * (3 - length))) + 'px'
 
         slot.style.borderRadius = '5px'
         slot.style.border = '5px solid ' + controller.color
+
+            const info = document.createElement('div')
+            info.classList.add('dropInfo')
+            info.style.position = 'relative'
+
+                const teacherTitle = document.createElement('h3')
+                teacherTitle.id = `teacherTitle${sectionObj.id}.${controller.id}`
+
+                teacherTitle.innerHTML = sectionObj.teacher
+                teacherTitle.style.color = createDarkColor(controller.color)
+
+                teacherTitle.style.textAlign = 'center'
+
+                const codeTitle = document.createElement('p')
+                codeTitle.id = `codeTitle${sectionObj.id}.${controller.id}`
+
+                codeTitle.innerHTML = sectionObj.code
+                codeTitle.style.color = createDarkColor(controller.color)
+
+                codeTitle.style.textAlign = 'center'
+
+            info.append(teacherTitle, codeTitle)
+
+        slot.append(info)
     
         onPlaceTag.replaceWith(slot)
 
@@ -578,4 +621,3 @@ document.addEventListener('change', e => {
     }
 
 })
-

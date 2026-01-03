@@ -641,7 +641,7 @@ function createLightColor (original) {
 
 }
 
-function createDarkColor (original) {
+export function createDarkColor (original) {
 
     const { h, s, l } = hexToHSL(original);
     return HSLToHex(h, s, Math.max(0, l - 30));
