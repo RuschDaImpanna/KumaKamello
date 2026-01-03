@@ -1,5 +1,6 @@
 //Import all settings from classController
 import { classController } from "./class.js";
+import { setting } from "./settings.js";
 
 //Current blocks
 let availableBlocks = []
@@ -90,6 +91,14 @@ document.addEventListener("change", () => {
 
                     console.log('Cambió', key, oldValue, '→', value)
 
+                    const timeParse = {
+
+                        0:45,
+                        1:50,
+                        2:60
+
+                    }
+
                     //Change size of first voucher
                     if (key == 'unitLength'){
 
@@ -127,6 +136,70 @@ document.addEventListener("change", () => {
 
                         //Recreate the hidden stuff
                         voucherBottom.append(placedDiv)
+
+
+                        //Change size of drops
+                        const slots = document.querySelectorAll('.slot')
+                        slots.forEach(slot => {
+
+                            const children = slot.childNodes
+
+                            for (const child of children) {
+
+                                if (child.classList?.contains('drop')) {
+
+                                    const sections = element.sections
+
+                                    for (const section of sections) {
+
+                                        if (child.id == `A${section.id}.${element.id}`){
+
+                                            child.style.height = (50*value - (5 * (3 - value))) + 'px'
+
+                                        }
+                                
+                                    }
+
+
+                                }
+
+                             }
+                
+                        });
+
+                        //Change endTime of A
+                        const sectionPark = document.querySelector('.sectionPark'+element.id)
+                        const aTimes = sectionPark.querySelectorAll('.sectionPanelControlls input[name=ATime]')
+
+                        aTimes.forEach((form, index) => {
+
+                            if (!form.value) return
+
+                            //Always gets endTime
+                            if (index % 2 != 0) {
+
+                                const initDay = aTimes[index - 1]
+
+                                const addTime = timeParse[setting[5]]*value
+                                let hour = parseInt(initDay.value.slice(0,2))
+                                let min = parseInt(initDay.value.slice(-2))
+
+                                const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
+                                const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
+
+                                const classId = Number(form.id.substring(form.id.indexOf('.')+1))
+                                const sectionId = Number(form.id.substring(form.id.indexOf('e')+1, form.id.indexOf('.')))
+
+                                const controller = classController.find(c => c.id == classId)
+                                const sectionObj = controller.sections.find(c => c.id == sectionId)
+
+                                sectionObj.aEndHour = modTime
+                                form.value = timeStr
+                                console.log('Impar', form, initDay.value)
+
+                            }
+
+                        });
 
                     }
                     //Change size of second voucher

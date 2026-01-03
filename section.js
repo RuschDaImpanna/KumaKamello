@@ -148,15 +148,7 @@ function createSectionPanel (controller, sectionObj) {
 
                 timeFloor(sectionObj, 'aInitHour', AInitTime.value, AInitTime)
 
-                const time = {
-
-                    0:45,
-                    1:50,
-                    2:60
-
-                }
-
-                const addTime = time[setting[5]]*controller.unitLength
+                const addTime = timeParse[setting[5]]*controller.unitLength
 
                 let hour = parseInt(AInitTime.value.slice(0,2))
                 let min = parseInt(AInitTime.value.slice(-2))
@@ -227,15 +219,7 @@ function createSectionPanel (controller, sectionObj) {
 
                 timeFloor(sectionObj, 'bInitHour', BInitTime.value, BInitTime)
 
-                const time = {
-
-                    0:45,
-                    1:50,
-                    2:60
-
-                }
-
-                const addTime = time[setting[5]]*controller.secondLength
+                const addTime = timeParse[setting[5]]*controller.secondLength
 
                 let hour = parseInt(BInitTime.value.slice(0,2))
                 let min = parseInt(BInitTime.value.slice(-2))
@@ -555,13 +539,15 @@ document.addEventListener('change', e => {
         slot.classList.add('drop')
         slot.id = `${target}${sectionObj.id}.${controller.id}`
 
+        slot.style.zIndex = 2
+
         slot.style.position = 'absolute'
         slot.style.left = 0
         slot.style.right = 0
 
         slot.style.backgroundColor = controller.color + '4D' 
 
-        slot.style.height = 50*length + 'px'
+        slot.style.height = (50*length - (5 * (3 - length))) + 'px'
 
         slot.style.borderRadius = '5px'
         slot.style.border = '5px solid ' + controller.color
