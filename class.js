@@ -1,5 +1,5 @@
 import { updateVoucherColor } from "./blocks.js"
-import { addSection } from "./section.js"
+import { addSection, classSlots } from "./section.js"
 
 //Get the panel container
 const container = document.getElementById('classManagement')
@@ -251,23 +251,57 @@ function createPanel (classObj) {
 //This is for deleting a class at the delete class button
 export function deleteClass(id, section, controller) {
 
-    // Array delete
+    //Array delete
     if(!section){
+
+        //Delete all drops from that class
+        classSlots.splice(0, classSlots.length,
+
+            ...classSlots.filter(drop => {
+
+                if (drop.id.substring(drop.id.indexOf('.')+1) === String(id)) {
+                    
+                    drop.remove()
+                    return false
+
+                }
+
+                return true
+
+            })
+        )
 
         classController = classController.filter(del => del.id !== id)
 
     } else {
+
+        //Delete all drops from that section
+        classSlots.splice(0, classSlots.length,
+
+            ...classSlots.filter(drop => {
+
+                if (drop.id.substring(1) === `${id}.${controller.id}`) {
+                    
+                    drop.remove()
+                    return false
+
+                }
+
+                return true
+
+            })
+        )
 
         console.log(section, controller)
         controller.sections = controller.sections.filter(del => del.id !== id)
 
     }
 
-    // Panel delete
+    //Panel delete
     const panel = !section ? document.querySelector(`.classPanel[data-id="${id}"]`):document.querySelector(`.sectionPanel[data-id="${id}"]`)
-    if (panel) panel.remove()
+    panel.remove()
 
     //For inmedate update to blocks.js
-    document.dispatchEvent(new Event("updateBlock"))
+    if (!section) document.dispatchEvent(new Event("updateBlock"))
 
 }

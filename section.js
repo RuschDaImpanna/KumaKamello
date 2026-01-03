@@ -23,7 +23,7 @@ const timeParse = {
 
 }
 
-const classSlots = []
+export const classSlots = []
 
 function createSectionPanel (controller, sectionObj) {
 
@@ -358,6 +358,8 @@ document.addEventListener(('updateTable'), () => {
 
     const sectionPanel =  [...document.querySelectorAll('.sectionPanel')]
 
+    classSlots.length = 0
+
     sectionPanel.forEach(element => {
 
         const textId = element.parentNode.classList[0]
@@ -438,7 +440,7 @@ document.addEventListener('change', e => {
     let onPlaceTag
 
 
-    const slot = document.querySelectorAll('.slot')
+    const slots = document.querySelectorAll('.slot')
 
     //If it's a day, this should delete any placeTag available
     if (formObj.type == 'radio'){
@@ -450,9 +452,9 @@ document.addEventListener('change', e => {
         sectionObj = controller.sections.find(c => c.id == sectionId)
 
         outerLoop:
-        for (const element of slot) {
+        for (const slot of slots) {
 
-            const children = element.childNodes
+            const children = slot.childNodes
 
             for (const child of children) {
 
@@ -479,9 +481,9 @@ document.addEventListener('change', e => {
         sectionObj = controller.sections.find(c => c.id == sectionId)
 
         outerLoop:
-        for (const element of slot) {
+        for (const slot of slots) {
 
-            const children = element.childNodes
+            const children = slot.childNodes
 
             for (const child of children) {
 
@@ -507,7 +509,7 @@ document.addEventListener('change', e => {
 
     //Remove the old slots
     oldSlot:
-    for (const element of slot) {
+    for (const element of slots) {
 
         const children = element.childNodes
 
@@ -596,6 +598,9 @@ document.addEventListener('change', e => {
         slot.append(info)
     
         onPlaceTag.replaceWith(slot)
+
+        classSlots.push(slot)
+        console.log(slot, classSlots)
 
     }
 
