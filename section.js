@@ -530,9 +530,6 @@ document.addEventListener('change', e => {
 
     }
 
-    console.log(sectionObj)
-    console.log(classId, sectionId, target)
-    console.log(day, time, length)
 
     if (!fixedTag && formObj.type == 'radio') {
 
@@ -613,8 +610,6 @@ document.addEventListener('change', e => {
         placeTag.id = `${target}${sectionObj.id}.${controller.id}`
 
         document.getElementById(`${day+1}01`).append(placeTag)
-
-        console.log(document.getElementById(`${day+1}01`))
 
         //If time was already set, use that tag as the reference
         if (time) {

@@ -171,7 +171,7 @@ function createTable() {
 
     for (let y = 0; y < ySize+1; y++) {
 
-        //Actual time
+        //Current time
         const rawFirstTime = setting[3]+unit*(y-1)
         //Next time
         const rawSecondTime = setting[3]+unit*y
