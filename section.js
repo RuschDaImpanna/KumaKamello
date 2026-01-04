@@ -552,7 +552,7 @@ document.addEventListener('change', e => {
 
         //Create the tag
         const slot = document.createElement('div')
-        slot.classList.add('drop')
+        slot.classList.add('slot', 'drop')
         slot.id = `${target}${sectionObj.id}.${controller.id}`
 
         slot.style.zIndex = 2

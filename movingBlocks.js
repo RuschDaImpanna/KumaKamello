@@ -156,14 +156,14 @@ function makeDraggable (block, element) {
 
             element.sections.forEach(segment => {
 
-                disableForm('ATitle',segment.id, false)
-                disableForm('splitLabel_',segment.id, false)
+                disableForm('ATitle',`${segment.id}.${element.id}`, false)
+                disableForm('splitLabel_',`${segment.id}.${element.id}`, false)
                 
             });
             
 
             //If there was something there before
-            if (Array.from(finalContainer.children).length >= 2) {
+            if (Array.from(finalContainer.children).length >= 3) {
 
                 const prevBlock = finalContainer.lastElementChild
                 const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
@@ -192,7 +192,14 @@ function makeDraggable (block, element) {
 
 
                 //Update the disable form
-                disableForm('Fh3_', prevElement.id, false)
+                disableForm('Fh3_', prevElement.id, true)
+
+                prevElement.sections.forEach(segment => {
+
+                    disableForm('ATitle',`${segment.id}.${prevElement.id}`, true)
+                    disableForm('splitLabel_',`${segment.id}.${prevElement.id}`, true)
+                
+                });
 
             }
 
@@ -204,8 +211,8 @@ function makeDraggable (block, element) {
 
             element.sections.forEach(segment => {
 
-                disableForm('ATitle',segment.id, true)
-                disableForm('splitLabel_',segment.id, true)
+                disableForm('ATitle',`${segment.id}.${element.id}`, true)
+                disableForm('splitLabel_',`${segment.id}.${element.id}`, true)
                 
             });
 
