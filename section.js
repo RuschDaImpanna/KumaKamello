@@ -621,3 +621,23 @@ document.addEventListener('change', e => {
     }
 
 })
+
+//If a drop has been selected
+//Since is a CustomEvent, I need to acess to detail.blocks to know the current block
+document.addEventListener(('updateSections'), (e) => {
+
+    classSlots.forEach(drop => {
+
+        drop.hidden = false
+        
+    });
+
+    const placedBlock = e.detail.block
+    const drop = placedBlock.parentNode
+
+    const controller = classController.find(c => c.id = Number(placedBlock.id.slice(5)))
+
+    console.log(placedBlock, drop)
+    console.log(controller)
+
+})

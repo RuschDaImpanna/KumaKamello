@@ -1,6 +1,7 @@
 //Import all settings
 import { classController, deleteClass } from "./class.js";
 import { splitBlockToDoubleVoucher } from "./blocks.js";
+import { classSlots } from "./section.js";
 
 const blocksContainer = document.querySelector('.blocks')
 
@@ -81,6 +82,23 @@ function makeDraggable (block, element) {
         ghostBlock = createGhost(block, element.color, element.title)
 
         blocksContainer.insertBefore(ghostBlock, blocksContainer.children[blockIndex])
+
+        //Only show the slots available for that block
+        const notAvailable = classSlots.filter(s => s.id.substring(s.id.indexOf('.')+1) != block.id.slice(5))
+        const available = classSlots.filter(s => !notAvailable.includes(s))
+
+        console.log(notAvailable, available)
+
+        notAvailable.forEach(drop => {
+
+            drop.hidden = true
+            
+        });
+        available.forEach(drop => {
+
+            drop.hidden = false
+            
+        });
 
         //Move to body so doesn't have a parent
         document.body.appendChild(block)
@@ -203,6 +221,10 @@ function makeDraggable (block, element) {
 
             }
 
+            //Call section.js to update sections
+            //A CustomEvent lets store a variable on the event on detail.block (by this case)
+            document.dispatchEvent(new CustomEvent("updateSections", {detail : {block}}))
+
         } 
         //Enable forms
         else {
@@ -215,6 +237,10 @@ function makeDraggable (block, element) {
                 disableForm('splitLabel_',`${segment.id}.${element.id}`, true)
                 
             });
+
+            //Call section.js to update sections
+            document.dispatchEvent(new CustomEvent("updateSections", {detail : {block}}))
+
 
         }
 
@@ -490,8 +516,6 @@ document.addEventListener(('updateTable'), () => {
 function disableForm(string, id, enable){
 
     let disableRef = document.getElementById(string+id)
-
-    console.log(disableRef, string+id)
 
     if (!disableRef) return
 
