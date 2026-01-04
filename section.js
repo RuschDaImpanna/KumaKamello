@@ -70,11 +70,15 @@ function createSectionPanel (controller, sectionObj) {
             //Dynamically, change text on real time
             title.innerText = nameInput.value
 
-            const dropTitle = document.getElementById(`teacherTitle${sectionObj.id}.${controller.id}`)
+            const dropTitle = document.querySelectorAll(`#teacherTitle${sectionObj.id}\\.${controller.id}`)
 
             if (!dropTitle) return
 
-            dropTitle.innerText = nameInput.value
+            dropTitle.forEach(txt => {
+
+                txt.innerText = nameInput.value
+                
+            });
 
         }
 
@@ -108,12 +112,15 @@ function createSectionPanel (controller, sectionObj) {
             codeDisplay.innerText = codeInput.value
             //document.getElementById('labelPlacedBlock'+controller.id).innerText = codeInput.value
 
-            const dropCode = document.getElementById(`codeTitle${sectionObj.id}.${controller.id}`)
+            const dropCode = document.querySelectorAll(`#codeTitle${sectionObj.id}\\.${controller.id}`)
 
             if (!dropCode) return
 
-            dropCode.innerText = codeInput.value
+            array.forEach(txt => {
+    
+                txt.innerText = codeInput.value
 
+            });
 
         }
 
