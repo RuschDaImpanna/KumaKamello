@@ -1,4 +1,4 @@
-import { updateVoucherColor } from "./blocks.js"
+import { updateVoucherColor, createDarkColor } from "./blocks.js"
 import { addSection, classSlots } from "./section.js"
 
 //Get the panel container
@@ -125,32 +125,23 @@ function createPanel (classObj) {
             updateVoucherColor(colorInput.value, classObj.id)
 
             //Change drop color
-            const slot = document.querySelectorAll('.slot')
-            slot.forEach(element => {
 
-                const children = element.childNodes
+            const slots = classSlots.filter(s => s.id.substring(s.id.indexOf('.')+1) == classObj.id)
 
-                    for (const child of children) {
+            slots.forEach(slot => {
 
-                        if (child.classList?.contains('drop')) {
+                slot.style.backgroundColor = classObj.color + '4D'
+                slot.style.border = '5px solid ' + classObj.color
 
-                            const sections = classObj.sections
+                slot.childNodes.forEach(obj => {
 
-                            for (const section of sections) {
+                    if(obj.classList.contains('dropInfo')){
 
-                                if (child.id == `A${section.id}.${classObj.id}` || child.id == `B${section.id}.${classObj.id}`){
-
-                                    child.style.backgroundColor = classObj.color + '4D'
-                                    child.style.border = '5px solid ' + classObj.color
-
-                                }
-                                
-                            }
-
-
-                        }
+                        obj.childNodes.forEach(txt => txt.style.color = createDarkColor(classObj.color))
 
                     }
+
+                })
                 
             });
 
