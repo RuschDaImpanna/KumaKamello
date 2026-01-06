@@ -122,12 +122,18 @@ function makeDraggable (block, element) {
 
             drop.hidden = true
             
-        });
+        })
         available.forEach(drop => {
 
             drop.hidden = false
+
+            if (drop.id.endsWith(`.${block.id.slice(5)}`)) {
+
+                drop.style.zIndex = 2
+
+            }
             
-        });
+        })
 
         //Move to body so doesn't have a parent
         document.body.appendChild(block)
@@ -191,12 +197,22 @@ function makeDraggable (block, element) {
 
 
         //Where is it now?
-        const finalContainer = currentDropContainer || ghostBlock.parentNode
+        let finalContainer = currentDropContainer || ghostBlock.parentNode
 
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
         
+        slotsChk:
         if (finalContainer.classList.contains('slot')){
+
+            //Check if it's from a matching slot -> block
+            if (finalContainer.id.substring(finalContainer.id.indexOf('.')+1) != element.id){
+
+                blocksContainer.append(block)
+                finalContainer = blocksContainer
+                break slotsChk
+
+            }
 
             //Disable forms
             disableForm('Fh3_',element.id, false)
@@ -207,13 +223,6 @@ function makeDraggable (block, element) {
                 disableForm('splitLabel_',`${segment.id}.${element.id}`, false)
                 
             });
-
-            //Check if it's from a matching slot -> block
-            if (finalContainer.id.substring(finalContainer.id.indexOf('.')+1) != element.id){
-
-                blocksContainer.append(block)
-
-            }
             
 
             //If there was something there before

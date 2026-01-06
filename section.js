@@ -636,6 +636,7 @@ document.addEventListener(('updateSections'), (e) => {
     classSlots.forEach(drop => {
 
         drop.hidden = false
+        drop.style.zIndex = 1
         
     });
 
