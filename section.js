@@ -658,6 +658,7 @@ document.addEventListener(('updateSections'), (e) => {
         });
         
     });
+
     //Information from movingBlocks.js
     const placedBlock = e.detail.block
     const drop = placedBlock.parentNode
@@ -670,7 +671,14 @@ document.addEventListener(('updateSections'), (e) => {
     //Find the controller of that object
     const controller = classController.find(c => c.id == Number(placedBlock.id.slice(5)))
 
+    //If !refDrop, return
     if (!refDrop) {
+
+        controller.sections.forEach(element => {
+
+            element.selected = false
+
+        })
 
         disableDrops(false)
 
@@ -683,12 +691,11 @@ document.addEventListener(('updateSections'), (e) => {
 
     //Select current block
     classObj.selected = true
+    disableDrops(true)
 
-    function disableDrops (disabled){
+    function disableDrops (disabled) {
 
         controller.sections.forEach(element => {
-
-            element.selected = false
 
             for (let t = element.aInitHour; t < element.aEndHour; t = t + timeParse[setting[5]]) {
 
@@ -731,17 +738,16 @@ document.addEventListener(('updateSections'), (e) => {
                         //If a child is a drop of other block
                         if (!child.id.endsWith(`.${controller.id}`)){
 
-                            child.hidden = false
+                            child.hidden = disabled
                             const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
 
-                            otherDrop.disabled = false
+                            otherDrop.disabled = disabled
                         
                         }
                     
                     })
                 
                 }
-
 
             }
             
