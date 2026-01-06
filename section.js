@@ -555,7 +555,7 @@ document.addEventListener('change', e => {
         const availableSlot = document.getElementById(`${day+1}${String(yMove+1).padStart(2, '0')}`)
         availableSlot.appendChild(onPlaceTag)
 
-        //Create the tag
+        //Create the drop
         const slot = document.createElement('div')
         slot.classList.add('slot', 'drop')
         slot.id = `${target}${sectionObj.id}.${controller.id}`
@@ -636,11 +636,28 @@ document.addEventListener(('updateSections'), (e) => {
 
     classSlots.forEach(drop => {
 
-        drop.hidden = false
         drop.style.zIndex = 1
         
     });
+    classController.forEach(element => {
 
+        element.sections.forEach(segment => {
+
+            if(!segment.disabled){
+
+                const dropsToEnable = classSlots.filter(d => d.id.endsWith(`${segment.id}.${element.id}`))
+
+                dropsToEnable.forEach(slot => {
+
+                    slot.hidden = false
+
+                });
+
+            }
+            
+        });
+        
+    });
     //Information from movingBlocks.js
     const placedBlock = e.detail.block
     const drop = placedBlock.parentNode
@@ -648,11 +665,79 @@ document.addEventListener(('updateSections'), (e) => {
     //Find the slot from where it was drop into the available slots
     const refDrop = classSlots.find(s => s.id == drop.id)
 
-    if (!refDrop) return
+    console.log(refDrop)
 
-    //Find the controllers from that object
+    //Find the controller of that object
     const controller = classController.find(c => c.id == Number(placedBlock.id.slice(5)))
-    const classObj = controller.sections.find(c => c.id == Number(refDrop.id.substring(refDrop.id.indexOf('A')+1, refDrop.id.indexOf('.'))))
+
+    if (!refDrop) {
+
+        controller.sections.forEach(element => {
+
+            element.selected = false
+
+            for (let t = element.aInitHour; t < element.aEndHour; t = t + timeParse[setting[5]]) {
+
+                //Identify y position
+                const yPos = ((t - setting[3]) / timeParse[setting[5]])+1
+
+                //Find the possible slots from where a drop could be disabled
+                const targetSlot = document.getElementById(`${element.aDay+1}${String(yPos).padStart(2, '0')}`)
+                const childsOfSlot = targetSlot.childNodes
+
+                childsOfSlot.forEach(child => {
+
+                    //If a child is a drop of other block
+                    if (!child.id.endsWith(`.${controller.id}`)){
+
+                        child.hidden = false
+                        const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
+
+                        otherDrop.disabled = false
+                        
+                    }
+                    
+                })
+                
+            }
+
+            if (element.splitSection){
+
+                for (let t = element.bInitHour; t < element.bEndHour; t = t + timeParse[setting[5]]) {
+
+                    //Identify y position
+                    const yPos = ((t - setting[3]) / timeParse[setting[5]])+1
+
+                    //Find the possible slots from where a drop could be disabled
+                    const targetSlot = document.getElementById(`${element.bDay+1}${String(yPos).padStart(2, '0')}`)
+                    const childsOfSlot = targetSlot.childNodes
+
+                    childsOfSlot.forEach(child => {
+
+                        //If a child is a drop of other block
+                        if (!child.id.endsWith(`.${controller.id}`)){
+
+                            child.hidden = false
+                            const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
+
+                            otherDrop.disabled = false
+                        
+                        }
+                    
+                    })
+                
+                }
+
+
+            }
+            
+        })
+        return 
+
+    }
+
+    //Find the section of the drop where the block is
+    const classObj = controller.sections.find(c => c.id == Number(refDrop.id.substring(1, refDrop.id.indexOf('.'))))
 
     //Select current block
     classObj.selected = true
