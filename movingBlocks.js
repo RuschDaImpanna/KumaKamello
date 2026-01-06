@@ -84,7 +84,36 @@ function makeDraggable (block, element) {
         blocksContainer.insertBefore(ghostBlock, blocksContainer.children[blockIndex])
 
         //Only show the slots available for that block
-        const notAvailable = classSlots.filter(s => s.id.substring(s.id.indexOf('.')+1) != block.id.slice(5))
+        const notAvailable = classSlots.filter(s => {
+
+            const slotKey = s.id.substring(1) // "sectionId.controllerId" from the slot
+            const blockKey = block.id.slice(5) // ".controllerId" from the block
+
+            //If slot is for the same block
+            if (slotKey.endsWith(`.${blockKey}`)) {
+
+                return false
+
+            }
+
+            //Inside classController...
+            const isOccupied = classController.some(controller =>
+
+                //...find on all [controller].sections
+                controller.sections.some(section =>
+
+                    //If any sectionObj is selected and find  any matching slot
+                    section.selected && slotKey === `${section.id}.${controller.id}`
+
+                )
+
+            );
+
+            //If the slot is occupied
+            return !isOccupied;
+
+        });
+
         const available = classSlots.filter(s => !notAvailable.includes(s))
 
         console.log(notAvailable, available)
@@ -178,6 +207,13 @@ function makeDraggable (block, element) {
                 disableForm('splitLabel_',`${segment.id}.${element.id}`, false)
                 
             });
+
+            //Check if it's from a matching slot -> block
+            if (finalContainer.id.substring(finalContainer.id.indexOf('.')+1) != element.id){
+
+                blocksContainer.append(block)
+
+            }
             
 
             //If there was something there before

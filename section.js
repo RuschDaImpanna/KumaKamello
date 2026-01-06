@@ -559,7 +559,7 @@ document.addEventListener('change', e => {
         slot.classList.add('slot', 'drop')
         slot.id = `${target}${sectionObj.id}.${controller.id}`
 
-        slot.style.zIndex = 2
+        slot.style.zIndex = 1
 
         slot.style.position = 'absolute'
         slot.style.left = 0
@@ -639,12 +639,23 @@ document.addEventListener(('updateSections'), (e) => {
         
     });
 
+    //Information from movingBlocks.js
     const placedBlock = e.detail.block
     const drop = placedBlock.parentNode
 
-    const controller = classController.find(c => c.id = Number(placedBlock.id.slice(5)))
+    //Find the slot from where it was drop into the available slots
+    const refDrop = classSlots.find(s => s.id == drop.id)
 
-    console.log(placedBlock, drop)
-    console.log(controller)
+    if (!refDrop) return
+
+    //Find the controllers from that object
+    const controller = classController.find(c => c.id == Number(placedBlock.id.slice(5)))
+    const classObj = controller.sections.find(c => c.id == Number(refDrop.id.substring(refDrop.id.indexOf('A')+1, refDrop.id.indexOf('.'))))
+
+    classObj.selected = true
+
+    console.log(placedBlock, drop, refDrop)
+    console.log(controller, classObj)
+    console.log(classSlots)
 
 })
