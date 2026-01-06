@@ -478,8 +478,6 @@ document.addEventListener(('updateTable'), () => {
         const block = document.getElementById('block' + element.id)
         const voucherBottom = block.querySelector('.voucherBottom')
 
-        console.log(block)
-
         if(block.parentNode.classList.contains('slot')){
 
             //Move to .blocks
@@ -493,8 +491,6 @@ document.addEventListener(('updateTable'), () => {
 
             //Hide placed information
             placedInfo.hidden = true
-
-            console.log(element.splitBlock)
 
             if (element.splitBlock){
 
@@ -511,8 +507,8 @@ document.addEventListener(('updateTable'), () => {
 
             element.sections.forEach(segment => {
 
-                disableForm('ATitle',segment.id, true)
-                disableForm('splitLabel_',segment.id, true)
+                disableForm('ATitle',`${segment.id}.${element.id}`, true)
+                disableForm('splitLabel_',`${segment.id}.${element.id}`, true)
                 
             });
 
