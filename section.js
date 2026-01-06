@@ -672,6 +672,20 @@ document.addEventListener(('updateSections'), (e) => {
 
     if (!refDrop) {
 
+        disableDrops(false)
+
+        return 
+
+    }
+
+    //Find the section of the drop where the block is
+    const classObj = controller.sections.find(c => c.id == Number(refDrop.id.substring(1, refDrop.id.indexOf('.'))))
+
+    //Select current block
+    classObj.selected = true
+
+    function disableDrops (disabled){
+
         controller.sections.forEach(element => {
 
             element.selected = false
@@ -690,10 +704,10 @@ document.addEventListener(('updateSections'), (e) => {
                     //If a child is a drop of other block
                     if (!child.id.endsWith(`.${controller.id}`)){
 
-                        child.hidden = false
+                        child.hidden = disabled
                         const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
 
-                        otherDrop.disabled = false
+                        otherDrop.disabled = disabled
                         
                     }
                     
@@ -732,15 +746,8 @@ document.addEventListener(('updateSections'), (e) => {
             }
             
         })
-        return 
 
     }
-
-    //Find the section of the drop where the block is
-    const classObj = controller.sections.find(c => c.id == Number(refDrop.id.substring(1, refDrop.id.indexOf('.'))))
-
-    //Select current block
-    classObj.selected = true
 
     /*{
 
