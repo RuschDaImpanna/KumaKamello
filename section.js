@@ -1,7 +1,8 @@
 //Import all settings
 import { classController, deleteClass } from "./class.js";
 import { setting, timeFloor } from "./settings.js";
-import { createDarkColor } from "./blocks.js";
+import { createDarkColor, splitBlockToDoubleVoucher } from "./blocks.js";
+import { createVoucherTop, disableForm } from "./movingBlocks.js";
 
 const daysParse = {
 
@@ -653,7 +654,48 @@ document.addEventListener(('updateSections'), (e) => {
     const controller = classController.find(c => c.id == Number(placedBlock.id.slice(5)))
     const classObj = controller.sections.find(c => c.id == Number(refDrop.id.substring(refDrop.id.indexOf('A')+1, refDrop.id.indexOf('.'))))
 
+    //Select current block
     classObj.selected = true
+
+    /*{
+
+        const prevBlock = finalContainer.lastElementChild
+        const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
+        let prevElement
+        
+        for (const control in classController){
+        
+            if (classController[control].id == Number(prevBlock.id.slice(5))){
+        
+                prevElement = classController[control]
+                break
+        
+            }
+        
+        }
+        
+        const prevVouchTop = createVoucherTop(prevVouchBtm, prevElement)
+        
+        //In case it's double
+        const prevTaggers = splitBlockToDoubleVoucher(prevVouchTop, prevVouchBtm, prevElement.color, prevElement.id).childNodes
+        
+        
+        //Previous block, .blocks, The top of the previous block, The previous block bottom voucher, The previous controller, The previous split tag, The previous split voucher
+        placeInCalendarFix(prevBlock, blocksContainer, prevVouchTop, prevVouchBtm, prevElement, prevTaggers[0], prevTaggers[1])
+        blocksContainer.append(finalContainer.lastElementChild)
+        
+        
+        //Update the disable form
+        disableForm('Fh3_', prevElement.id, true)
+        
+        prevElement.sections.forEach(segment => {
+        
+            disableForm('ATitle',`${segment.id}.${prevElement.id}`, true)
+            disableForm('splitLabel_',`${segment.id}.${prevElement.id}`, true)
+                        
+        });
+
+    }*/
 
     console.log(placedBlock, drop, refDrop)
     console.log(controller, classObj)

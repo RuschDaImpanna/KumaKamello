@@ -228,42 +228,6 @@ function makeDraggable (block, element) {
             //If there was something there before
             if (Array.from(finalContainer.children).length >= 3) {
 
-                const prevBlock = finalContainer.lastElementChild
-                const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
-                let prevElement
-
-                for (const control in classController){
-
-                    if (classController[control].id == Number(prevBlock.id.slice(5))){
-
-                        prevElement = classController[control]
-                        break
-
-                    }
-
-                }
-
-                const prevVouchTop = createVoucherTop(prevVouchBtm, prevElement)
-
-                //In case it's double
-                const prevTaggers = splitBlockToDoubleVoucher(prevVouchTop, prevVouchBtm, prevElement.color, prevElement.id).childNodes
-
-
-                //Previous block, .blocks, The top of the previous block, The previous block bottom voucher, The previous controller, The previous split tag, The previous split voucher
-                placeInCalendarFix(prevBlock, blocksContainer, prevVouchTop, prevVouchBtm, prevElement, prevTaggers[0], prevTaggers[1])
-                blocksContainer.append(finalContainer.lastElementChild)
-
-
-                //Update the disable form
-                disableForm('Fh3_', prevElement.id, true)
-
-                prevElement.sections.forEach(segment => {
-
-                    disableForm('ATitle',`${segment.id}.${prevElement.id}`, true)
-                    disableForm('splitLabel_',`${segment.id}.${prevElement.id}`, true)
-                
-                });
-
             }
 
             //Call section.js to update sections
@@ -558,7 +522,7 @@ document.addEventListener(('updateTable'), () => {
 
 })
 
-function disableForm(string, id, enable){
+export function disableForm(string, id, enable){
 
     let disableRef = document.getElementById(string+id)
 
@@ -585,8 +549,7 @@ function disableForm(string, id, enable){
 
 }
 
-
-function createVoucherTop(voucherBottom, element){
+export function createVoucherTop(voucherBottom, element){
 
     //Create top voucher
     const voucherTop = document.createElement('div')
