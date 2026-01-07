@@ -173,7 +173,7 @@ function createSectionPanel (controller, sectionObj) {
 
                 const addTime = timeParse[setting[5]]*controller.unitLength
 
-                if (sectionObj.splitSection) {
+                if (sectionObj.splitSection && sectionObj.bDay == sectionObj.aDay) {
 
                     const step = timeParse[setting[5]]
                     const aEnd = sectionObj.aInitHour + addTime
@@ -270,16 +270,20 @@ function createSectionPanel (controller, sectionObj) {
                 const step = timeParse[setting[5]]
                 const bEnd = sectionObj.bInitHour + addTime
 
-                for (let t = sectionObj.bInitHour; t < bEnd; t += step) {
+                if (sectionObj.aDay == sectionObj.bDay) {
 
-                    for (let aT = sectionObj.aInitHour; aT < sectionObj.aEndHour; aT += step) {
+                    for (let t = sectionObj.bInitHour; t < bEnd; t += step) {
+    
+                        for (let aT = sectionObj.aInitHour; aT < sectionObj.aEndHour; aT += step) {
+    
+                            if (t === aT) {
+    
+                                BInitTime.value = ''
+                                sectionObj.bInitHour = 0
+                                alert(`You can't place the second segment into a time that the first segment is using`)
+                                return
 
-                        if (t === aT) {
-
-                            BInitTime.value = ''
-                            sectionObj.bInitHour = 0
-                            alert(`You can't place the second segment into a time that the first segment is using`)
-                            return
+                            }
                         }
                     }
                 }
@@ -843,7 +847,7 @@ document.addEventListener(('updateSections'), (e) => {
 
         classSlots.forEach(d => {
 
-            if (!d.id.endsWith(`${classObj.id}.${controller.id}`) && disabled){
+            if (disabled && !d.id.endsWith(`${classObj.id}.${controller.id}`)){
 
                 d.style.opacity = 0.3
                     
