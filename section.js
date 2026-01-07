@@ -551,7 +551,7 @@ document.addEventListener('change', e => {
     if (onPlaceTag) {
 
         //Move the tag
-        const yMove = (time - setting[3]) / timeParse[setting[5]]
+        const yMove = findYMove()
         const availableSlot = document.getElementById(`${day+1}${String(yMove+1).padStart(2, '0')}`)
         availableSlot.appendChild(onPlaceTag)
 
@@ -606,6 +606,42 @@ document.addEventListener('change', e => {
 
         classSlots.push(slot)
         console.log(slot, classSlots)
+
+    }
+
+    //ChatGPT did this
+    function findYMove (){
+
+        const start = setting[3]
+        const end = setting[4]
+
+        const yWrap = start > end
+        const unit = timeParse[setting[5]]
+
+        //If normal time
+        if (!yWrap) {
+
+            return (time - start) / unit
+            
+        }
+
+        //If user is nuts (yWrap)
+
+        //Find first calendar slot based on fist avaibale time
+        const dayStart = Math.ceil((0 - start) / unit) * unit + start
+
+        //Slots between 00:00 and endTime
+        const firstSegmentLength = Math.floor((end - dayStart) / unit) + 1
+
+        //If the time is greater than 00:00 and less than the end (first segment before wrap)
+        if (time >= dayStart && time <= end) {
+
+            return (time - dayStart) / unit
+
+        }
+
+        //If it's not at the first half (after wrap)
+        return firstSegmentLength + (time - start) / unit
 
     }
 

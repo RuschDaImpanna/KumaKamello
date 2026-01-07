@@ -113,14 +113,30 @@ export function timeFloor(arr, i, timeStr, sendStr){
         const deadTime = setting[6] ? 60 - time[setting[5]]:0
         const unit = time[setting[5]] + deadTime
 
-        //Clamp between initHour and endHour
-        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, calendarEnd));
+        const yWrap = calendarEnd < calendarStart;
 
-        //Find nearest to replace
-        const offset = fixedMinutes - calendarStart;
-        fixedMinutes = calendarStart + Math.round(offset / unit) * unit;
+        //ChatGPT did this. I couldn't do a yWrap case
+        //Check range
+        if (!yWrap) {
 
-        fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, calendarEnd));
+            fixedMinutes = Math.max(calendarStart, Math.min(fixedMinutes, calendarEnd));
+
+        } else {
+
+            if (!(fixedMinutes >= calendarStart || fixedMinutes <= calendarEnd)) {
+
+                //Find nearest point
+                const distToStart = (fixedMinutes - calendarStart + 1440) % 1440;
+                const distToEnd   = (calendarEnd - fixedMinutes + 1440) % 1440;
+                fixedMinutes = distToStart < distToEnd ? calendarStart : calendarEnd;
+
+            }
+        }
+
+        //Snap to unit
+        const base = calendarStart;
+        const offset = (fixedMinutes - base + 1440) % 1440;
+        fixedMinutes = (base + Math.round(offset / unit) * unit) % 1440;
 
     }
 
