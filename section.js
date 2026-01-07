@@ -801,6 +801,8 @@ document.addEventListener(('updateSections'), (e) => {
         
         //Update the disable form
         disableForm('Fh3_', prevElement.id, true)
+
+        document.getElementById('Sct_' + element.id).disabled = true
         
         prevElement.sections.forEach(segment => {
         

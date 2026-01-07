@@ -77,6 +77,7 @@ function createPanel (classObj) {
 
         //Add available section
         const addSctBtn = document.createElement('button')
+        addSctBtn.id = 'Sct_' + classObj.id
         addSctBtn.innerText = 'Add available section'
         addSctBtn.onclick = () => addSection(classObj) //Add Section function
 

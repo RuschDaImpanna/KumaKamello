@@ -218,6 +218,8 @@ function makeDraggable (block, element) {
             //Disable forms
             disableForm('Fh3_',element.id, false)
 
+            document.getElementById('Sct_' + element.id).disabled = true
+
             element.sections.forEach(segment => {
 
                 disableForm('ATitle',`${segment.id}.${element.id}`, false)
@@ -240,6 +242,8 @@ function makeDraggable (block, element) {
         else {
 
             disableForm('Fh3_', element.id, true)
+
+            document.getElementById('Sct_' + element.id).disabled = false
 
             element.sections.forEach(segment => {
 
@@ -506,6 +510,8 @@ document.addEventListener(('updateTable'), () => {
             //Enable forms
             disableForm('Fh3_', element.id, true)
 
+            ocument.getElementById('Sct_' + element.id).disabled = false
+
             element.sections.forEach(segment => {
 
                 disableForm('ATitle',`${segment.id}.${element.id}`, true)
@@ -519,7 +525,7 @@ document.addEventListener(('updateTable'), () => {
 
 })
 
-export function disableForm(string, id, enable){
+export function disableForm (string, id, enable){
 
     let disableRef = document.getElementById(string+id)
 
@@ -529,13 +535,14 @@ export function disableForm(string, id, enable){
 
     while (sibling) {
 
-        // Each input after the disableRef, disable
+        //Each input after the disableRef, disable
         if (sibling.matches('input, select, textarea')) {
 
             sibling.disabled = !enable
 
         }
 
+        //If the sibling has input childs, disable them too
         sibling.querySelectorAll('input, select, textarea')
                 .forEach(el => el.disabled = !enable)
 
