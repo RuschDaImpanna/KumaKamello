@@ -126,7 +126,6 @@ function createPanel (classObj) {
             updateVoucherColor(colorInput.value, classObj.id)
 
             //Change drop color
-
             const slots = classSlots.filter(s => s.id.substring(s.id.indexOf('.')+1) == classObj.id)
 
             slots.forEach(slot => {

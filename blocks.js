@@ -451,7 +451,7 @@ function createNewBlock (lastController, lightColor, darkColor) {
                 labelPlaced.style.top = '-50px'
                 labelPlaced.style.color = betterContrast ? String(lightColor):String(darkColor)
                 
-                labelPlaced.innerText = lastController.code
+                labelPlaced.innerText = 'XXXXXX'
                 
                 
                 //Push to div
@@ -577,16 +577,22 @@ export function updateVoucherColor (newColor, id) {
     //If voucher should be using light or dark on the title
     const betterContrast = compareContrast(newLight, newColor)
 
-    const voucherTop = document.querySelector(`#block${id} .voucherTop`)
-    const voucherBottom = document.querySelector(`#block${id} .voucherBottom`)
+    const vouchersTop = document.querySelectorAll(`#block${id} .voucherTop`)
+    const vouchersBottom = document.querySelectorAll(`#block${id} .voucherBottom`)
 
-    //Normal color
-    voucherTop.style.backgroundColor = newColor
-    voucherBottom.style.backgroundColor = newColor
+    vouchersTop.forEach(vT => {
 
-    //Dark color
-    voucherTop.style.boxShadow = '0 10px 8px 0 ' + (newDark+'B2')
-    voucherBottom.style.boxShadow = '0 10px 8px 0 ' + (newDark+'B2')
+        vT.style.backgroundColor = newColor
+        vT.style.boxShadow = '0 10px 8px 0 ' + (newDark+'B2')
+        
+    })
+
+    vouchersBottom.forEach(vB => {
+
+        vB.style.backgroundColor = newColor
+        vB.style.boxShadow = '0 10px 8px 0 ' + (newDark+'B2')
+        
+    });
 
     //Title colors
     const textObjs = document.querySelectorAll(`#block${id} h3`)
@@ -634,7 +640,7 @@ function createBin () {
 
 }
 
-function createLightColor (original) {
+export function createLightColor (original) {
 
     const { h, s, l } = hexToHSL(original)
     return HSLToHex(h, s, Math.min(100, l + 30))

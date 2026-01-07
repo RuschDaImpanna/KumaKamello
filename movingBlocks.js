@@ -1,6 +1,6 @@
 //Import all settings
 import { classController, deleteClass } from "./class.js";
-import { splitBlockToDoubleVoucher } from "./blocks.js";
+import { splitBlockToDoubleVoucher, createDarkColor, createLightColor } from "./blocks.js";
 import { classSlots } from "./section.js";
 
 const blocksContainer = document.querySelector('.blocks')
@@ -215,6 +215,36 @@ function makeDraggable (block, element) {
 
             }
 
+            const classObj =  element.sections.find(s => s.id == finalContainer.id.substring(1, finalContainer.id.indexOf('.')))
+
+            //Check if it fit on a B slot
+            if (finalContainer.id[0] == 'B' || classObj.splitSection){
+
+                const ASlot = document.getElementById(`A${finalContainer.id.slice(1)}`)
+
+                //If no A slot created
+                if (!ASlot){
+
+                    blocksContainer.append(block)
+                    finalContainer = blocksContainer
+                    alert('Please create a First segment for this class')
+
+                    break slotsChk
+
+                }
+
+                ASlot.append(block)
+
+                const copyBlock = document.createElement('div')
+                copyBlock.id = block.id
+                copyBlock.classList.add('copy')
+
+                finalContainer.append(copyBlock)
+
+                createBVoucherBottom(copyBlock, element, block)
+
+            }
+
             //Disable forms
             disableForm('Fh3_',element.id, false)
 
@@ -229,9 +259,9 @@ function makeDraggable (block, element) {
             
 
             //If there was something there before
-            if (Array.from(finalContainer.children).length >= 3) {
+            /*if (Array.from(finalContainer.children).length >= 3) {
 
-            }
+            }*/
 
             //Call section.js to update sections
             //A CustomEvent lets store a variable on the event on detail.block (by this case)
@@ -489,7 +519,7 @@ document.addEventListener(('updateTable'), () => {
             blocksContainer.append(block)
 
             //Recreate top voucher
-            const voucherTop = createVoucherTop(voucherBottom, element)
+            const voucherTop = createVoucherTop(element)
             block.insertBefore(voucherTop, voucherBottom)
 
             const placedInfo = voucherBottom.lastElementChild
@@ -510,7 +540,7 @@ document.addEventListener(('updateTable'), () => {
             //Enable forms
             disableForm('Fh3_', element.id, true)
 
-            ocument.getElementById('Sct_' + element.id).disabled = false
+            document.getElementById('Sct_' + element.id).disabled = false
 
             element.sections.forEach(segment => {
 
@@ -553,7 +583,7 @@ export function disableForm (string, id, enable){
 
 }
 
-export function createVoucherTop(voucherBottom, element){
+export function createVoucherTop(element){
 
     //Create top voucher
     const voucherTop = document.createElement('div')
@@ -568,7 +598,7 @@ export function createVoucherTop(voucherBottom, element){
     voucherTop.style.justifyContent = 'center'
 
     voucherTop.style.backgroundColor = element.color
-    voucherTop.style.boxShadow = '0 10px 8px 0 ' + voucherBottom.style.boxShadow
+    voucherTop.style.boxShadow = '0 10px 8px 0 ' + createDarkColor(element.color)
 
     voucherTop.style.borderRadius = '10px'
 
@@ -581,11 +611,90 @@ export function createVoucherTop(voucherBottom, element){
 
         textTitle.innerText = element.title
         textTitle.style.textAlign = 'center'
-        textTitle.style.color = voucherBottom.querySelector('h3').style.color
+        textTitle.style.color = createLightColor(element.color)
 
     //Push title to top voucher
     voucherTop.append(textTitle)
 
     return voucherTop
+
+}
+
+function createBVoucherBottom (block, element, ref){
+
+    const darkColor = createDarkColor(element.color)
+    const lightColor = createLightColor(element.color)
+
+    const betterContrast = ref.querySelector(`#titlePlacedBlock${element.id}`).style.color == lightColor
+
+    //Create bottom voucher
+    const voucherBottom = document.createElement('div')
+    voucherBottom.classList.add('voucherBottom')
+
+    voucherBottom.style.position = 'relative'
+    voucherBottom.style.height = (50 * element.unitLength) + 'px'
+
+    voucherBottom.style.display = 'flex'
+    voucherBottom.style.flexDirection = 'column'
+    voucherBottom.style.alignItems = 'center'
+    voucherBottom.style.justifyContent = 'center'
+        
+    voucherBottom.style.boxShadow = '0 10px 8px 0 ' + (darkColor+'B2')
+    voucherBottom.style.backgroundColor = element.color
+    voucherBottom.style.borderRadius = '10px 10px 0 0'
+
+        //Create a fucking div bc text won't be placing
+        const placedText = document.createElement('div')
+        placedText.style.position = 'absolute'
+
+            //Create title for positioned
+            const textTitlePlaced = document.createElement('h3')
+            textTitlePlaced.id = 'titlePlacedBlock' + element.id
+
+            textTitlePlaced.style.margin = '5px 0'
+            textTitlePlaced.style.textAlign = 'center'
+                
+            textTitlePlaced.innerText = element.title
+            textTitlePlaced.style.color = betterContrast ? String(lightColor):String(darkColor)
+
+            //Create label for positioned
+            const labelPlaced = document.createElement('p')
+            labelPlaced.id = 'labelPlacedBlock' + "XXXXXX"
+
+            labelPlaced.style.margin = '5px 0'
+            labelPlaced.style.textAlign = 'center'
+            labelPlaced.style.top = '-50px'
+            labelPlaced.style.color = betterContrast ? String(lightColor):String(darkColor)
+                
+            labelPlaced.innerText = ref.querySelector(`#labelPlacedBlock${element.id}`).innerText
+                
+                
+            //Push to div
+            placedText.append(textTitlePlaced, labelPlaced)
+
+        //Create dotted lines
+        for (let i = 0; i < element.unitLength; i++) {
+
+            if (i != 0){
+
+                const dottedLine = document.createElement('div')
+                dottedLine.style.position = 'absolute'
+
+                dottedLine.style.top = 50 * i + 'px'
+                dottedLine.style.left = '10px'
+                dottedLine.style.right = '10px'
+
+                dottedLine.style.borderBottom = '3px dashed ' + (betterContrast ? String(darkColor):String(lightColor))
+
+                voucherBottom.append(dottedLine)
+
+            }
+                
+        }
+
+        //Push to botton voucher
+        voucherBottom.append(placedText)
+
+    block.append(voucherBottom)
 
 }

@@ -727,8 +727,10 @@ document.addEventListener(('updateSections'), (e) => {
     classObj.selected = true
     disableDrops(true)
 
+    //Place code
     placedBlock.querySelector('#labelPlacedBlock' + controller.id).innerHTML = classObj.code
 
+    //Disable/enable drops
     function disableDrops (disabled) {
 
         controller.sections.forEach(element => {
@@ -797,7 +799,7 @@ document.addEventListener(('updateSections'), (e) => {
 
         classSlots.forEach(d => {
 
-            if (d != drop && disabled){
+            if (d != drop && d.id.endsWith(`.${controller.id}`) && disabled){
 
                 d.style.opacity = 0.3
                     
@@ -824,7 +826,7 @@ document.addEventListener(('updateSections'), (e) => {
         
         }
         
-        const prevVouchTop = createVoucherTop(prevVouchBtm, prevElement)
+        const prevVouchTop = createVoucherTop(prevElement)
         
         //In case it's double
         const prevTaggers = splitBlockToDoubleVoucher(prevVouchTop, prevVouchBtm, prevElement.color, prevElement.id).childNodes
