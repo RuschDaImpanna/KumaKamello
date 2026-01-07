@@ -167,9 +167,32 @@ function createSectionPanel (controller, sectionObj) {
             //Time fixes
             AInitTime.onblur = () => {
 
+                if (!AInitTime.value) return
+
                 timeFloor(sectionObj, 'aInitHour', AInitTime.value, AInitTime)
 
                 const addTime = timeParse[setting[5]]*controller.unitLength
+
+                if (sectionObj.splitSection) {
+
+                    const step = timeParse[setting[5]]
+                    const aEnd = sectionObj.aInitHour + addTime
+
+                    for (let t = sectionObj.aInitHour; t < aEnd; t += step) {
+
+                        for (let bT = sectionObj.bInitHour; bT < sectionObj.bEndHour; bT += step) {
+
+                            if (t === bT) {
+
+                                AInitTime.value = ''
+                                sectionObj.aInitHour = 0
+                                alert(`You can't place the first segment into a time that the second segment is using`)
+                                return
+                            }
+                        }
+                    }
+                }
+
 
                 let hour = parseInt(AInitTime.value.slice(0,2))
                 let min = parseInt(AInitTime.value.slice(-2))
@@ -238,9 +261,29 @@ function createSectionPanel (controller, sectionObj) {
             //Time fixes
             BInitTime.onblur = () => {
 
+                if (!BInitTime.value) return
+                
                 timeFloor(sectionObj, 'bInitHour', BInitTime.value, BInitTime)
 
                 const addTime = timeParse[setting[5]]*controller.secondLength
+
+                const step = timeParse[setting[5]]
+                const bEnd = sectionObj.bInitHour + addTime
+
+                for (let t = sectionObj.bInitHour; t < bEnd; t += step) {
+
+                    for (let aT = sectionObj.aInitHour; aT < sectionObj.aEndHour; aT += step) {
+
+                        if (t === aT) {
+
+                            BInitTime.value = ''
+                            sectionObj.bInitHour = 0
+                            alert(`You can't place the second segment into a time that the first segment is using`)
+                            return
+                        }
+                    }
+                }
+
 
                 let hour = parseInt(BInitTime.value.slice(0,2))
                 let min = parseInt(BInitTime.value.slice(-2))
@@ -264,6 +307,7 @@ function createSectionPanel (controller, sectionObj) {
 
             const splitsChk = sectionPark.querySelectorAll('.sectionPanelControlls input[type=checkbox]')
             controller.splitBlock = [...splitsChk].some(chk => chk.checked)
+            sectionObj.splitSection = splitBtn.checked
 
             const secondHourInput = document.getElementById('SlI_'+controller.id)
 
@@ -799,7 +843,7 @@ document.addEventListener(('updateSections'), (e) => {
 
         classSlots.forEach(d => {
 
-            if (d != drop && d.id.endsWith(`.${controller.id}`) && disabled){
+            if (!d.id.endsWith(`${classObj.id}.${controller.id}`) && disabled){
 
                 d.style.opacity = 0.3
                     
