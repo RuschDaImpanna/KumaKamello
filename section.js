@@ -117,7 +117,7 @@ function createSectionPanel (controller, sectionObj) {
 
             if (!dropCode) return
 
-            array.forEach(txt => {
+            dropCode.forEach(txt => {
     
                 txt.innerText = codeInput.value
 
@@ -666,8 +666,6 @@ document.addEventListener(('updateSections'), (e) => {
     //Find the slot from where it was drop into the available slots
     const refDrop = classSlots.find(s => s.id == drop.id)
 
-    console.log(refDrop)
-
     //Find the controller of that object
     const controller = classController.find(c => c.id == Number(placedBlock.id.slice(5)))
 
@@ -693,6 +691,8 @@ document.addEventListener(('updateSections'), (e) => {
     classObj.selected = true
     disableDrops(true)
 
+    placedBlock.querySelector('#labelPlacedBlock' + controller.id).innerHTML = classObj.code
+
     function disableDrops (disabled) {
 
         controller.sections.forEach(element => {
@@ -704,6 +704,9 @@ document.addEventListener(('updateSections'), (e) => {
 
                 //Find the possible slots from where a drop could be disabled
                 const targetSlot = document.getElementById(`${element.aDay+1}${String(yPos).padStart(2, '0')}`)
+
+                if (!targetSlot) break
+
                 const childsOfSlot = targetSlot.childNodes
 
                 childsOfSlot.forEach(child => {
@@ -731,6 +734,9 @@ document.addEventListener(('updateSections'), (e) => {
 
                     //Find the possible slots from where a drop could be disabled
                     const targetSlot = document.getElementById(`${element.bDay+1}${String(yPos).padStart(2, '0')}`)
+
+                    if (!targetSlot) break
+
                     const childsOfSlot = targetSlot.childNodes
 
                     childsOfSlot.forEach(child => {
@@ -752,6 +758,16 @@ document.addEventListener(('updateSections'), (e) => {
             }
             
         })
+
+        classSlots.forEach(d => {
+
+            if (d != drop && disabled){
+
+                d.style.opacity = 0.3
+                    
+            }
+                
+        });
 
     }
 

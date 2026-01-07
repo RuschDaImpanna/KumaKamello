@@ -126,6 +126,7 @@ function makeDraggable (block, element) {
         available.forEach(drop => {
 
             drop.hidden = false
+            drop.style.opacity = ''
 
             if (drop.id.endsWith(`.${block.id.slice(5)}`)) {
 
