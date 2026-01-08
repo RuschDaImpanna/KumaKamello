@@ -102,7 +102,7 @@ function makeDraggable (block, element) {
                 //...find on all [controller].sections
                 controller.sections.some(section =>
 
-                    //If any sectionObj is selected and find  any matching slot
+                    //If any sectionObj is selected and find any matching slot
                     section.selected && slotKey === `${section.id}.${controller.id}`
 
                 )
@@ -115,8 +115,6 @@ function makeDraggable (block, element) {
         });
 
         const available = classSlots.filter(s => !notAvailable.includes(s))
-
-        console.log(notAvailable, available)
 
         notAvailable.forEach(drop => {
 
@@ -131,6 +129,7 @@ function makeDraggable (block, element) {
             if (drop.id.endsWith(`.${block.id.slice(5)}`)) {
 
                 drop.style.zIndex = 2
+                drop.querySelector('.dropInfo').hidden = false
 
             }
             

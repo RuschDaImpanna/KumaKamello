@@ -774,6 +774,8 @@ document.addEventListener(('updateSections'), (e) => {
 
     //Select current block
     classObj.selected = true
+    controller.sections.forEach(c => { if (c != classObj) c.selected = false });
+
     disableDrops(true)
 
     //Place code
@@ -784,65 +786,25 @@ document.addEventListener(('updateSections'), (e) => {
 
         controller.sections.forEach(element => {
 
+            //When disabling, only the selected block affects others
+            //When enabling, we must show all slots
+            if (!element.selected && disabled) return
+
             //Disable all elements from below
-            for (let t = element.aInitHour; t < element.aEndHour; t = t + timeParse[setting[5]]) {
+            disableLoops(element, 'a', t => t < element.aEndHour, timeParse[setting[5]], disabled)
 
-                //Identify y position
-                const yPos = ((t - setting[3]) / timeParse[setting[5]])+1
+            //Disable all element from above
+            disableLoops(element, 'a', t => t >= element.aInitHour - (2 * timeParse[setting[5]]), -timeParse[setting[5]], disabled)
 
-                //Find the possible slots from where a drop could be disabled
-                const targetSlot = document.getElementById(`${element.aDay+1}${String(yPos).padStart(2, '0')}`)
-
-                if (!targetSlot) break
-
-                const childsOfSlot = targetSlot.childNodes
-
-                childsOfSlot.forEach(child => {
-
-                    //If a child is a drop of other block
-                    if (!child.id.endsWith(`.${controller.id}`)){
-
-                        child.hidden = disabled
-                        const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
-
-                        otherDrop.disabled = disabled
-                        
-                    }
-                    
-                })
-                
-            }
 
             if (element.splitSection){
 
                 //Disable all elements from below
-                for (let t = element.bInitHour; t < element.bEndHour; t = t + timeParse[setting[5]]) {
+                disableLoops(element, 'b', t => t < element.bEndHour, timeParse[setting[5]], disabled)
 
-                    //Identify y position
-                    const yPos = ((t - setting[3]) / timeParse[setting[5]])+1
 
-                    //Find the possible slots from where a drop could be disabled
-                    const targetSlot = document.getElementById(`${element.bDay+1}${String(yPos).padStart(2, '0')}`)
-
-                    if (!targetSlot) break
-
-                    const childsOfSlot = targetSlot.childNodes
-
-                    childsOfSlot.forEach(child => {
-
-                        //If a child is a drop of other block
-                        if (!child.id.endsWith(`.${controller.id}`)){
-
-                            child.hidden = disabled
-                            const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
-
-                            otherDrop.disabled = disabled
-                        
-                        }
-                    
-                    })
-                
-                }
+                //Disable all elements from above
+                disableLoops(element, 'b', t => t >= element.bInitHour - (2 * timeParse[setting[5]]), -timeParse[setting[5]], disabled)
 
             }
             
@@ -850,13 +812,63 @@ document.addEventListener(('updateSections'), (e) => {
 
         classSlots.forEach(d => {
 
-            if (disabled && !d.id.endsWith(`${classObj.id}.${controller.id}`)){
+            //Get opacity to all classSlots of that block placed, but the one selected
+            //Also, hide the info from the one selected
+            if (disabled) {
 
-                d.style.opacity = 0.3
+                if (!d.id.endsWith(`${classObj.id}.${controller.id}`) && d.id.endsWith(`.${controller.id}`)) {
+
+                    d.style.opacity = 0.3
+
+                } else if (d.id.endsWith(`${classObj.id}.${controller.id}`)) { 
+
+                    d.querySelector('.dropInfo').hidden = true
+
+                }
                     
             }
                 
         });
+
+    }
+
+    function disableLoops (element, key, compare, unit, disabled) {
+
+        for (let t = element[key + 'InitHour']; compare(t); t += unit) {
+
+            //Identify y position
+            const yPos = ((t - setting[3]) / Math.abs(unit))+1
+
+            //Find the possible slots from where a drop could be disabled
+            const targetSlot = document.getElementById(`${element[key + 'Day']+1}${String(yPos).padStart(2, '0')}`)
+
+            if (!targetSlot) continue
+
+            const childsOfSlot = targetSlot.childNodes
+
+            childsOfSlot.forEach(child => {
+
+                //If a child is a drop of other block
+                if (!child.id.endsWith(`.${controller.id}`)){
+
+                    child.hidden = disabled
+                    const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
+
+                    otherDrop.disabled = disabled
+
+                    if (otherDrop.splitSection) {
+
+                        const doubleSibling = child.id[0] == 'A' ? document.getElementById(`A${child.id.slice(1)}`):document.getElementById(`B${child.id.slice(1)}`)
+
+                        doubleSibling.hidden = disabled
+
+                    }
+                        
+                }
+                    
+            })
+                
+        }
 
     }
 
