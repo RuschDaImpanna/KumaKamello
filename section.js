@@ -429,12 +429,13 @@ document.addEventListener(('updateTable'), () => {
         const BTimes = [...element.querySelectorAll('.BTime input[name=BTime]')]
 
         const section = classController[id].sections.find(s => s.id === subId)
+        const classPanelParent = element.closest(`.classPanel`)
 
         ADays.innerHTML = ''
-        daysCreation(ADays, section, element.dataset)
+        daysCreation(ADays, section, classPanelParent.dataset)
 
         BDays.innerHTML = ''
-        daysCreation(BDays, section, element.dataset)
+        daysCreation(BDays, section, classPanelParent.dataset)
 
         ATimes.forEach(element => {
 
@@ -783,6 +784,7 @@ document.addEventListener(('updateSections'), (e) => {
 
         controller.sections.forEach(element => {
 
+            //Disable all elements from below
             for (let t = element.aInitHour; t < element.aEndHour; t = t + timeParse[setting[5]]) {
 
                 //Identify y position
@@ -813,6 +815,7 @@ document.addEventListener(('updateSections'), (e) => {
 
             if (element.splitSection){
 
+                //Disable all elements from below
                 for (let t = element.bInitHour; t < element.bEndHour; t = t + timeParse[setting[5]]) {
 
                     //Identify y position
