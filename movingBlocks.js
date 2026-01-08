@@ -138,7 +138,6 @@ function makeDraggable (block, element) {
         //Remove any copy if existed
         const anyCopy = document.querySelector(`.copy#${block.id}`)
 
-        console.log(`#${block.id} .copy`)
         if (anyCopy) anyCopy.remove()
 
         //Move to body so doesn't have a parent
@@ -539,49 +538,78 @@ function makeDraggable (block, element) {
     }
 }
 
-document.addEventListener(('updateTable'), () => {
+//If table refreshes
+document.addEventListener(('updateTable'), (e) => {
 
-    classController.forEach(element =>{
+    const parents = []
+    const refresh = e.detail.notUpdate
+
+    classController.forEach(element => {
 
         const block = document.getElementById('block' + element.id)
         const voucherBottom = block.querySelector('.voucherBottom')
+
+        parents.push(block.parentNode.id)
 
         if(block.parentNode.classList.contains('slot')){
 
             //Move to .blocks
             blocksContainer.append(block)
 
-            //Recreate top voucher
-            const voucherTop = createVoucherTop(element)
-            block.insertBefore(voucherTop, voucherBottom)
+            if (refresh){
 
-            const placedInfo = voucherBottom.lastElementChild
+                //Wait more time than section.js
+                requestAnimationFrame(() => {
 
-            //Hide placed information
-            placedInfo.hidden = true
+                    requestAnimationFrame(() => {
 
-            if (element.splitBlock){
+                        parents.forEach((id, index) => {
 
-                const taggers = splitBlockToDoubleVoucher(voucherTop, voucherBottom, element.color, element.id).childNodes
+                            document.getElementById(id).append(block)
+                
+                        });
 
-                console.log(taggers[0], taggers[1])
-                block.insertBefore(taggers[1], voucherTop)
-                block.insertBefore(taggers[0], document.querySelector('.splitVoucher'))
+                    })
+
+                })
+
+            } else {
+
+                //Recreate top voucher
+                const voucherTop = createVoucherTop(element)
+                block.insertBefore(voucherTop, voucherBottom)
+
+                const placedInfo = voucherBottom.lastElementChild
+
+                //Hide placed information
+                placedInfo.hidden = true
+
+                if (element.splitBlock){
+
+                    const taggers = splitBlockToDoubleVoucher(voucherTop, voucherBottom, element.color, element.id).childNodes
+
+                    console.log(taggers[0], taggers[1])
+                    block.insertBefore(taggers[1], voucherTop)
+                    block.insertBefore(taggers[0], document.querySelector('.splitVoucher'))
+
+                }
+
+                //Enable forms
+                disableForm('Fh3_', element.id, true)
+
+                document.getElementById('Sct_' + element.id).disabled = false
+
+                element.sections.forEach(segment => {
+
+                    disableForm('ATitle',`${segment.id}.${element.id}`, true)
+                    disableForm('splitLabel_',`${segment.id}.${element.id}`, true)
+                
+                });
+
 
             }
 
-            //Enable forms
-            disableForm('Fh3_', element.id, true)
-
-            document.getElementById('Sct_' + element.id).disabled = false
-
-            element.sections.forEach(segment => {
-
-                disableForm('ATitle',`${segment.id}.${element.id}`, true)
-                disableForm('splitLabel_',`${segment.id}.${element.id}`, true)
-                
-            });
-
+            
         }
 
     })

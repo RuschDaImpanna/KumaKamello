@@ -1,8 +1,12 @@
+import { classSlots } from "./section.js"
+
 const form = document.getElementById('tableSettings')
 const table = document.querySelector(".table")
 const tableTitle = document.getElementById('tableTitle')
 
 export const setting = ['', 0, 4, 420, 1140, 2, false, true]
+
+let indexChange
 
 createTable()
 
@@ -38,6 +42,8 @@ window.dynamicText = dynamicText;
 
 function readSettings() {
 
+    const oldSettings = [...setting]
+
     //Days
     setting[1] = [...form.initDay].findIndex(obj => obj.checked)
     setting[2] = [...form.finalDay].findIndex(obj => obj.checked)
@@ -70,6 +76,15 @@ function readSettings() {
 
     //24-hour based format
     setting[7] = form.format.checked
+
+    indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
+
+    console.log({
+    indexChange,
+    before: oldSettings[indexChange],
+    after: setting[indexChange]
+  });
+
 
 }
 
@@ -177,7 +192,7 @@ function fitToUnit (fixed, old, formParam){
 function createTable() {
 
     //For inmedate update to movingBlocks.js
-    document.dispatchEvent(new Event("updateTable"))
+    document.dispatchEvent(new CustomEvent("updateTable", {detail : {notUpdate:indexChange >= 7}}))
 
     //Calculate size
     const {xSize, ySize, unit, yWrap} = calculateSize()

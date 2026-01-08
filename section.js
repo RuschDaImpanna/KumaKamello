@@ -429,67 +429,98 @@ function daysCreation (container, sectionObj, controller){
 }
 
 //If the table refreshes
-document.addEventListener(('updateTable'), () => {
+document.addEventListener(('updateTable'), (e) => {
 
-    const sectionPanel =  [...document.querySelectorAll('.sectionPanel')]
+    const refresh = e.detail.notUpdate
 
-    classSlots.length = 0
+    if (refresh) {
 
-    sectionPanel.forEach(element => {
+        const parents = []
 
-        const textId = element.parentNode.classList[0]
+        classSlots.forEach(element => {
 
-        const id = Number(textId.slice(11))
-        const subId = Number(element.dataset.id)
-
-        const ADays = element.querySelector('.ADays')
-        const BDays = element.querySelector('.BDays')
-        const ATimes = [...element.querySelectorAll('.ATime input[name=ATime]')]
-        const BTimes = [...element.querySelectorAll('.BTime input[name=BTime]')]
-
-        const section = classController[id].sections.find(s => s.id === subId)
-        const classPanelParent = element.closest(`.classPanel`)
-
-        ADays.innerHTML = ''
-        daysCreation(ADays, section, classPanelParent.dataset)
-
-        BDays.innerHTML = ''
-        daysCreation(BDays, section, classPanelParent.dataset)
-
-        ATimes.forEach(element => {
-
-            element.value = ''
-        
-        });
-        BTimes.forEach(element => {
-
-            element.value = ''
-        
-        });
-
-        
-    });
-
-    classController.forEach(element => {
-
-        const sectionObj = element.sections
-
-        sectionObj.forEach(segment => {
-
-            segment.aDay = -1
-            segment.bDay = -1
-
-            segment.aInitHour = 0
-            segment.bInitHour = 0
-
-            segment.aEndHour = 0
-            segment.bEndHour = 0
-
-            console.log(segment)
+            //Get all ids from where those slots were
+            parents.push(element.parentNode.id)
             
         });
+
+        //Wait a little bit of time
+        requestAnimationFrame(() => {
+
+            parents.forEach((id, index) => {
+
+                document.getElementById(id).append(classSlots[index])
+                
+            });
+
+        })
+
+
+    } else {
+
+        classSlots.length = 0
+
+        const sectionPanel =  [...document.querySelectorAll('.sectionPanel')]
+
+        //Removing values from form
+        sectionPanel.forEach(element => {
+
+            const textId = element.parentNode.classList[0]
+
+            const id = Number(textId.slice(11))
+            const subId = Number(element.dataset.id)
+
+            const ADays = element.querySelector('.ADays')
+            const BDays = element.querySelector('.BDays')
+            const ATimes = [...element.querySelectorAll('.ATime input[name=ATime]')]
+            const BTimes = [...element.querySelectorAll('.BTime input[name=BTime]')]
+
+            const section = classController[id].sections.find(s => s.id === subId)
+            const classPanelParent = element.closest(`.classPanel`)
+
+            ADays.innerHTML = ''
+            daysCreation(ADays, section, classPanelParent.dataset)
+
+            BDays.innerHTML = ''
+            daysCreation(BDays, section, classPanelParent.dataset)
+
+            ATimes.forEach(element => {
+
+                element.value = ''
         
-    });
+            });
+            BTimes.forEach(element => {
+
+                element.value = ''
+        
+            });
+
+        
+        });
+
+        //Changing settings
+        classController.forEach(element => {
+
+            const sectionObj = element.sections
+
+            sectionObj.forEach(segment => {
+
+                segment.aDay = -1
+                segment.bDay = -1
+
+                segment.aInitHour = 0
+                segment.bInitHour = 0
+
+                segment.aEndHour = 0
+                segment.bEndHour = 0
+
+                console.log(segment)
+            
+            });
+        
+        });
+
+    }
 
 })
 
