@@ -136,6 +136,12 @@ function makeDraggable (block, element) {
             
         })
 
+        //Remove any copy if existed
+        const anyCopy = document.querySelector(`.copy#${block.id}`)
+
+        console.log(`#${block.id} .copy`)
+        if (anyCopy) anyCopy.remove()
+
         //Move to body so doesn't have a parent
         document.body.appendChild(block)
 
