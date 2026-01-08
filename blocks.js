@@ -595,7 +595,7 @@ export function updateVoucherColor (newColor, id) {
     });
 
     //Title colors
-    const textObjs = document.querySelectorAll(`#block${id} h3`)
+    const textObjs = document.querySelectorAll(`#block${id} h3, #block${id} p`)
     textObjs.forEach(element => {
 
         element.style.color = betterContrast ? String(newLight):String(newDark)

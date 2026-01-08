@@ -692,14 +692,12 @@ function createBVoucherBottom (block, element, ref){
 
             //Create label for positioned
             const labelPlaced = document.createElement('p')
-            labelPlaced.id = 'labelPlacedBlock' + "XXXXXX"
+            labelPlaced.id = 'labelPlacedBlock' + element.id
 
             labelPlaced.style.margin = '5px 0'
             labelPlaced.style.textAlign = 'center'
             labelPlaced.style.top = '-50px'
             labelPlaced.style.color = betterContrast ? String(lightColor):String(darkColor)
-                
-            labelPlaced.innerText = ref.querySelector(`#labelPlacedBlock${element.id}`).innerText
                 
                 
             //Push to div

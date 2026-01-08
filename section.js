@@ -315,7 +315,7 @@ function createSectionPanel (controller, sectionObj) {
 
             const secondHourInput = document.getElementById('SlI_'+controller.id)
 
-            if (controller.splitBlock){
+            if (sectionObj.splitSection){
 
                 BTime.hidden = false
                 secondHourInput.hidden = false
@@ -329,6 +329,24 @@ function createSectionPanel (controller, sectionObj) {
 
                 ATitle.innerText = 'Section class schedule'
 
+                //Find corresponding B slot to delete
+                const index = classSlots.findIndex(s => s.id === `B${sectionObj.id}.${controller.id}`)
+                const oldBSlot = classSlots[index]
+
+                if (index != -1){
+
+                    classSlots.splice(index, 1)
+                    oldBSlot.remove()
+
+                }
+
+                //Reseting all BInputs if unmarked
+                BTime.querySelectorAll('input').forEach(input => {
+
+                    if (input.type === 'radio') input.checked = false
+                    if (input.type === 'time') input.value = ''
+
+                })
             }
 
         }
@@ -495,7 +513,6 @@ document.addEventListener('change', e => {
     let sectionObj
 
     let onPlaceTag
-
 
     const slots = document.querySelectorAll('.slot')
 
