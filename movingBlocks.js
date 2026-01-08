@@ -70,12 +70,12 @@ function makeDraggable (block, element) {
         const rect = block.getBoundingClientRect()
 
         //Get mouse position
-        startX = e.pageX
-        startY = e.pageY
+        startX = e.clientX
+        startY = e.clientY
 
         //Position by mouse and block
-        offsetX = startX - rect.left - window.scrollX
-        offsetY = startY - rect.top - window.scrollY
+        offsetX = startX - rect.left
+        offsetY = startY - rect.top
 
         //Create ghost block
         const blockIndex = Array.from(blocksContainer.children).indexOf(block)
@@ -203,6 +203,7 @@ function makeDraggable (block, element) {
         //Place block to ghostBlock
         ghostBlock.replaceWith(block)
         
+        //If it's a slot
         slotsChk:
         if (finalContainer.classList.contains('slot')){
 
@@ -217,10 +218,12 @@ function makeDraggable (block, element) {
 
             const classObj =  element.sections.find(s => s.id == finalContainer.id.substring(1, finalContainer.id.indexOf('.')))
 
-            //Check if it fit on a B slot
-            if (finalContainer.id[0] == 'B' || classObj.splitSection){
+            //Check if it fits on a B slot
+            notBChk:
+            if (classObj.splitSection){
 
                 const ASlot = document.getElementById(`A${finalContainer.id.slice(1)}`)
+                const BSlot = finalContainer.id[0] == 'B' ? finalContainer:document.getElementById(`B${finalContainer.id.slice(1)}`)
 
                 //If no A slot created
                 if (!ASlot){
@@ -233,15 +236,46 @@ function makeDraggable (block, element) {
 
                 }
 
+                if(BSlot != ASlot && !BSlot) break notBChk
+
                 ASlot.append(block)
 
                 const copyBlock = document.createElement('div')
                 copyBlock.id = block.id
                 copyBlock.classList.add('copy')
 
-                finalContainer.append(copyBlock)
+                BSlot.append(copyBlock)
 
                 createBVoucherBottom(copyBlock, element, block)
+
+                //Add a listener if user wants to move the copy block
+                copyBlock.addEventListener('mousedown', (e) => {
+
+                    e.preventDefault()
+                    e.stopPropagation()
+
+                    //Replace copy with original
+                    BSlot.replaceChild(block, copyBlock)
+
+                    block.getBoundingClientRect()
+
+                    //Find vocuhers to be pushed
+                    const voucher = block.querySelector('.voucherTop, .voucherBottom')
+
+                    //Activate mousedown event
+                    voucher.dispatchEvent(new MouseEvent('mousedown', {
+
+                        bubbles: true,
+                        cancelable: true,
+
+                        clientX: e.clientX,
+                        clientY: e.clientY,
+                        pageX: e.pageX,
+                        pageY: e.pageY
+                        
+                    }))
+
+                })
 
             }
 
@@ -255,13 +289,7 @@ function makeDraggable (block, element) {
                 disableForm('ATitle',`${segment.id}.${element.id}`, false)
                 disableForm('splitLabel_',`${segment.id}.${element.id}`, false)
                 
-            });
-            
-
-            //If there was something there before
-            /*if (Array.from(finalContainer.children).length >= 3) {
-
-            }*/
+            })
 
             //Call section.js to update sections
             //A CustomEvent lets store a variable on the event on detail.block (by this case)
@@ -632,7 +660,7 @@ function createBVoucherBottom (block, element, ref){
     voucherBottom.classList.add('voucherBottom')
 
     voucherBottom.style.position = 'relative'
-    voucherBottom.style.height = (50 * element.unitLength) + 'px'
+    voucherBottom.style.height = (50 * element.secondLength) + 'px'
 
     voucherBottom.style.display = 'flex'
     voucherBottom.style.flexDirection = 'column'
@@ -673,7 +701,7 @@ function createBVoucherBottom (block, element, ref){
             placedText.append(textTitlePlaced, labelPlaced)
 
         //Create dotted lines
-        for (let i = 0; i < element.unitLength; i++) {
+        for (let i = 0; i < element.secondLength; i++) {
 
             if (i != 0){
 
