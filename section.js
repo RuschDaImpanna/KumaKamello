@@ -111,7 +111,8 @@ function createSectionPanel (controller, sectionObj) {
 
             //Dynamically, change text on real time
             codeDisplay.innerText = codeInput.value
-            //document.getElementById('labelPlacedBlock'+controller.id).innerText = codeInput.value
+            
+            document.querySelectorAll('#labelPlacedBlock'+controller.id).forEach(element => { element.innerText = codeInput.value })
 
             const dropCode = document.querySelectorAll(`#codeTitle${sectionObj.id}\\.${controller.id}`)
 
@@ -797,6 +798,13 @@ document.addEventListener(('updateSections'), (e) => {
 
     //Place code
     placedBlock.querySelector('#labelPlacedBlock' + controller.id).innerHTML = classObj.code
+
+    if (classObj.splitSection) {
+
+        const copy = document.querySelector(`#${placedBlock.id}.copy`)
+        copy.querySelector('#labelPlacedBlock' + controller.id).innerHTML = classObj.code
+
+    }
 
     //Disable/enable drops
     function disableDrops (disabled) {
