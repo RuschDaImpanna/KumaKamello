@@ -584,7 +584,7 @@ function makeDraggable (block, element) {
         //Update the disable form
         disableForm('Fh3_', prevElement.id, true)
 
-        document.getElementById('Sct_' + element.id).disabled = true
+        document.getElementById('Sct_' + prevElement.id).disabled = false
         
         prevElement.sections.forEach(segment => {
         
