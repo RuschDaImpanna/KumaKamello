@@ -913,12 +913,13 @@ document.addEventListener(('updateSections'), (e) => {
 
                     if (child.childNodes.length >= 2 && disabled) {
 
-                        const oldBlock = child.lastElementChild
+                        //Call the steping block function
+                        callToStep(child.lastElementChild)
 
-                        callToStep(oldBlock)
+                        //Show the info from the block removed
+                        child.querySelector('.dropInfo').hidden = false
 
-                        console.log(oldBlock == document.querySelector('.blocks').lastElementChild)
-
+                        //Remove blockings from the new block
                         element.disabled = false
                         placedBlock.hidden = false
                         drop.hidden = false
