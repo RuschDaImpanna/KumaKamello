@@ -23,7 +23,12 @@ document.addEventListener('updateBlock', () => {
 
 function makeDraggable (block, element) {
 
+    //The only way this gets triggered it's because its a block pushing another
+    if (!element) return steppingBlock(block)
+
+    
     if (block.dataset.draggableInit) return
+
     block.dataset.draggableInit = 'true'
 
     const voucherTop = block.querySelector('.voucherTop')
@@ -540,7 +545,50 @@ function makeDraggable (block, element) {
         }
 
     }
+
+    function steppingBlock (prevBlock) {
+
+        const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
+        let prevElement
+        
+        for (const control in classController){
+        
+            if (classController[control].id == Number(prevBlock.id.slice(5))){
+        
+                prevElement = classController[control]
+                break
+        
+            }
+        
+        }
+        
+        const prevVouchTop = createVoucherTop(prevElement)
+        
+        //In case it's double
+        const prevTaggers = splitBlockToDoubleVoucher(prevVouchTop, prevVouchBtm, prevElement.color, prevElement.id).childNodes
+        
+        
+        //Previous block, .blocks, The top of the previous block, The previous block bottom voucher, The previous controller, The previous split tag, The previous split voucher
+        placeInCalendarFix(prevBlock, blocksContainer, prevVouchTop, prevVouchBtm, prevElement, prevTaggers[0], prevTaggers[1])
+        blocksContainer.append(prevBlock)
+        
+        
+        //Update the disable form
+        disableForm('Fh3_', prevElement.id, true)
+
+        document.getElementById('Sct_' + element.id).disabled = true
+        
+        prevElement.sections.forEach(segment => {
+        
+            disableForm('ATitle',`${segment.id}.${prevElement.id}`, true)
+            disableForm('splitLabel_',`${segment.id}.${prevElement.id}`, true)
+                        
+        });
+
+    }
 }
+
+export function callToStep (block) {makeDraggable(block)} 
 
 //If table refreshes
 document.addEventListener(('updateTable'), (e) => {
@@ -623,7 +671,7 @@ document.addEventListener(('updateTable'), (e) => {
 
 })
 
-export function disableForm (string, id, enable){
+function disableForm (string, id, enable){
 
     let disableRef = document.getElementById(string+id)
 
@@ -651,7 +699,7 @@ export function disableForm (string, id, enable){
 
 }
 
-export function createVoucherTop(element){
+function createVoucherTop(element){
 
     //Create top voucher
     const voucherTop = document.createElement('div')

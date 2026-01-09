@@ -1,8 +1,8 @@
 //Import all settings
 import { classController, deleteClass } from "./class.js";
 import { setting, timeFloor } from "./settings.js";
-import { createDarkColor, splitBlockToDoubleVoucher } from "./blocks.js";
-import { createVoucherTop, disableForm } from "./movingBlocks.js";
+import { createDarkColor } from "./blocks.js";
+import { callToStep } from "./movingBlocks.js";
 
 const daysParse = {
 
@@ -907,6 +907,12 @@ document.addEventListener(('updateSections'), (e) => {
                 //If a child is a drop of other block
                 if (!child.id.endsWith(`.${controller.id}`)){
 
+                    if (child.childNodes.length >= 2) {
+
+                        callToStep(child.lastElementChild)
+
+                    }
+
                     child.hidden = disabled
                     const otherDrop = classController.find(c => c.id == Number(child.id.substring(child.id.indexOf('.')+1))).sections.find(s => s.id == Number(child.id.substring(1, child.id.indexOf('.'))))
 
@@ -927,48 +933,6 @@ document.addEventListener(('updateSections'), (e) => {
         }
 
     }
-
-    /*{
-
-        const prevBlock = finalContainer.lastElementChild
-        const prevVouchBtm = prevBlock.querySelector('.voucherBottom')
-        let prevElement
-        
-        for (const control in classController){
-        
-            if (classController[control].id == Number(prevBlock.id.slice(5))){
-        
-                prevElement = classController[control]
-                break
-        
-            }
-        
-        }
-        
-        const prevVouchTop = createVoucherTop(prevElement)
-        
-        //In case it's double
-        const prevTaggers = splitBlockToDoubleVoucher(prevVouchTop, prevVouchBtm, prevElement.color, prevElement.id).childNodes
-        
-        
-        //Previous block, .blocks, The top of the previous block, The previous block bottom voucher, The previous controller, The previous split tag, The previous split voucher
-        placeInCalendarFix(prevBlock, blocksContainer, prevVouchTop, prevVouchBtm, prevElement, prevTaggers[0], prevTaggers[1])
-        blocksContainer.append(finalContainer.lastElementChild)
-        
-        
-        //Update the disable form
-        disableForm('Fh3_', prevElement.id, true)
-
-        document.getElementById('Sct_' + element.id).disabled = true
-        
-        prevElement.sections.forEach(segment => {
-        
-            disableForm('ATitle',`${segment.id}.${prevElement.id}`, true)
-            disableForm('splitLabel_',`${segment.id}.${prevElement.id}`, true)
-                        
-        });
-
-    }*/
 
     console.log(placedBlock, drop, refDrop)
     console.log(controller, classObj)
