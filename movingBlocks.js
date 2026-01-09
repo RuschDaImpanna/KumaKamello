@@ -7,13 +7,17 @@ const blocksContainer = document.querySelector('.blocks')
 
 document.addEventListener('updateBlock', () => {
 
-    classController.forEach(element => {
+    setTimeout(() => {
 
-        const block = document.getElementById('block' + element.id)
+        classController.forEach(element => {
 
-        makeDraggable(block, element)
+            const block = document.getElementById('block' + element.id)
 
-    })
+            makeDraggable(block, element)
+
+        })
+
+    }, 0)
 
 })
 
