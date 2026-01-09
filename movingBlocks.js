@@ -627,6 +627,8 @@ document.addEventListener(('updateTable'), (e) => {
 
                         parents.forEach(id => {
 
+                            if (!id) return
+
                             document.getElementById(id).append(block)
                             block.hidden = false
                 
