@@ -18,33 +18,18 @@ h3, h4 {
 
 }
 
-.dayHeader{
+.dayHeader h3{
 
-    background-color: #8C8EFF;
-    h3{
+    position: relative;
+    top: 25%;
 
-        position: relative;
-        top: 25%;
-
-        font-size: 1.5em;
-
-    }
+    font-size: 1.5em;
 
 }
-.timeHeader{
+.timeHeader h4{
 
-    background-color: #A8C7FF;
-    h4{
-
-        position: relative;
-        top: 25%
-
-    }
-
-}
-.slot{
-
-    background-color: #EBEEF2;
+    position: relative;
+    top: 25%
 
 }
 

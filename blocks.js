@@ -654,7 +654,7 @@ export function createDarkColor (original) {
     
 }
 
-function compareContrast(light, original) {
+export function compareContrast(light, original) {
 
     const { h, s, l } = hexToHSL(original)
     const { l: Ll } = hexToHSL(light)

@@ -1,10 +1,10 @@
-import { classSlots } from "./section.js"
+import { createDarkColor, createLightColor, compareContrast } from "./blocks.js"
 
 const form = document.getElementById('tableSettings')
 const table = document.querySelector(".table")
 const tableTitle = document.getElementById('tableTitle')
 
-export const setting = ['', 0, 4, 420, 1140, 2, false, true]
+export const setting = ['', 0, 4, 420, 1140, 2, false, true, '#6E97F7']
 
 let indexChange
 
@@ -77,13 +77,10 @@ function readSettings() {
     //24-hour based format
     setting[7] = form.format.checked
 
-    indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
+    //Color
+    setting[8] = form.color.value
 
-    console.log({
-    indexChange,
-    before: oldSettings[indexChange],
-    after: setting[indexChange]
-  });
+    indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
 
 
 }
@@ -197,6 +194,12 @@ function createTable() {
     //Calculate size
     const {xSize, ySize, unit, yWrap} = calculateSize()
 
+    //Get colors
+    const darkColor = createDarkColor(setting[8])
+    const lightColor = createLightColor(createLightColor(setting[8]))
+
+    const betterContrast = compareContrast(lightColor, setting[8])
+
     //Create table
     table.innerHTML = ''
 
@@ -231,6 +234,7 @@ function createTable() {
             else if (y === 0) {
 
                 cell.classList.add('dayHeader')
+                cell.style.backgroundColor = setting[8] + 'CC'
 
                 const days = {
 
@@ -247,6 +251,8 @@ function createTable() {
                 const text = document.createElement('h3')
                 text.innerText = days[(setting[1]+(x-1)) % 7]
                 text.style.textAlign = 'center'
+                text.style.color = betterContrast ? lightColor:darkColor
+
                 cell.appendChild(text)
 
             }
@@ -254,6 +260,7 @@ function createTable() {
             else if (x === 0) {
 
                 cell.classList.add('timeHeader')
+                cell.style.backgroundColor = setting[8] + 'CC'
 
                 const text = document.createElement('h4')
 
@@ -337,6 +344,8 @@ function createTable() {
                 text.innerText = `${String(firstHour).padStart(2, '0')}:${String(firstMinute).padStart(2, '0')} ${!setting[7] ? firstSet : ''} - ${String(secondHour).padStart(2, '0')}:${String(secondMinute).padStart(2, '0')} ${!setting[7] ? secondSet : ''}`
 
                 text.style.textAlign = 'center'
+                text.style.color = betterContrast ? lightColor:darkColor
+
                 cell.appendChild(text)
 
             }
@@ -344,6 +353,7 @@ function createTable() {
 
                 cell.classList.add('slot')
                 cell.style.position = 'relative'
+                cell.style.backgroundColor =  setting[8] + '4D'
 
                 if(yWrap && hasGap && y === firstSegmentLength + 1){
                 
