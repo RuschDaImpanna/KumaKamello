@@ -23,15 +23,7 @@ document.addEventListener('updateBlock', () => {
 
 function makeDraggable (block, element) {
 
-    //The only way this gets triggered it's because its a block pushing another
-    if (!element) return steppingBlock(block)
-
-    
-    if (block.dataset.draggableInit) return
-
-    block.dataset.draggableInit = 'true'
-
-    const voucherTop = block.querySelector('.voucherTop')
+    let voucherTop
     const voucherBottom = block.querySelector('.voucherBottom')
 
     let splitTag
@@ -50,10 +42,26 @@ function makeDraggable (block, element) {
     let offsetX = 0
     let offsetY = 0
 
+    let ghostBlock = null
+
+    //The only way this gets triggered it's because its a block pushing another
+    if (!element) {
+
+        element = classController.find(c => c.id == block.id.slice(5))
+        voucherTop = createVoucherTop(element)
+        steppingBlock(block)
+        return 
+
+    }
+
+    if (block.dataset.draggableInit) return
+
+    voucherTop = block.querySelector('.voucherTop')
+
+    block.dataset.draggableInit = 'true'
+
     voucherTop?.addEventListener('mousedown', onMouseDown)
     voucherBottom?.addEventListener('mousedown', onMouseDown)
-
-    let ghostBlock = null
 
     function onMouseDown (e) {
 
