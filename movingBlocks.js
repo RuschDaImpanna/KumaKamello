@@ -553,6 +553,8 @@ document.addEventListener(('updateTable'), (e) => {
 
         if(block.parentNode.classList.contains('slot')){
 
+            if (refresh) block.hidden = true
+
             //Move to .blocks
             blocksContainer.append(block)
 
@@ -563,9 +565,10 @@ document.addEventListener(('updateTable'), (e) => {
 
                     requestAnimationFrame(() => {
 
-                        parents.forEach((id, index) => {
+                        parents.forEach(id => {
 
                             document.getElementById(id).append(block)
+                            block.hidden = false
                 
                         });
 
