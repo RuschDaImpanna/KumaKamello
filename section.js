@@ -777,17 +777,21 @@ document.addEventListener(('updateSections'), (e) => {
 
         element.sections.forEach(segment => {
 
-            if(!segment.disabled){
+            const dropsCreated = classSlots.filter(d => d.id.endsWith(`${segment.id}.${element.id}`))
 
-                const dropsToEnable = classSlots.filter(d => d.id.endsWith(`${segment.id}.${element.id}`))
+            dropsCreated.forEach(slot => {
 
-                dropsToEnable.forEach(slot => {
+                if(!segment.disabled){
 
                     slot.hidden = false
 
-                });
+                } else {
 
-            }
+                    slot.hidden = true
+
+                }
+
+            });
             
         });
         
@@ -907,9 +911,17 @@ document.addEventListener(('updateSections'), (e) => {
                 //If a child is a drop of other block
                 if (!child.id.endsWith(`.${controller.id}`)){
 
-                    if (child.childNodes.length >= 2) {
+                    if (child.childNodes.length >= 2 && disabled) {
 
-                        callToStep(child.lastElementChild)
+                        const oldBlock = child.lastElementChild
+
+                        callToStep(oldBlock)
+
+                        console.log(oldBlock == document.querySelector('.blocks').lastElementChild)
+
+                        element.disabled = false
+                        placedBlock.hidden = false
+                        drop.hidden = false
 
                     }
 
