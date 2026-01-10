@@ -4,7 +4,7 @@ const form = document.getElementById('tableSettings')
 const table = document.querySelector(".table")
 const tableTitle = document.getElementById('tableTitle')
 
-export const setting = ['', 0, 4, 420, 1140, 2, false, true, '#6E97F7']
+export const setting = ['', 0, 4, 420, 1140, 2, false, true, '#6e97f7']
 
 let indexChange
 
@@ -35,6 +35,8 @@ function dynamicText(){
 
     //Set title
     tableTitle.innerHTML = setting[0]
+
+    indexChange = 9
 
 }
 
@@ -80,8 +82,7 @@ function readSettings() {
     //Color
     setting[8] = form.color.value
 
-    indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
-
+    indexChange >= 9 ? indexChange:indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
 
 }
 
@@ -189,7 +190,7 @@ function fitToUnit (fixed, old, formParam){
 function createTable() {
 
     //For inmedate update to movingBlocks.js
-    document.dispatchEvent(new CustomEvent("updateTable", {detail : {notUpdate:indexChange >= 7 || indexChange == 0}}))
+    document.dispatchEvent(new CustomEvent("updateTable", {detail : {notUpdate:indexChange >= 7}}))
 
     //Calculate size
     const {xSize, ySize, unit, yWrap} = calculateSize()

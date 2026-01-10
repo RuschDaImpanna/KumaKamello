@@ -630,6 +630,7 @@ document.addEventListener(('updateTable'), (e) => {
                         parents.forEach(id => {
 
                             if (!id) return
+                            if (id.slice(id.indexOf('.')+1) != block.id.slice(5)) return
 
                             document.getElementById(id).append(block)
                             block.hidden = false
