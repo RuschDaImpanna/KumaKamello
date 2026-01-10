@@ -67,7 +67,7 @@ function createSectionPanel (controller, sectionObj) {
         nameInput.oninput = () => {
 
             //Rewrite title at classController object
-            sectionObj.title = nameInput.value
+            sectionObj.teacher = nameInput.value
             //Dynamically, change text on real time
             title.innerText = nameInput.value
 
