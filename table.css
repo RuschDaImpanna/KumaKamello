@@ -16,6 +16,8 @@ h3, h4 {
 
     min-width: 1075px;
 
+    user-select: none;
+
 }
 
 .dayHeader h3{

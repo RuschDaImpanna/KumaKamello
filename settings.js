@@ -189,7 +189,7 @@ function fitToUnit (fixed, old, formParam){
 function createTable() {
 
     //For inmedate update to movingBlocks.js
-    document.dispatchEvent(new CustomEvent("updateTable", {detail : {notUpdate:indexChange >= 7}}))
+    document.dispatchEvent(new CustomEvent("updateTable", {detail : {notUpdate:indexChange >= 7 || indexChange == 0}}))
 
     //Calculate size
     const {xSize, ySize, unit, yWrap} = calculateSize()
