@@ -37,11 +37,11 @@ exportBtn.addEventListener("click", createFile)
 
 function createFile() {
 
-    const info  = []
+    const info  = [{file:'Kuma Kamello',version:'0.1.1'}]
 
     info.push(setting, classController)
 
-    const file = new Blob([JSON.stringify(info)],{type:"application/json"})
+    const file = new Blob([JSON.stringify(info, null, 2)],{type:"application/json"})
 
     const anchor = document.createElement('a')
     anchor.href = URL.createObjectURL(file)

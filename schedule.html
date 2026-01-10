@@ -36,7 +36,10 @@
 
             <form id="files">
 
-                <button type="button" id="import">Import</button>
+                <input type="file" id="import" accept=".json" hidden/>
+                <button type="button" onclick="document.getElementById('import').click()">
+                    Import
+                </button>
                 <button type="button" id="export" disabled>Export</button>
 
             </form>
