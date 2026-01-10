@@ -497,6 +497,8 @@ function makeDraggable (block, element) {
             //Recreate the top of the voucher
             if (block.contains(localBottom)) {
 
+                localTop.querySelector('h3').innerText = element.title
+
                 block.insertBefore(localTop, localBottom)
                 localTop.addEventListener('mousedown', onMouseDown)
 

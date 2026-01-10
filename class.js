@@ -107,8 +107,10 @@ function createPanel (classObj) {
             classObj.title = nameInput.value
             //Dynamically, change text on real time
             title.innerText = nameInput.value
-            document.getElementById('titleBlock'+classObj.id).innerText = nameInput.value
             document.getElementById('titlePlacedBlock'+classObj.id).innerText = nameInput.value
+
+            if (!document.getElementById('titleBlock'+classObj.id)) return
+            document.getElementById('titleBlock'+classObj.id).innerText = nameInput.value
 
         }
 
