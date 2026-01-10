@@ -10,6 +10,13 @@ let indexChange
 
 createTable()
 
+//Prevent of submit
+form.addEventListener("submit", e => {
+
+    e.preventDefault();
+
+})
+
 form.addEventListener("change", () => {
 
     readSettings()

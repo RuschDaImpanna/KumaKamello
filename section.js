@@ -439,8 +439,16 @@ document.addEventListener(('updateTable'), (e) => {
 
         classSlots.forEach(element => {
 
+            const currentState = element.hidden
+
+            //Program won't find slots if those are hidden
+            element.hidden = false
+
             //Get all ids from where those slots were
             parents.push(element.parentNode.id)
+
+            //Take back to normal state
+            element.hidden = currentState
             
         });
 
