@@ -54,7 +54,14 @@ function addClass(){
 
     } else {
 
-        alert('Class limit. Please delete a class to add a new one')
+        Swal.fire({
+
+            title: 'Class limit',
+            icon: 'error',
+            text: 'Please delete a class to add a new one'
+
+        })
+
 
     }
 

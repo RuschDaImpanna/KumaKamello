@@ -187,7 +187,15 @@ function createSectionPanel (controller, sectionObj) {
 
                                 AInitTime.value = ''
                                 sectionObj.aInitHour = 0
-                                alert(`You can't place the first segment into a time that the second segment is using`)
+
+                                Swal.fire({
+
+                                    title:'Time conflict',
+                                    icon:'error',
+                                    text: `You can't place the first segment into a time that the second segment is using`
+
+                                })
+
                                 return
                             }
                         }
@@ -281,7 +289,15 @@ function createSectionPanel (controller, sectionObj) {
     
                                 BInitTime.value = ''
                                 sectionObj.bInitHour = 0
-                                alert(`You can't place the second segment into a time that the first segment is using`)
+
+                                Swal.fire({
+
+                                    title:'Time conflict',
+                                    icon:'error',
+                                    text: `You can't place the second segment into a time that the first segment is using`
+
+                                })
+
                                 return
 
                             }
@@ -393,8 +409,14 @@ export function addSection(controller) {
 
     } else {
 
-        alert('Class section limit. Please, delete a section to add a new one')
+        Swal.fire({
 
+            title: 'Class section limit',
+            icon: 'error',
+            text: 'Please, delete a section to add a new one'
+
+        })
+        
     }
 
 }

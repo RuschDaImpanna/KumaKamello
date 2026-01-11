@@ -171,7 +171,14 @@ export function timeFloor(arr, i, timeStr, sendStr){
 
     if (fixedMinutes !== minutes){
 
-        alert('Time adjusted to nearest available slot');
+        const incompLog = document.getElementById('errorLog');
+        incompLog.innerText = 'Time adjusted to nearest available slot'
+
+        incompLog.hidden = false
+
+        setTimeout(() => {
+            incompLog.hidden = true;
+        }, 3000)
         
     }
 
@@ -179,7 +186,8 @@ export function timeFloor(arr, i, timeStr, sendStr){
 
 function fitToUnit (fixed, old, formParam){
 
-    const incompLog = document.getElementById('incompErrorLog');
+    const incompLog = document.getElementById('errorLog');
+    incompLog.innerText = 'Not compatible unit. Time rearranged'
 
     if(fixed != old){
 

@@ -251,7 +251,14 @@ function makeDraggable (block, element) {
 
                     blocksContainer.append(block)
                     finalContainer = blocksContainer
-                    alert('Please create a First segment for this class')
+
+                    Swal.fire({
+
+                        title:'First segment missing',
+                        icon:'warning',
+                        text:'Please create a First segment for this class'
+
+                    })
 
                     break slotsChk
 
