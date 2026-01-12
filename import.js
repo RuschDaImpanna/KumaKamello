@@ -79,7 +79,13 @@ function fixAlert (popup, progressBar) {
 
     const parent = progressBar.parentNode
 
+    const load = document.createElement('h3')
+    load.id = 'load'
+    load.innerText = '0%'
+
+
     parent.insertBefore(loadObj, progressBar)
+    parent.insertBefore(load, loadObj)
     parent.insertBefore(document.createElement('br'), loadObj)
     parent.insertBefore(document.createElement('br'), progressBar)
     parent.insertBefore(document.createElement('br'), progressBar)
@@ -93,6 +99,7 @@ async function importSession(progressBar, file) {
 
     const wait = ms => new Promise(res => setTimeout(res, ms))
     let progress = 0
+    const load = document.getElementById('load')
 
     async function updateImport (time, condition, points){
 
@@ -102,6 +109,7 @@ async function importSession(progressBar, file) {
 
         progress += points
         progressBar.value = progress
+        load.innerText = Number.isInteger(progress) ? progress + '%':progress.toFixed(2) + '%';
 
     }
 
@@ -113,7 +121,7 @@ async function importSession(progressBar, file) {
         100,
         () => {
 
-            if (!file) throw new Error (`No file provided`)
+            if (!file) throw new Error (`<h3>No file provided</h3>`)
 
         }, //If !file
         1
@@ -127,7 +135,7 @@ async function importSession(progressBar, file) {
             const type = file.type
 
             if (type.slice(type.indexOf('/')+1) != 'json') throw new Error (`
-                <p>Not compatible file type</p>
+                <h3>Not compatible file type</h3>
                 <br/>
                 <p>Your file → ${type} | Needed type → application/json</p>`)
 
@@ -151,7 +159,7 @@ async function importSession(progressBar, file) {
 
             } catch (e) {
     
-                throw new Error("<p>Failed to read file</p>")
+                throw new Error("<h3>Failed to read file</h3>")
 
             }
 
@@ -171,7 +179,7 @@ async function importSession(progressBar, file) {
 
             } catch {
     
-                throw new Error("<p>Invalid JSON structure</p>")
+                throw new Error("<h3>Invalid JSON structure</h3>")
 
             }
 
@@ -185,18 +193,16 @@ async function importSession(progressBar, file) {
         150,
         () => {
 
-            console.log(data.length)
-
             if (data.length != 3) throw new Error (`
-                <p>Not compatible JSON file</p> 
+                <h3>Not compatible JSON file</h3> 
                 <br/>
                 <p>Not compatible data lenght → ${data.length}</p>`)
             if (Object.keys(data[0]).length != 2) throw new Error (`
-                <p>Not compatible JSON file</p> 
+                <h3>Not compatible JSON file</h3> 
                 <br/>
                 <p>Not compatible header lenght → ${Object.keys(data[0]).length}</p>`)
             if (data[0].file != 'Kuma Kamello') throw new Error (`
-                <p>Not compatible JSON file</p> 
+                <h3>Not compatible JSON file</h3> 
                 <br/>
                 <p>Doesn't support ${data[0].file} file type`)
             
@@ -234,11 +240,114 @@ async function importSession(progressBar, file) {
     )
 
     //Stage 3 - Check if setting and classController have the right format
-    await wait(300)
-    console.log('state3')
-    progress += 10
-    progressBar.value = progress
+    const fileSetting = [...data[1]]
+    const checkSetting = ['string', 'number', 'number', 'number', 'number', 'number', 'boolean', 'boolean', 'string']
+    const errorStt = ['Table name', 'Inital day', 'End day', 'Initial hour', 'Ending hour', 'Hour unit', 'Deadtime', '24-hour calendar', 'Table color']
+    for (let i = 0; i < checkSetting.length; i++) {
 
+        await updateImport(
+
+            120,
+            () => {
+
+                if (i == checkSetting.length-1 && fileSetting[i][0] != '#') throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>${errorStt[i]} value is not compatible</p>
+                    <p>Expected type → ${checkSetting[i]}</p>`)
+                if (typeof fileSetting[i] != checkSetting[i]) throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>${errorStt[i]} value is not compatible</p>
+                    <p>Expected type → ${checkSetting[i]}</p>`)
+            }, 
+            i == checkSetting.length-1 ? 2:1
+
+        ) //If setting[] has error
+        
+    }
+
+    const fileClassController = [...data[2]]
+    const checkController = ['number', 'string', 'string', 'number', 'number', 'boolean', 'object']
+    const checkSection = ['number', 'string', 'string', 'number', 'number', 'number', 'boolean', 'number', 'number', 'number', 'boolean', 'boolean']
+
+    let sctnsLenght = 0
+    fileClassController.forEach(element => {
+
+        sctnsLenght += element.sections.length
+        
+    });
+    const total = fileClassController.length + 0.25 * sctnsLenght
+    const classPts = 20/total
+    const sctnsPts = 0.25 * classPts
+
+    for (const element of fileClassController) {
+
+        const keys = Object.keys(element)
+
+        for (let c = 0; c < checkController.length; c++) {
+
+            await updateImport(
+
+                120,
+                async () => {
+
+                    if (c == 2 && element[keys[c]][0] != '#') throw new Error(`
+                            <h3>Invalid class settings</h3>
+                            <br/>
+                            <p>For class id: ${element.id}, ${keys[c]} value is not compatible</p>
+                            <p>Expected type → ${checkController[c]}</p>`)
+
+                    if (typeof element[keys[c]] != checkController[c]) throw new Error(`
+                            <h3>Invalid class settings</h3>
+                            <br/>
+                            <p>For class id: ${element.id}, ${keys[c]} value is not compatible</p>
+                            <p>Expected type → ${checkController[c]}</p>`)
+
+                    if (c == checkController.length-1) {
+
+                        for (const section of element.sections) {
+
+                            const sectionKeys = Object.keys(section)
+
+                            for (let s = 0; s < checkSection.length; s++) {
+
+                                await updateImport (
+
+                                    50,
+                                    () => {
+
+                                        if (typeof section[sectionKeys[s]] != checkSection[s]) throw new Error(`
+                                            <h3>Invalid section settings</h3>
+                                            <br/>
+                                            <p>For class id: ${element.id}, at section id ${section.id}, ${sectionKeys[s]} value is not compatible</p>
+                                            <p>Expected type → ${checkSection[s]}</p>`)
+
+                                    },
+                                    sctnsPts/checkSection.length
+
+                                ) //If any section (classController[].sections) is broken
+                                
+                            }
+
+                            
+                        }
+
+                    }
+
+                },
+                classPts/checkController.length
+
+            ) //If any classController[] is brokern
+
+        }
+    }
+
+    progress = 45
+    progressBar.value = progress
+    load.innerText = progress + '%'
+
+    
     await wait(300)
     console.log('state4')
     progress += 30
