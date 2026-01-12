@@ -35,7 +35,7 @@ function disbaleExport (disabled, condition) {
 //To make the JSON file
 exportBtn.addEventListener("click", createFile)
 
-function createFile() {
+export function createFile() {
 
     const info  = [{file:'Kuma Kamello',version:'0.1.1'}]
 

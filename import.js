@@ -1,75 +1,107 @@
-import { setting } from "./settings.js"
 import { classController } from "./class.js"
+import { createFile } from "./export.js"
 
 const importBtn = document.getElementById('import')
+const exportBtn = document.getElementById('export')
 
 importBtn.addEventListener("change" , () => {
 
     const file = importBtn.files[0]
 
-    let error
-
+    const confirm = exportBtn.disabled ? 
+    Promise.resolve(false) : 
     Swal.fire({
 
-        title: "Loading session...",
-        html: `
+        title: "Import session",
+        text: "Do you want to save your current session before importing?",
+        icon: "question",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save & Import",
+        denyButtonText: "Import without saving",
 
-        <progress id="progress" max="100" value="0" style="user-select:none"></progress>
+    }).then(result => {
+
+        if (result.isDismissed) return 'cancel'
+
+        return result.isConfirmed ? 'save':'notSave'
+    })
+
+    let error
+
+    confirm.then(action => {
+
+        if (action == 'cancel') return importBtn.value = ''
+
+        if(action == 'save'){
+
+            createFile()
+
+        }
+
+        Swal.fire({
+
+            title: "Loading session...",
+            html: `
+
+            <progress id="progress" max="100" value="0" style="user-select:none"></progress>
         
-        `,
+            `,
 
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+            showConfirmButton: false,
 
-        //On alert
-        didOpen: () => {
+            //On alert
+            didOpen: () => {
 
-            Swal.showLoading()
+                Swal.showLoading()
 
-            const popup = Swal.getPopup()
-            const progressBar = popup.querySelector('#progress')
+                const popup = Swal.getPopup()
+                const progressBar = popup.querySelector('#progress')
 
-            fixAlert(popup, progressBar)
-            importSession(progressBar, file)
-            .then(() => {
-                console.log("Import OK");
-            })
-            .catch(err => {
+                fixAlert(popup, progressBar)
+                importSession(progressBar, file)
+                .then(() => {
+                    console.log("Import OK");
+                })
+                .catch(err => {
 
-                error = err.message;
-                Swal.close();
-                importBtn.value = ''
+                    error = err.message;
+                    Swal.close();
+                    importBtn.value = ''
 
-            });
+                });
 
             
-        },
+            },
 
-        willClose: () => {
+            willClose: () => {
 
-            //Almost to close
+                //Almost to close
 
 
-        }
+            }
 
-    }).then((result) => {
+        }).then((result) => {
 
-        //Alert ended
-        if(error){
+            //Alert ended
+            if(error){
 
-            Swal.fire({
+                Swal.fire({
 
-                title: 'Error',
-                icon: 'error',
-                html: error
+                    title: 'Error',
+                    icon: 'error',
+                    html: error
 
-            })
+                })
 
-        }
+            }
 
-    });
+        });
+
+    })
 
 })
 
@@ -239,6 +271,8 @@ async function importSession(progressBar, file) {
         
     )
 
+
+
     //Stage 3 - Check if setting and classController have the right format
     const fileSetting = [...data[1]]
     const checkSetting = ['string', 'number', 'number', 'number', 'number', 'number', 'boolean', 'boolean', 'string']
@@ -347,6 +381,7 @@ async function importSession(progressBar, file) {
     progressBar.value = progress
     load.innerText = progress + '%'
 
+    
     
     await wait(300)
     console.log('state4')
