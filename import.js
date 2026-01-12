@@ -107,7 +107,7 @@ async function importSession(progressBar, file) {
 
 
 
-    //State 1 - Know if file is json
+    //Stage 1 - Know if file is json
     await updateImport(
 
         100,
@@ -138,7 +138,7 @@ async function importSession(progressBar, file) {
 
 
 
-    //State 2 - Check if the file contains all settings and correct file use
+    //Stage 2 - Check if the file contains correct header file use
     let rawText
     await updateImport(
 
@@ -156,10 +156,9 @@ async function importSession(progressBar, file) {
             }
 
         }, //If failed to read
-        1
+        2
         
     )
-    
     let data
     await updateImport(
 
@@ -177,43 +176,64 @@ async function importSession(progressBar, file) {
             }
 
         }, //If invalid JSON file
-        1
+        3
         
     )
-
-    const supportableBuilt = '0.1.1'
+    const supportableBuilt = '0.1.0'
     await updateImport(
 
         150,
         () => {
 
+            console.log(data.length)
+
             if (data.length != 3) throw new Error (`
                 <p>Not compatible JSON file</p> 
                 <br/>
                 <p>Not compatible data lenght → ${data.length}</p>`)
-            if (data[0].length != 2) throw new Error (`
+            if (Object.keys(data[0]).length != 2) throw new Error (`
                 <p>Not compatible JSON file</p> 
                 <br/>
-                <p>Not compatible header lenght → ${data[0].length}</p>`)
+                <p>Not compatible header lenght → ${Object.keys(data[0]).length}</p>`)
             if (data[0].file != 'Kuma Kamello') throw new Error (`
                 <p>Not compatible JSON file</p> 
                 <br/>
                 <p>Doesn't support ${data[0].file} file type`)
             
-            const [version, update, patch] = supportableBuilt.split('.').map(Number)
+            
 
-            if(data[0].version != `${version}.${update}.${patch}`) throw new Error (`
+            const supported = checkVersion(supportableBuilt, data[0].version)
+
+            function checkVersion (system, file) {
+
+                const [sM, sN, sP] = system.split('.').map(Number)
+                const [fM, fN, fP] = file.split('.').map(Number)
+
+                //Check mayor update
+                if (fM > sM) return false
+                if (fM < sM) return true
+
+                //Check minor update
+                if (fN > sN) return false
+                if (fN < sN) return true
+
+                //Check patch
+                return fP <= sP
+
+            }
+
+            if(supported) throw new Error (`
                 <p>Not compatible file version</p> 
                 <br/>
                 <p>Doesn't support ${data[0].version} files. Current update → ${supportableBuilt}`)
             
 
         }, //If not the right JSON file
-        3
+        5
         
     )
 
-   
+    //Stage 3 - Check if setting and classController have the right format
     await wait(300)
     console.log('state3')
     progress += 10
