@@ -1,5 +1,6 @@
 import { classController } from "./class.js"
 import { createFile } from "./export.js"
+import { dynamicText, setting } from "./settings.js"
 
 const importBtn = document.getElementById('import')
 const exportBtn = document.getElementById('export')
@@ -13,7 +14,7 @@ importBtn.addEventListener("change" , () => {
     Swal.fire({
 
         title: "Import session",
-        text: "Do you want to save your current session before importing?",
+        text: "Do you want to save your current session before importing? All changes may get overwritten",
         icon: "question",
         showDenyButton: true,
         showCancelButton: true,
@@ -27,8 +28,6 @@ importBtn.addEventListener("change" , () => {
         return result.isConfirmed ? 'save':'notSave'
     })
 
-    let error
-
     confirm.then(action => {
 
         if (action == 'cancel') return importBtn.value = ''
@@ -38,6 +37,9 @@ importBtn.addEventListener("change" , () => {
             createFile()
 
         }
+
+        let error
+        let finalProg
 
         Swal.fire({
 
@@ -77,14 +79,15 @@ importBtn.addEventListener("change" , () => {
             
             },
 
+            //Almost to close
             willClose: () => {
 
-                //Almost to close
-
+                const progressBar = document.getElementById('progress')
+                finalProg = Number(progressBar.value)
 
             }
 
-        }).then((result) => {
+        }).then(() => {
 
             //Alert ended
             if(error){
@@ -94,6 +97,14 @@ importBtn.addEventListener("change" , () => {
                     title: 'Error',
                     icon: 'error',
                     html: error
+
+                }).then(() => {
+
+                    if(finalProg > 45){
+
+                        window.location.reload()
+
+                    }
 
                 })
 
@@ -150,7 +161,7 @@ async function importSession(progressBar, file) {
     //Stage 1 - Know if file is json
     await updateImport(
 
-        100,
+        150,
         () => {
 
             if (!file) throw new Error (`<h3>No file provided</h3>`)
@@ -182,7 +193,7 @@ async function importSession(progressBar, file) {
     let rawText
     await updateImport(
 
-        100,
+        150,
         async () => {
 
             try {
@@ -202,7 +213,7 @@ async function importSession(progressBar, file) {
     let data
     await updateImport(
 
-        100,
+        150,
         async () => {
 
             try {
@@ -222,7 +233,7 @@ async function importSession(progressBar, file) {
     const supportableBuilt = '0.1.0'
     await updateImport(
 
-        150,
+        250,
         () => {
 
             if (data.length != 3) throw new Error (`
@@ -284,11 +295,22 @@ async function importSession(progressBar, file) {
             120,
             () => {
 
-                if (i == checkSetting.length-1 && fileSetting[i][0] != '#') throw new Error (`
-                    <h3>Invalid table settings</h3>
-                    <br/>
-                    <p>${errorStt[i]} value is not compatible</p>
-                    <p>Expected type → ${checkSetting[i]}</p>`)
+                if (i == checkSetting.length-1) {
+
+                    const color = fileSetting[i]
+                    const hex = Number('0x' + color.slice(color.indexOf('#')+1))
+
+                    if ((color[0] != '#') || (!hex)){
+
+                        throw new Error (`
+                        <h3>Invalid table settings</h3>
+                        <br/>
+                        <p>${errorStt[i]} value is not compatible</p>
+                        <p>Expected type → ${checkSetting[i]}</p>`)
+
+                    }
+                    
+                }
                 if (typeof fileSetting[i] != checkSetting[i]) throw new Error (`
                     <h3>Invalid table settings</h3>
                     <br/>
@@ -326,11 +348,22 @@ async function importSession(progressBar, file) {
                 120,
                 async () => {
 
-                    if (c == 2 && element[keys[c]][0] != '#') throw new Error(`
+                    if (c == 2) {
+
+                        const color = element[keys[c]]
+                        const hex = Number('0x' + color.slice(color.indexOf('#')+1))
+
+                        if ((color[0] != '#') || (!hex)){
+
+                            throw new Error(`
                             <h3>Invalid class settings</h3>
                             <br/>
                             <p>For class id: ${element.id}, ${keys[c]} value is not compatible</p>
                             <p>Expected type → ${checkController[c]}</p>`)
+
+                        }
+                    
+                    }
 
                     if (typeof element[keys[c]] != checkController[c]) throw new Error(`
                             <h3>Invalid class settings</h3>
@@ -380,11 +413,170 @@ async function importSession(progressBar, file) {
     progress = 45
     progressBar.value = progress
     load.innerText = progress + '%'
+    
+    
 
-    
-    
-    await wait(300)
-    console.log('state4')
+    //Stage 4 - Change table
+    const form = document.getElementById('tableSettings')
+    await updateImport(
+
+        100,
+        () => {
+
+            form.title.value = fileSetting[0]
+            dynamicText()
+
+        }, //Change title
+        2
+
+    )
+    await updateImport(
+
+        120,
+        () => {
+
+            if (!(0 < fileSetting[1] && fileSetting[1] <= 6)) {
+
+                throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>initDay value is not compatible</p>
+                    <p>File initDay value → ${fileSetting[1]}</p>`)
+
+            } 
+
+            [...form.initDay].find(obj => obj.value == fileSetting[1]).checked = true
+
+        }, //Change initDay
+        1
+
+    )
+    await updateImport(
+
+        120,
+        () => {
+
+            if (!(0 < fileSetting[2] && fileSetting[2] <= 6)) {
+
+                throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>endDay value is not compatible</p>
+                    <p>File endDay value → ${fileSetting[2]}</p>`)
+
+            } 
+
+            [...form.finalDay].find(obj => obj.value == fileSetting[2]).checked = true
+
+        }, //Change endDay
+        1
+
+    )
+    await updateImport(
+
+        120,
+        () => {
+
+            if (!(0 < fileSetting[3] && fileSetting[3] <= 1440)) {
+
+                throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>initTime value is not compatible</p>
+                    <p>File initTime value → ${fileSetting[3]}</p>`)
+
+            } 
+
+            const time = `${String(Math.floor(fileSetting[3]/60)).padStart(2, '0')}:${String(fileSetting[3] % 60).padStart(2, '0')}`
+
+            form.initTime.value = time
+
+        }, //Change initTime
+        1
+
+    )
+    await updateImport(
+
+        120,
+        () => {
+
+            if (!(0 < fileSetting[4] && fileSetting[4] <= 1440)) {
+
+                throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>endTime value is not compatible</p>
+                    <p>File endTime value → ${fileSetting[4]}</p>`)
+
+            } 
+
+            const time = `${String(Math.floor(fileSetting[4]/60)).padStart(2, '0')}:${String(fileSetting[4] % 60).padStart(2, '0')}`
+
+            form.endTime.value = time
+
+        }, //Change endTime
+        1
+
+    )
+    await updateImport(
+
+        120,
+        () => {
+
+            if (!(0 < fileSetting[5] && fileSetting[5] <= 2)) {
+
+                throw new Error (`
+                    <h3>Invalid table settings</h3>
+                    <br/>
+                    <p>units value is not compatible</p>
+                    <p>File units value → ${fileSetting[5]}</p>`)
+
+            } 
+
+            [...form.units].find(obj => obj.value == fileSetting[5]).checked = true
+
+        }, //Change units
+        1
+
+    )
+    await updateImport(
+
+        100,
+        () => {
+
+            if(setting[5] >= 2) return form.deadtime.disabled = true
+
+            form.deadtime.checked = setting[6]
+
+        }, //Change deadtime
+        1
+
+    )
+    await updateImport(
+
+        100,
+        () => {
+
+            form.format.checked = setting[6]
+
+        }, //Change format
+        1
+
+    )
+    await updateImport(
+
+        120,
+        () => {
+
+            form.color.value = fileSetting[8]
+            form.color.dispatchEvent(new Event('change', { bubbles: true }));
+
+        }, //Change title
+        1
+
+    )
+
+    /*
     progress += 30
     progressBar.value = progress
 
@@ -398,7 +590,7 @@ async function importSession(progressBar, file) {
     progress += 20
     progressBar.value = progress
 
-    Swal.close()
+    Swal.close()*/
 
     //ChatGPT made this
     function readFile(file) {

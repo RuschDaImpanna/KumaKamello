@@ -35,7 +35,7 @@ form.addEventListener("reset", () => {
 
 })
 
-function dynamicText(){
+export function dynamicText(){
 
     //Title
     setting[0] = form.title.value
