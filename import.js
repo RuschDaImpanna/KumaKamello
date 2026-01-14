@@ -49,7 +49,7 @@ importBtn.addEventListener("change" , () => {
             title: "Loading session...",
             html: `
 
-            <progress id="progress" max="100" value="0" style="user-select:none"></progress>
+            <progress id="progress" max="100" value="0" style="user-select:none; accent-color:#11C242"></progress>
         
             `,
 
@@ -74,7 +74,13 @@ importBtn.addEventListener("change" , () => {
                 .catch(err => {
 
                     error = err.message;
-                    Swal.close();
+
+                    animateError(progressBar, 'accentColor', 'red', '#11C242')
+                    animateError(document.getElementById('load'), 'color', 'red', getComputedStyle(document.getElementById('load')).color)
+                    animateError(document.querySelector('.swal2-container.swal2-center.swal2-backdrop-show'), 'backgroundColor', '#bb0000a0','#00000066')
+
+                    setTimeout(() => { Swal.close(); }, 300)
+                    exportBtn.disabled = true
                     importBtn.value = ''
 
                 });
@@ -99,7 +105,8 @@ importBtn.addEventListener("change" , () => {
 
                     title: 'Error',
                     icon: 'error',
-                    html: error
+                    html: error,
+                    footer: `<p style="margin:0">Failed at ${finalProg}%<p/>`
 
                 }).then(() => {
 
@@ -154,6 +161,22 @@ function reset () {
     });
     document.querySelector('.blocks').innerHTML = ''
     if (document.getElementById('deleteBin')) document.getElementById('deleteBin').remove()
+
+}
+
+function animateError (element, property, color, finalColor) {
+
+    element.animate(
+        [
+            { [property]: color },
+            { [property]: color },
+            { [property]: finalColor }
+        ],
+        {
+            duration: 400,
+            easing: 'ease-out'
+        }
+    )
 
 }
 
