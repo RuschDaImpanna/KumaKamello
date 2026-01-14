@@ -153,7 +153,7 @@ function reset () {
         
     });
     document.querySelector('.blocks').innerHTML = ''
-    document.getElementById('deleteBin').remove()
+    if (document.getElementById('deleteBin')) document.getElementById('deleteBin').remove()
 
 }
 
