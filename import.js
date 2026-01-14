@@ -42,6 +42,8 @@ importBtn.addEventListener("change" , () => {
         let error
         let finalProg
 
+        reset()
+
         Swal.fire({
 
             title: "Loading session...",
@@ -136,6 +138,22 @@ function fixAlert (popup, progressBar) {
 
     loadObj.style.inset = "0";
     loadObj.style.margin = "auto";
+
+}
+
+function reset () {
+
+    classController.length = 0
+    setting.length = 0
+
+    document.getElementById('classManagement').innerHTML = ''
+    document.querySelectorAll('.slot.drop').forEach(element => {
+
+        element.remove
+        
+    });
+    document.querySelector('.blocks').innerHTML = ''
+    document.getElementById('deleteBin').remove()
 
 }
 
@@ -584,8 +602,6 @@ async function importSession(progressBar, file) {
     const blockPts = 20/fileClassController.length
     const slotsPts = 20/sctnsLenght
 
-    console.log(blockPts, slotsPts)
-
     for (const element of fileClassController) {
 
         await updateImport(
@@ -602,8 +618,6 @@ async function importSession(progressBar, file) {
 
                         120,
                         () => {
-
-                            console.log(section)
 
                             addSection(element, section)
 
@@ -623,14 +637,6 @@ async function importSession(progressBar, file) {
 
 
     /*
-    progress += 30
-    progressBar.value = progress
-
-    await wait(300)
-    console.log('state5')
-    progress += 30
-    progressBar.value = progress
-
     await wait(300)
     console.log('state6')
     progress += 20
