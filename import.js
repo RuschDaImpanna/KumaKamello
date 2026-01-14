@@ -1,5 +1,6 @@
-import { addClass } from "./class.js"
+import { addClass, classController } from "./class.js"
 import { createFile } from "./export.js"
+import { addSection } from "./section.js"
 import { dynamicText, setting } from "./settings.js"
 
 const importBtn = document.getElementById('import')
@@ -545,9 +546,9 @@ async function importSession(progressBar, file) {
         100,
         () => {
 
-            if(setting[5] >= 2) return form.deadtime.disabled = true
+            if(fileSetting[5] >= 2) return form.deadtime.disabled = true
 
-            form.deadtime.checked = setting[6]
+            form.deadtime.checked = fileSetting[6]
 
         }, //Change deadtime
         1
@@ -558,7 +559,7 @@ async function importSession(progressBar, file) {
         100,
         () => {
 
-            form.format.checked = setting[6]
+            form.format.checked = fileSetting[6]
 
         }, //Change format
         1
@@ -587,16 +588,15 @@ async function importSession(progressBar, file) {
 
     for (const element of fileClassController) {
 
-        const keys = Object.keys(element)
-
         await updateImport(
 
             200,
             async () => {
 
                 addClass(element)
+                const sections = [...element.sections]
 
-                for (const section of element.sections) {
+                for (const section of sections) {
 
                     await updateImport(
 
@@ -604,6 +604,8 @@ async function importSession(progressBar, file) {
                         () => {
 
                             console.log(section)
+
+                            addSection(element, section)
 
                         }, //For classController[].sections
                         slotsPts

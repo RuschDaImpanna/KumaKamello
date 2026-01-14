@@ -1,7 +1,7 @@
 //Import all settings
 import { classController, deleteClass } from "./class.js";
 import { setting, timeFloor } from "./settings.js";
-import { createDarkColor } from "./blocks.js";
+import { createDarkColor, splitBlockToDoubleVoucher } from "./blocks.js";
 import { callToStep } from "./movingBlocks.js";
 
 const daysParse = {
@@ -59,8 +59,9 @@ function createSectionPanel (controller, sectionObj) {
 
         //Title input
         const nameInput = document.createElement('input')
-        nameInput.type = 'text'
         nameInput.placeholder = `Teacher's name`
+        nameInput.type = 'text'
+        nameInput.value = sectionObj.teacher
         nameInput.maxLength = 32
 
         //OnInput, changes on real time
@@ -87,6 +88,7 @@ function createSectionPanel (controller, sectionObj) {
         const codeInput = document.createElement('input')
         codeInput.placeholder = 'Code'
         codeInput.type = 'number'
+        codeInput.value = sectionObj.code
         codeInput.min = 0
         codeInput.max = 999999
 
@@ -149,6 +151,7 @@ function createSectionPanel (controller, sectionObj) {
 
             const AInitTime = document.createElement('input')
             AInitTime.type = 'time'
+            AInitTime.value = sectionObj.aInitHour == sectionObj.aEndHour ? '':`${String(Math.floor(sectionObj.aInitHour/60)).padStart(2, '0')}:${String(sectionObj.aInitHour % 60).padStart(2, '0')}`
 
             AInitTime.name = 'ATime'
             AInitTime.id = `AInitTime${sectionObj.id}.${controller.id}`
@@ -160,6 +163,7 @@ function createSectionPanel (controller, sectionObj) {
 
             const AEndTime = document.createElement('input')
             AEndTime.type = 'time'
+            AEndTime.value = sectionObj.aEndHour == sectionObj.aInitHour ? '':`${String(Math.floor(sectionObj.aEndHour/60)).padStart(2, '0')}:${String(sectionObj.aEndHour % 60).padStart(2, '0')}`
             AEndTime.disabled = true
 
             AEndTime.name = 'ATime'
@@ -251,6 +255,7 @@ function createSectionPanel (controller, sectionObj) {
 
             const BInitTime = document.createElement('input')
             BInitTime.type = 'time'
+            BInitTime.value = sectionObj.bInitHour == sectionObj.bEndHour ? '':`${String(Math.floor(sectionObj.bInitHour/60)).padStart(2, '0')}:${String(sectionObj.bInitHour % 60).padStart(2, '0')}`
 
             BInitTime.name = 'BTime'
             BInitTime.id = `BInitTime${sectionObj.id}.${controller.id}`
@@ -262,6 +267,7 @@ function createSectionPanel (controller, sectionObj) {
 
             const BEndTime = document.createElement('input')
             BEndTime.type = 'time'
+            BEndTime.value = sectionObj.bEndHour == sectionObj.bInitHour ? '':`${String(Math.floor(sectionObj.bEndHour/60)).padStart(2, '0')}:${String(sectionObj.bEndHour % 60).padStart(2, '0')}`
             BEndTime.disabled = true
 
             BEndTime.name = 'BTime'
@@ -368,6 +374,19 @@ function createSectionPanel (controller, sectionObj) {
 
         }
 
+        //If any import has a splitSection
+        if (sectionObj.splitSection) {
+
+            const block = document.getElementById('block' + controller.id)
+            const voucherTop = block.querySelector('.voucherTop')
+            const voucherBottom = block.querySelector('.voucherBottom')
+
+            splitBtn.click()
+
+            block.insertBefore(splitBlockToDoubleVoucher(voucherTop, voucherBottom, controller.color, controller.id), voucherTop)
+
+        }
+
 
     controls.append(nameInput, codeInput, ATime, document.createElement('br'), splitLabel, splitBtn, BTime)
 
@@ -379,7 +398,7 @@ function createSectionPanel (controller, sectionObj) {
 }
 
 //This is for new each segment for each class block
-export function addSection(controller) {
+export function addSection(controller, fileImprt) {
 
     const sections = controller.sections
 
@@ -404,7 +423,9 @@ export function addSection(controller) {
 
     if(sections.length < 50){
 
-        sections.push(basicSection)
+        const stuff = !fileImprt ? basicSection:fileImprt
+
+        sections.push(stuff)
         createSectionPanel(controller,sections[sections.length-1])
 
     } else {
@@ -432,6 +453,7 @@ function daysCreation (container, sectionObj, controller){
         radio.id = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
         radio.name = `${name}${sectionObj.id}.${controller.id}`
         radio.value = i+1
+        radio.checked = sectionObj[name[0].toLowerCase()+'Day'] == i+1
                     
         const label = document.createElement('label')
         label.htmlFor = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
