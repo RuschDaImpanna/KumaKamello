@@ -8,9 +8,11 @@ const container = document.getElementById('classManagement')
 export let classController = []
 
 const addBtn = document.getElementById('addClass')
-addBtn.addEventListener('click', addClass)
+addBtn.addEventListener('click', () => addClass())
 
-function addClass(){
+export function addClass(fileImprt){
+
+    console.log(fileImprt)
 
     let nextClassId = classController[classController.length-1] === undefined ? 0:classController[classController.length-1].id+1
 
@@ -44,7 +46,9 @@ function addClass(){
 
         nextClassId++
 
-        classController.push(basicStructure)
+        const stuff = !fileImprt ? basicStructure:fileImprt
+
+        classController.push(stuff)
 
         //Assign a panel for a classController object
         createPanel(classController[classController.length-1])

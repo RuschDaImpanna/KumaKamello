@@ -1,4 +1,4 @@
-import { classController } from "./class.js"
+import { addClass } from "./class.js"
 import { createFile } from "./export.js"
 import { dynamicText, setting } from "./settings.js"
 
@@ -158,7 +158,7 @@ async function importSession(progressBar, file) {
 
 
 
-    //Stage 1 - Know if file is json
+    //Stage 1 - Know if file is json (5)
     await updateImport(
 
         150,
@@ -189,7 +189,7 @@ async function importSession(progressBar, file) {
 
 
 
-    //Stage 2 - Check if the file contains correct header file use
+    //Stage 2 - Check if the file contains correct header file use (10)
     let rawText
     await updateImport(
 
@@ -284,7 +284,7 @@ async function importSession(progressBar, file) {
 
 
 
-    //Stage 3 - Check if setting and classController have the right format
+    //Stage 3 - Check if setting and classController have the right format (30)
     const fileSetting = [...data[1]]
     const checkSetting = ['string', 'number', 'number', 'number', 'number', 'number', 'boolean', 'boolean', 'string']
     const errorStt = ['Table name', 'Inital day', 'End day', 'Initial hour', 'Ending hour', 'Hour unit', 'Deadtime', '24-hour calendar', 'Table color']
@@ -316,6 +316,7 @@ async function importSession(progressBar, file) {
                     <br/>
                     <p>${errorStt[i]} value is not compatible</p>
                     <p>Expected type → ${checkSetting[i]}</p>`)
+
             }, 
             i == checkSetting.length-1 ? 2:1
 
@@ -416,7 +417,7 @@ async function importSession(progressBar, file) {
     
     
 
-    //Stage 4 - Change table
+    //Stage 4 - Change table (10)
     const form = document.getElementById('tableSettings')
     await updateImport(
 
@@ -435,7 +436,7 @@ async function importSession(progressBar, file) {
         120,
         () => {
 
-            if (!(0 < fileSetting[1] && fileSetting[1] <= 6)) {
+            if (!(0 <= fileSetting[1] && fileSetting[1] <= 6)) {
 
                 throw new Error (`
                     <h3>Invalid table settings</h3>
@@ -456,7 +457,7 @@ async function importSession(progressBar, file) {
         120,
         () => {
 
-            if (!(0 < fileSetting[2] && fileSetting[2] <= 6)) {
+            if (!(0 <= fileSetting[2] && fileSetting[2] <= 6)) {
 
                 throw new Error (`
                     <h3>Invalid table settings</h3>
@@ -477,7 +478,7 @@ async function importSession(progressBar, file) {
         120,
         () => {
 
-            if (!(0 < fileSetting[3] && fileSetting[3] <= 1440)) {
+            if (!(0 <= fileSetting[3] && fileSetting[3] <= 1440)) {
 
                 throw new Error (`
                     <h3>Invalid table settings</h3>
@@ -500,7 +501,7 @@ async function importSession(progressBar, file) {
         120,
         () => {
 
-            if (!(0 < fileSetting[4] && fileSetting[4] <= 1440)) {
+            if (!(0 <= fileSetting[4] && fileSetting[4] <= 1440)) {
 
                 throw new Error (`
                     <h3>Invalid table settings</h3>
@@ -523,7 +524,7 @@ async function importSession(progressBar, file) {
         120,
         () => {
 
-            if (!(0 < fileSetting[5] && fileSetting[5] <= 2)) {
+            if (!(0 <= fileSetting[5] && fileSetting[5] <= 2)) {
 
                 throw new Error (`
                     <h3>Invalid table settings</h3>
@@ -575,6 +576,49 @@ async function importSession(progressBar, file) {
         1
 
     )
+
+
+
+    //Stage 5 and 6 - Create classes/blocks and sections/slots (20 + 20)
+    const blockPts = 20/fileClassController.length
+    const slotsPts = 20/sctnsLenght
+
+    console.log(blockPts, slotsPts)
+
+    for (const element of fileClassController) {
+
+        const keys = Object.keys(element)
+
+        await updateImport(
+
+            200,
+            async () => {
+
+                addClass(element)
+
+                for (const section of element.sections) {
+
+                    await updateImport(
+
+                        120,
+                        () => {
+
+                            console.log(section)
+
+                        }, //For classController[].sections
+                        slotsPts
+
+                    )
+                    
+                }
+
+            },
+            blockPts
+
+        ) //For classController[]
+
+    }
+
 
     /*
     progress += 30
