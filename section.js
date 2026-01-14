@@ -448,15 +448,17 @@ function daysCreation (container, sectionObj, controller){
 
     for (let i = setting[1]-1; i < setting[2]; i++) {
 
+        const value = (i+1)-setting[1]
+
         const radio = document.createElement('input')
         radio.type = 'radio'
-        radio.id = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
+        radio.id = `${name.slice(0,-1)}${sectionObj.id}-${value}.${controller.id}`
         radio.name = `${name}${sectionObj.id}.${controller.id}`
-        radio.value = i+1
-        radio.checked = sectionObj[name[0].toLowerCase()+'Day'] == i+1
+        radio.value = value
+        radio.checked = sectionObj[name[0].toLowerCase()+'Day'] == value
                     
         const label = document.createElement('label')
-        label.htmlFor = `${name.slice(0,-1)}${sectionObj.id}-${i+1}.${controller.id}`
+        label.htmlFor = `${name.slice(0,-1)}${sectionObj.id}-${value}.${controller.id}`
         label.innerHTML = daysParse[i+1]
 
         radio.onclick = () => {
