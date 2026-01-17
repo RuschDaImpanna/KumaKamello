@@ -1,6 +1,6 @@
 import { addClass, classController } from "./class.js"
 import { createFile } from "./export.js"
-import { addSection } from "./section.js"
+import { addSection, classSlots } from "./section.js"
 import { dynamicText, setting } from "./settings.js"
 
 const importBtn = document.getElementById('import')
@@ -92,7 +92,7 @@ importBtn.addEventListener("change" , () => {
             willClose: () => {
 
                 const progressBar = document.getElementById('progress')
-                finalProg = Number(progressBar.value)
+                finalProg = Number.isInteger(progressBar.value) ? Number(progressBar.value):Number(progressBar.value.toFixed(2))
 
             }
 
@@ -152,6 +152,7 @@ function reset () {
 
     classController.length = 0
     setting.length = 0
+    classSlots.length = 0
 
     document.getElementById('classManagement').innerHTML = ''
     document.querySelectorAll('.slot.drop').forEach(element => {
@@ -272,13 +273,13 @@ async function importSession(progressBar, file) {
         3
         
     )
-    const supportableBuilt = '0.1.0'
+    const supportableBuilt = '0.2.0'
     await updateImport(
 
         250,
         () => {
 
-            if (data.length != 3) throw new Error (`
+            if (data.length != 4) throw new Error (`
                 <h3>Not compatible JSON file</h3> 
                 <br/>
                 <p>Not compatible data lenght → ${data.length}</p>`)
@@ -309,7 +310,7 @@ async function importSession(progressBar, file) {
                 if (fN < sN) return true
 
                 //Check patch
-                return fP <= sP
+                return fP < sP
 
             }
 
@@ -323,6 +324,22 @@ async function importSession(progressBar, file) {
         5
         
     )
+
+    //ChatGPT made this
+    function readFile(file) {
+
+        return new Promise((resolve, reject) => {
+
+            const reader = new FileReader();
+
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(new Error("File read error"));
+
+            reader.readAsText(file);
+
+        });
+
+    }
 
 
 
@@ -614,16 +631,16 @@ async function importSession(progressBar, file) {
             form.color.value = fileSetting[8]
             form.color.dispatchEvent(new Event('change', { bubbles: true }));
 
-        }, //Change title
+        }, //Change color
         1
 
     )
 
 
 
-    //Stage 5 and 6 - Create classes/blocks and sections/slots (20 + 20)
+    //Stage 5 and 6 - Create classes/blocks and sections/slots (20 + 10)
     const blockPts = 20/fileClassController.length
-    const slotsPts = 20/sctnsLenght
+    const slotsPts = 10/sctnsLenght
 
     for (const element of fileClassController) {
 
@@ -659,29 +676,89 @@ async function importSession(progressBar, file) {
     }
 
 
-    /*
-    await wait(300)
-    console.log('state6')
-    progress += 20
-    progressBar.value = progress
 
-    Swal.close()*/
+    //Stage 7 - Place drops (10)
+    const fileClassSlots = [...data[3]]
 
-    //ChatGPT made this
-    function readFile(file) {
+    const dropPts = 10/fileClassSlots.length
+    for (const slot of fileClassSlots) {
 
-        return new Promise((resolve, reject) => {
+        await updateImport(
 
-            const reader = new FileReader();
+            200,
+            () => {
 
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(new Error("File read error"));
+                const fragment = document.createElement('template')
+                fragment.innerHTML = slot.obj
 
-            reader.readAsText(file);
+                const obj = document.getElementById(slot.parent).appendChild(fragment.content.firstElementChild)
 
-        });
+                classSlots.push(obj)
 
+            }, //Place slots
+            dropPts
+
+        )
+        
     }
 
+
+
+    //Stage 8 - Replace blocks from the drops with real blocks (5)
+    const slots = document.querySelectorAll('.slot.drop')
+    let placed = []
+    slots.forEach(slot => {
+
+        slot.childNodes.forEach(child => {
+
+            if(!child.id.startsWith('block')) return
+
+            placed.push(child)
+            
+        })
+
+    })
+    const blocks = [...document.querySelector('.blocks').childNodes]
+
+    const delPts = 5/placed.length
+
+    for (const block of placed) {
+
+        if (block.classList.contains('copy')) continue
+
+        await updateImport(
+
+            100,
+            () => {
+
+                const match = blocks.find(e => e.id == block.id)
+
+                const code = block.querySelector('.voucherBottom p').innerText
+
+                block.replaceWith(match)
+
+                match.querySelector('.voucherTop').remove()
+
+                const voucherBottom = match.querySelector('.voucherBottom')
+                voucherBottom.lastElementChild.hidden = false
+                voucherBottom.querySelector('p').innerText = code
+
+                const controller = fileClassController.find(c => c.id == Number(match.id.slice(5)))
+
+                if(!controller.splitBlock) return
+
+                match.querySelectorAll('.splitTag, .splitVoucher').forEach(e => e.hidden = true)
+                voucherBottom.style.width = ''
+
+
+            }, //Replace blocks
+            delPts
+
+        )
+        
+    }
+
+
+    Swal.close()
 
 }
