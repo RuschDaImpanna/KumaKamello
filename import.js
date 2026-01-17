@@ -724,7 +724,42 @@ async function importSession(progressBar, file) {
 
     for (const block of placed) {
 
-        if (block.classList.contains('copy')) continue
+        //Add listener to the copy totake the original one
+        if (block.classList.contains('copy')) {
+
+            block.addEventListener('mousedown', (e) => {
+
+                e.preventDefault()
+                e.stopPropagation()
+
+                const original = blocks.find(e => e.id == block.id)
+
+                //Replace copy with original
+                block.parentNode.replaceChild(original, block)
+
+                original.getBoundingClientRect()
+
+                //Find vocuhers to be pushed
+                const voucher = original.querySelector('.voucherTop, .voucherBottom')
+
+                //Activate mousedown event
+                voucher.dispatchEvent(new MouseEvent('mousedown', {
+
+                    bubbles: true,
+                    cancelable: true,
+
+                    clientX: e.clientX,
+                    clientY: e.clientY,
+                    pageX: e.pageX,
+                    pageY: e.pageY
+                        
+                }))
+
+            })
+
+            continue
+
+        }
 
         await updateImport(
 
@@ -757,7 +792,6 @@ async function importSession(progressBar, file) {
         )
         
     }
-
 
     Swal.close()
 
