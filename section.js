@@ -957,10 +957,13 @@ document.addEventListener(('updateSections'), (e) => {
             const targetSlot = document.getElementById(`${element[key + 'Day']+1}${String(yPos).padStart(2, '0')}`)
 
             if (!targetSlot) continue
+            if (targetSlot.id.endsWith('0')) continue
 
             const childsOfSlot = targetSlot.childNodes
 
             childsOfSlot.forEach(child => {
+
+                if (!child) return
 
                 //If a child is a drop of other block
                 if (!child.id.endsWith(`.${controller.id}`)){
@@ -987,8 +990,11 @@ document.addEventListener(('updateSections'), (e) => {
 
                     if (otherDrop.splitSection) {
 
-                        const doubleSibling = child.id[0] == 'A' ? document.getElementById(`A${child.id.slice(1)}`):document.getElementById(`B${child.id.slice(1)}`)
+                        const doubleSibling = child.id[0] != 'A' ? document.getElementById(`A${child.id.slice(1)}`):document.getElementById(`B${child.id.slice(1)}`)
 
+                        if (doubleSibling.querySelector('.copy')) doubleSibling.querySelector('.copy').remove()
+                        
+                        doubleSibling.querySelector('.dropInfo').hidden = false
                         doubleSibling.hidden = disabled
 
                     }
