@@ -532,9 +532,12 @@ function makeDraggable (block, element) {
         let localTag = [...block.querySelectorAll('.splitTag')]
         let localVoucher = [...block.querySelectorAll('.splitVoucher')]
 
+        localTag.forEach(e => e.hidden = false)
+        localVoucher.forEach(e => e.hidden = false)
+
         if(atSlot){
 
-            localTag.forEach(e => e.remove());
+            localTag.forEach(e => e.remove())
             localVoucher.forEach(e => e.remove())
 
         } else {
