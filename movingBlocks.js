@@ -477,11 +477,7 @@ function makeDraggable (block, element) {
         //Delete the top of the voucher
         const tops = [...block.querySelectorAll('.voucherTop')]
 
-        tops.forEach(element => {
-
-            element.remove()
-            
-        });
+        tops.forEach(e => e.remove())
 
         //If it's at a slot
         if (container.classList.contains('slot')){
@@ -538,16 +534,8 @@ function makeDraggable (block, element) {
 
         if(atSlot){
 
-            localTag.forEach(element => {
-
-            element.remove()
-                    
-            });
-            localVoucher.forEach(element => {
-
-                element.remove()
-                    
-            });
+            localTag.forEach(e => e.remove());
+            localVoucher.forEach(e => e.remove())
 
         } else {
 
