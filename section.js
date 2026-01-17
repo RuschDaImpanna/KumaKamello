@@ -971,9 +971,9 @@ document.addEventListener(('updateSections'), (e) => {
             if (!targetSlot) continue
             if (targetSlot.id.endsWith('0')) continue
 
-            const childsOfSlot = targetSlot.childNodes
+            const childrenOfSlot = targetSlot.childNodes
 
-            childsOfSlot.forEach(child => {
+            childrenOfSlot.forEach(child => {
 
                 if (!child) return
 
