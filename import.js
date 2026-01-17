@@ -405,7 +405,7 @@ async function importSession(progressBar, file) {
 
             await updateImport(
 
-                120,
+                80,
                 async () => {
 
                     if (c == 2) {
@@ -441,7 +441,7 @@ async function importSession(progressBar, file) {
 
                                 await updateImport (
 
-                                    50,
+                                    30,
                                     () => {
 
                                         if (typeof section[sectionKeys[s]] != checkSection[s]) throw new Error(`
@@ -480,7 +480,7 @@ async function importSession(progressBar, file) {
     const form = document.getElementById('tableSettings')
     await updateImport(
 
-        100,
+        80,
         () => {
 
             form.title.value = fileSetting[0]
@@ -492,7 +492,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        120,
+        100,
         () => {
 
             if (!(0 <= fileSetting[1] && fileSetting[1] <= 6)) {
@@ -513,7 +513,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        120,
+        100,
         () => {
 
             if (!(0 <= fileSetting[2] && fileSetting[2] <= 6)) {
@@ -534,7 +534,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        120,
+        100,
         () => {
 
             if (!(0 <= fileSetting[3] && fileSetting[3] <= 1440)) {
@@ -557,7 +557,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        120,
+        100,
         () => {
 
             if (!(0 <= fileSetting[4] && fileSetting[4] <= 1440)) {
@@ -580,7 +580,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        120,
+        100,
         () => {
 
             if (!(0 <= fileSetting[5] && fileSetting[5] <= 2)) {
@@ -601,7 +601,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        80,
         () => {
 
             if(fileSetting[5] >= 2) return form.deadtime.disabled = true
@@ -614,7 +614,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        80,
         () => {
 
             form.format.checked = fileSetting[6]
@@ -625,7 +625,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        120,
+        100,
         () => {
 
             form.color.value = fileSetting[8]
@@ -646,7 +646,7 @@ async function importSession(progressBar, file) {
 
         await updateImport(
 
-            200,
+            150,
             async () => {
 
                 addClass(element)
@@ -656,7 +656,7 @@ async function importSession(progressBar, file) {
 
                     await updateImport(
 
-                        120,
+                        80,
                         () => {
 
                             addSection(element, section)
