@@ -757,7 +757,18 @@ document.addEventListener('change', e => {
     
         availableSlot.appendChild(slot)
 
-        classSlots.push(slot)
+        const oldRef = classSlots.findIndex(obj => obj.id === slot.id)
+
+        if (oldRef != -1) {
+
+            classSlots[oldRef] = slot
+
+        } else {
+
+            classSlots.push(slot)
+
+        }
+
         console.log(slot, classSlots)
 
     }
