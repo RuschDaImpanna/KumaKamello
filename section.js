@@ -705,7 +705,8 @@ document.addEventListener('change', e => {
         //Move the tag
         const yMove = findYMove()
         const availableSlot = document.getElementById(`${day+1}${String(yMove+1).padStart(2, '0')}`)
-        availableSlot.appendChild(onPlaceTag)
+
+        onPlaceTag.remove()
 
         //Create the drop
         const slot = document.createElement('div')
@@ -754,7 +755,7 @@ document.addEventListener('change', e => {
 
         slot.append(info)
     
-        onPlaceTag.replaceWith(slot)
+        availableSlot.appendChild(slot)
 
         classSlots.push(slot)
         console.log(slot, classSlots)
