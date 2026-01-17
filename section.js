@@ -893,9 +893,12 @@ document.addEventListener(('updateSections'), (e) => {
 
     //Select current block
     classObj.selected = true
+    classObj.disabled = false
     controller.sections.forEach(c => { if (c != classObj) c.selected = false });
 
     disableDrops(true)
+
+    refDrop.hidden = false
 
     //Place code
     placedBlock.querySelector('#labelPlacedBlock' + controller.id).innerHTML = classObj.code
@@ -904,6 +907,7 @@ document.addEventListener(('updateSections'), (e) => {
 
         const copy = document.querySelector(`#${placedBlock.id}.copy`)
         copy.querySelector('#labelPlacedBlock' + controller.id).innerHTML = classObj.code
+        copy.parentNode.hidden = false
 
     }
 
@@ -971,11 +975,14 @@ document.addEventListener(('updateSections'), (e) => {
             if (!targetSlot) continue
             if (targetSlot.id.endsWith('0')) continue
 
-            const childrenOfSlot = targetSlot.childNodes
+            const childrenOfSlot = [...targetSlot.children]
 
             childrenOfSlot.forEach(child => {
 
                 if (!child) return
+                if (child == refDrop) return
+
+                console.log(child)
 
                 //If a child is a drop of other block
                 if (!child.id.endsWith(`.${controller.id}`)){
