@@ -11,12 +11,22 @@ h3, h4 {
 }
 .table {
 
+    font-size: clamp(10px, 1vw, 14px);
+
     display: grid;
     width: 100%;
-
-    min-width: 1075px;
+    min-width: 0;
 
     user-select: none;
+
+}
+
+
+
+
+.dayHeader {
+
+    container-type: inline-size;
 
 }
 
@@ -25,15 +35,41 @@ h3, h4 {
     position: relative;
     top: 25%;
 
-    font-size: 1.5em;
+    font-size: 1.6em;
 
 }
 .timeHeader h4{
 
     position: relative;
-    top: 25%
+    top: 25%;
+
+    font-size: 1.2em;
 
 }
+
+.shortText {
+
+  display: none;
+
+}
+
+@container (max-width: 100px) {
+
+  .dayHeader .largeText {
+
+    display: none;
+
+  }
+
+  .dayHeader .shortText {
+
+    display: block;
+    font-size: 2em;
+
+  }
+
+}
+
 
 .wrapDivider {
 

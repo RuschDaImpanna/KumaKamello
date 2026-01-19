@@ -47,7 +47,38 @@ export function dynamicText(){
 
 }
 
+export function dynamicColor(){
+
+    setting[8] = form.color.value
+
+    const {darkColor, lightColor, betterContrast} = getColors()
+
+    document.querySelectorAll('.timeHeader, .dayHeader').forEach(element => {
+
+        element.style.backgroundColor = setting[8] + 'CC'
+
+        element.childNodes.forEach(label => {
+
+            label.style.color = betterContrast ? lightColor:darkColor
+            
+        })
+        
+    })
+
+    document.querySelectorAll('.slot:not(.drop)').forEach(element => {
+
+        element.style.backgroundColor = setting[8] + '4D'
+        
+    });
+
+    document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
+
+    indexChange = 8
+    
+}
+
 window.dynamicText = dynamicText;
+window.dynamicColor = dynamicColor;
 
 function readSettings() {
 
@@ -89,7 +120,7 @@ function readSettings() {
     //Color
     setting[8] = form.color.value
 
-    indexChange >= 9 ? indexChange:indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
+    indexChange >= 8 ? indexChange:indexChange = setting.findIndex((value, i) => value !== oldSettings[i])
 
 }
 
@@ -211,13 +242,12 @@ function createTable() {
     const {xSize, ySize, unit, yWrap} = calculateSize()
 
     //Get colors
-    const darkColor = createDarkColor(setting[8])
-    const lightColor = createLightColor(createLightColor(setting[8]))
-
-    const betterContrast = compareContrast(lightColor, setting[8])
+    const {darkColor, lightColor, betterContrast} = getColors()
 
     //Create table
     table.innerHTML = ''
+
+    document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
 
     for (let y = 0; y < ySize+1; y++) {
 
@@ -264,12 +294,19 @@ function createTable() {
 
                 }
 
-                const text = document.createElement('h3')
-                text.innerText = days[(setting[1]+(x-1)) % 7]
-                text.style.textAlign = 'center'
-                text.style.color = betterContrast ? lightColor:darkColor
+                const largeText = document.createElement('h3')
+                largeText.classList.add('largeText')
+                largeText.innerText = days[(setting[1]+(x-1)) % 7]
+                largeText.style.textAlign = 'center'
+                largeText.style.color = betterContrast ? lightColor:darkColor
 
-                cell.appendChild(text)
+                const shortText = document.createElement('h3')
+                shortText.classList.add('shortText')
+                shortText.innerText = days[(setting[1]+(x-1)) % 7].slice(-days[(setting[1]+(x-1)) % 7].length, 3)
+                shortText.style.textAlign = 'center'
+                shortText.style.color = betterContrast ? lightColor:darkColor
+
+                cell.append(largeText, shortText)
 
             }
             //Time Header
@@ -464,5 +501,16 @@ function createTable() {
         document.getElementById(xSize + String(ySize).padStart(2, '0')).style.borderRadius = '0 0 15px 0'
 
     }
+
+}
+
+function getColors () {
+
+    const darkColor = createDarkColor(setting[8])
+    const lightColor = createLightColor(createLightColor(setting[8]))
+
+    const betterContrast = compareContrast(lightColor, setting[8])
+
+    return {darkColor, lightColor, betterContrast}
 
 }
