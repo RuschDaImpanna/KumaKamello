@@ -519,21 +519,63 @@ function setBackgrounds (darkColor){
 
     document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
     document.getElementById('openSettings').style.backgroundColor = darkColor
+    document.getElementById('openClass').style.backgroundColor = darkColor
     document.querySelectorAll('.lineOpen').forEach(element => {
 
         element.style.backgroundColor = darkColor
         
     });
     document.querySelector('.classSettings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
+    document.querySelector('.fixedClassSettings').style.borderBottom = `5px dashed color-mix(in srgb, ${darkColor} 45%, ${setting[8]})`
     document.querySelector('.settings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
     document.getElementById('settingsTab').style.scrollbarColor = `${darkColor} color-mix(in srgb, ${darkColor} 45%, white)`
+    document.getElementById('classManagement').style.scrollbarColor = `${darkColor} color-mix(in srgb, ${darkColor} 45%, white)`
 
 }
 
-document.getElementById("openSettings").addEventListener("click", () => { 
+const openSettings = document.getElementById("openSettings")
+const openClass = document.getElementById("openClass")
 
-    document.querySelector(".settings").classList.toggle("open")
-    document.querySelector("#openSettings .arrow").classList.toggle("open")
+const settingsToOpen = document.querySelectorAll(".settings, #openSettings .arrow")
+const classToOpen = document.querySelectorAll(".classSettings, #openClass .arrow")
 
+openSettings.addEventListener("click", () => {
+
+    if ([...classToOpen].find(e => e.classList.contains('open'))){
+
+        classToOpen.forEach(element => {
+
+            element.classList.remove("open")
+
+        });
+
+    }
+
+    settingsToOpen.forEach(element => {
+
+        element.classList.toggle("open")
+
+    });
+
+})
+
+openClass.addEventListener("click", () => {
+
+    if ([...settingsToOpen].find(e => e.classList.contains('open'))){
+
+        settingsToOpen.forEach(element => {
+
+            element.classList.remove("open")
+
+        });
+
+    }
+
+
+    classToOpen.forEach(element => {
+
+        element.classList.toggle("open")
+
+    });
 
 })
