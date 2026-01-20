@@ -71,7 +71,7 @@ export function dynamicColor(){
         
     });
 
-    document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
+    setBackgrounds(darkColor)
 
     indexChange = 8
     
@@ -247,7 +247,7 @@ function createTable() {
     //Create table
     table.innerHTML = ''
 
-    document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
+    setBackgrounds(darkColor)
 
     for (let y = 0; y < ySize+1; y++) {
 
@@ -514,3 +514,25 @@ function getColors () {
     return {darkColor, lightColor, betterContrast}
 
 }
+
+function setBackgrounds (darkColor){
+
+    document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
+    document.getElementById('openSettings').style.backgroundColor = darkColor
+    document.querySelectorAll('.lineOpen').forEach(element => {
+
+        element.style.backgroundColor = darkColor
+        
+    });
+    document.querySelector('.settings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
+    document.querySelector('.classSettings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
+
+}
+
+document.getElementById("openSettings").addEventListener("click", () => { 
+
+    document.querySelector(".settings").classList.toggle("open")
+    document.querySelector("#openSettings .arrow").classList.toggle("open")
+
+
+})

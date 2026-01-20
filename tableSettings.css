@@ -1,0 +1,70 @@
+.settings {
+
+    position: fixed;
+    bottom: 0;
+    transform: translateY(100%);
+
+    width: 100%;
+
+    transition: transform 0.4s ease;
+
+}
+.settings.open {
+
+  transform: translateY(40%);
+
+}
+
+
+.arrow {
+
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 5px;
+
+}
+
+#openSettings{
+
+    position: absolute;
+    transform: translate(-50%, -125%);
+    left: 47%;
+
+    height: 40px;
+    width: 15%;
+
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    .arrow{
+
+        transform: rotate(-135deg);
+        transition: transform 0.4s ease;
+
+    }
+
+    .arrow.open {
+        transform: rotate(45deg);
+    }
+
+}
+
+
+
+
+.lineOpen{
+
+    position: relative;
+    transform: translateY(-100%);
+    width: 100%;
+    height: 20px;
+
+    border-radius: 10px 10px 0 0;
+
+}
