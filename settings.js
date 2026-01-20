@@ -524,8 +524,9 @@ function setBackgrounds (darkColor){
         element.style.backgroundColor = darkColor
         
     });
-    document.querySelector('.settings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
     document.querySelector('.classSettings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
+    document.querySelector('.settings').style.backgroundColor = `color-mix(in srgb, ${darkColor} 45%, white)`
+    document.getElementById('settingsTab').style.scrollbarColor = `${darkColor} color-mix(in srgb, ${darkColor} 45%, white)`
 
 }
 

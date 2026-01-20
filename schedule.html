@@ -37,16 +37,11 @@
 
         <article class="settings">
 
-            <div class="lineOpen"></div>
-            <div id="openSettings">
+            <div id="settingsTab">
 
-                <div class="arrow"></div>
+                <h1>Schedule Settings</h1>
 
-            </div>
-
-            <h1>Table Settings</h1>
-
-            <form id="files">
+                <form id="files">
 
                 <input type="file" id="import" accept=".json" hidden/>
                 <button type="button" onclick="document.getElementById('import').click()">
@@ -54,23 +49,23 @@
                 </button>
                 <button type="button" id="export" disabled>Export</button>
 
-            </form>
+                </form>
 
-            <br/>
-            <br/>
+                <br/>
+                <br/>
 
-            <form id="tableSettings">
+                <form id="tableSettings">
 
-                <div id="title">
+                    <div id="title">
 
                     <h3>Title</h3>
                     <input type="text" name="title" placeholder="My Schedule" maxlength="64" oninput="dynamicText()">
 
-                </div>
+                    </div>
 
-                <br/>
+                    <br/>
 
-                <div id="initDay">
+                    <div id="initDay">
 
                     <h3>Initial Day</h3>
                     <input type="radio" id="initM" name="initDay" value="0" checked>
@@ -88,11 +83,11 @@
                     <input type="radio" id="initSn" name="initDay" value="6">
                     <label for="initSn">Sunday</label>
 
-                </div>
+                    </div>
 
-                <br/>
+                    <br/>
 
-                <div id="endDay">
+                    <div id="endDay">
 
                     <h3>Final Day</h3>
                     <input type="radio" id="endM" name="finalDay" value="0">
@@ -110,52 +105,62 @@
                     <input type="radio" id="endSn" name="finalDay" value="6">
                     <label for="endSn">Sunday</label>
 
-                </div>
+                    </div>
 
-                <br/>
+                    <br/>
 
-                <div id="lapse">
+                    <div id="lapse">
 
                     <label for="initTime">Initial Hour</label>
                     <input type="time" name="initTime" value="07:00">
                     <label for="endTime">Ending Hour</label>
                     <input type="time" name="endTime" value="19:00">
 
-                </div>
+                    </div>
 
-                <br/>
+                    <br/>
 
-                <div id="units">
+                    <div id="units">
 
-                    <h3>Hour unit</h3>
-                    <input type="radio" id="plusQuarter" name="units" value="0">
-                    <label for="plusQuarter">45 min</label>
-                    <input type="radio" id="fifty" name="units" value="1">
-                    <label for="fifty">50 min</label>
-                    <input type="radio" id="hour" name="units" value="2" checked>
-                    <label for="hour">1 hour</label>
+                        <h3>Hour unit</h3>
+                        <input type="radio" id="plusQuarter" name="units" value="0">
+                        <label for="plusQuarter">45 min</label>
+                        <input type="radio" id="fifty" name="units" value="1">
+                        <label for="fifty">50 min</label>
+                        <input type="radio" id="hour" name="units" value="2" checked>
+                        <label for="hour">1 hour</label>
 
-                    <h3>Add deadtime</h3>
-                    <input type="checkbox" id="deadtime" name="deadtime" disabled>
+                        <h3>Add deadtime</h3>
+                        <input type="checkbox" id="deadtime" name="deadtime" disabled>
 
-                    <h3>24-hour based format</h3>
-                    <input type="checkbox" id="format" name="format" checked>
+                        <h3>24-hour based format</h3>
+                        <input type="checkbox" id="format" name="format" checked>
 
-                </div>
+                    </div>
 
-                <br/>
+                    <br/>
 
-                <div id="color">
+                    <div id="color">
 
-                    <h3>Color</h3>
-                    <input type="color" id="tableColor" name="color"  value="#6E97F7" oninput="dynamicColor()">
+                        <h3>Color</h3>
+                        <input type="color" id="tableColor" name="color"  value="#6E97F7" oninput="dynamicColor()">
 
-                </div>
+                    </div>
 
-                <input type="reset" id="reset" name="reset" value="Reset to default">
-                
+                    <input type="reset" id="reset" name="reset" value="Reset to default">
+                    
 
-            </form>
+                </form>
+
+            </div>
+
+            <div class="lineOpen"></div>
+            <div id="openSettings">
+
+                <div class="arrow"></div>
+                <span>Schedule settings</span>
+
+            </div>
 
         </article>
 
