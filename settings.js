@@ -517,7 +517,7 @@ function getColors () {
 
 function setBackgrounds (darkColor){
 
-    document.querySelector('.schedule').style.backgroundColor = darkColor + '26'
+    document.body.style.backgroundColor = darkColor + '26'
     document.getElementById('openSettings').style.backgroundColor = darkColor
     document.getElementById('openClass').style.backgroundColor = darkColor
     document.querySelectorAll('.lineOpen').forEach(element => {
