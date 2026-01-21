@@ -1,0 +1,157 @@
+/*Background*/
+#intro{
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 3;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: white;
+
+    * {
+
+        position: absolute;
+
+    }
+
+}
+
+#intro::before{
+
+    content: "";
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    width: 200vmax;
+    height: 200vmax;
+
+    background: #007bff;
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%) scale(0);
+
+    animation: circleExpand 1.5s cubic-bezier(0.4, 0, 0, 1) forwards;
+
+}
+.close#intro{
+
+    opacity: 0;
+    transition: ease-out 0.5s;
+
+}
+
+
+
+/*Logo*/
+#logo{
+
+    width: 50px;
+    height: 50px;
+
+    transform: rotate(-90deg) scale(0.7);
+    opacity: 0;
+    animation: logoTransform 0.3s 0.25s cubic-bezier(0, 1.5, 1, 1) forwards
+
+}
+.close#logo{
+
+    transform: scale(1.3);
+    opacity: 0;
+    transition: ease-out 0.5s;
+    
+}
+
+#splash{
+
+    width: 150px;
+    height: 150px;
+
+}
+.line {
+
+    --lineRot: 0deg;
+
+    position: absolute;
+
+    width: 5px;
+    height: 35px;
+
+    background-color: white;
+    border-radius: 5px;
+
+    top: 50%;
+    left: 50%;
+
+    margin-bottom: 30px;
+
+    transform-origin: 50% calc(100% + 30px);
+    transform: translate(-50%, calc(-100% - 30px)) rotate(var(--rot)) scaleY(0);
+    animation: expand 0.8s 0.2s cubic-bezier(0, 1, 0.5, 1) forwards;
+
+}
+
+#l1 { --rot: 0deg; }
+#l2 { --rot: 45deg; }
+#l3 { --rot: 90deg; }
+#l4 { --rot: 135deg; }
+#l5 { --rot: 180deg; }
+#l6 { --rot: 225deg; }
+#l7 { --rot: 270deg; }
+#l8 { --rot: 315deg; }
+
+
+
+/*Animations*/
+@keyframes circleExpand {
+
+    to {
+
+        transform: translate(-50%, -50%) scale(1);
+
+    }
+
+}
+
+@keyframes logoTransform {
+
+    to {
+
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+
+    }
+
+}
+
+@keyframes expand {
+
+    0% {
+
+        transform: translate(-50%, calc(-100% - 30px)) rotate(var(--rot)) scaleY(0);
+
+    }
+    45% {
+
+        transform: translate(-50%, calc(-100% - 30px)) rotate(var(--rot)) scaleY(1);
+
+        opacity: 1;
+        
+    }
+    100%{
+
+        transform: translate(-50%, calc(-100% - 30px)) rotate(var(--rot)) scaleY(1.5);
+
+        opacity: 0;
+
+    }
+}
