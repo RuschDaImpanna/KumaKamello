@@ -71,6 +71,9 @@ export function dynamicColor(){
         
     });
 
+    //Get colors to CSS
+    document.documentElement.style.setProperty('--lightColor', `color-mix(in srgb, ${setting[8]} 45%, white)`)
+    document.documentElement.style.setProperty('--darkColor', darkColor)
     setBackgrounds(darkColor)
 
     indexChange = 8
@@ -247,6 +250,9 @@ function createTable() {
     //Create table
     table.innerHTML = ''
 
+    //Get colors to CSS
+    document.documentElement.style.setProperty('--lightColor', `color-mix(in srgb, ${setting[8]} 45%, white)`)
+    document.documentElement.style.setProperty('--darkColor', darkColor)
     setBackgrounds(darkColor)
 
     for (let y = 0; y < ySize+1; y++) {

@@ -9,6 +9,29 @@ body{
 
 }
 
+body::-webkit-scrollbar{
+
+    border-radius: 0 10px 10px 10px;
+
+    background-color: var(--lightColor);
+
+}
+
+body::-webkit-scrollbar-thumb{
+
+    background-color: var(--darkColor);
+
+    border: 5px solid var(--lightColor);
+
+    border-radius: 15px;
+    
+}
+body::-webkit-scrollbar-thumb:hover{
+
+    background-color: color-mix(in srgb, var(--darkColor) 65%, white);
+    
+} 
+
 .schedule {
 
     padding: 0 7%;
