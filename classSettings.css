@@ -7,7 +7,7 @@
     right: 0;
 
     padding-left: 10px;
-    width: 300px;
+    width: 350px;
 
     transition: transform 0.35s cubic-bezier(0, 1.5, 1, 0.9);;
     transform: translateX(97%);
@@ -31,7 +31,7 @@
 }
 .classSettings.open {
 
-    transform: translateX(0%);
+    transform: translateX(10%);
 
 }
 
@@ -100,7 +100,7 @@
 .fixedClassSettings{
 
     height: 10%;
-    width: 100%;
+    width: 80%;
 
     position: fixed;
     padding: 15px 30px;
@@ -115,6 +115,7 @@
 
     overflow-y: scroll;
 
+    width: 80%;
     height: 84%;
 
     padding: 0 15px;
