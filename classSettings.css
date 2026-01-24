@@ -77,6 +77,8 @@
         width: 150px;
         border-radius: 10px;
 
+        visibility: hidden;
+
         text-align: center;
 
         opacity: 0;
