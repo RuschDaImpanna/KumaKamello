@@ -45,6 +45,7 @@ document.addEventListener("updateBlock", () => {
         //Delete from DOM
         const delBlock = document.getElementById('block' + deletedBlock.id)
         getMesh(delBlock).then(r => {
+            if (!r) return
             disintegrateAnim(r, delBlock)
         });
 
@@ -60,6 +61,7 @@ document.addEventListener("updateBlock", () => {
         const deleteBin = document.getElementById('deleteBin')
 
         getMesh(deleteBin).then(r => {
+            if (!r) return
             disintegrateAnim(r, deleteBin)
         });
     

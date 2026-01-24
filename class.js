@@ -269,6 +269,8 @@ export async function deleteClass(id, section, controller) {
             ...classSlots.filter(drop => {
 
                 if (drop.id.substring(drop.id.indexOf('.')+1) === String(id)) {
+
+                    drop.hidden = false
                     
                     delPromise.push(getMesh(drop))
                     delRef.push(drop)
@@ -293,6 +295,8 @@ export async function deleteClass(id, section, controller) {
                 if (drop.id.substring(1) === `${id}.${controller.id}`) {
 
                     if (drop.childNodes.length > 1) callToStep(drop.lastElementChild)
+
+                    drop.hidden = false
                     
                     delPromise.push(getMesh(drop))
                     delRef.push(drop)

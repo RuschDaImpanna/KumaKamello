@@ -5,6 +5,8 @@ const pixelSize = 4
 //This part of getting a screenshot form the object was made by ChatGPT
 export async function getMesh (element) {
 
+    if (!element) return
+
     const shadowElements = [...element.childNodes].filter(e => { return window.getComputedStyle(e).boxShadow != 'none' })
 
     const shadows = []
