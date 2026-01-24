@@ -1,3 +1,4 @@
+import { disintegrateAnim, getMesh } from "./animations.js"
 import { updateVoucherColor, createDarkColor } from "./blocks.js"
 import { addSection, classSlots } from "./section.js"
 
@@ -253,7 +254,10 @@ function createPanel (classObj) {
 }
 
 //This is for deleting a class at the delete class button
-export function deleteClass(id, section, controller) {
+export async function deleteClass(id, section, controller) {
+
+    const delPromise = []
+    const delRef = []
 
     //Array delete
     if(!section){
@@ -265,7 +269,8 @@ export function deleteClass(id, section, controller) {
 
                 if (drop.id.substring(drop.id.indexOf('.')+1) === String(id)) {
                     
-                    drop.remove()
+                    delPromise.push(getMesh(drop))
+                    delRef.push(drop)
                     return false
 
                 }
@@ -286,7 +291,8 @@ export function deleteClass(id, section, controller) {
 
                 if (drop.id.substring(1) === `${id}.${controller.id}`) {
                     
-                    drop.remove()
+                    delPromise.push(getMesh(drop))
+                    delRef.push(drop)
                     return false
 
                 }
@@ -299,6 +305,14 @@ export function deleteClass(id, section, controller) {
         console.log(section, controller)
         controller.sections = controller.sections.filter(del => del.id !== id)
 
+    }
+
+    const delMeshes = await Promise.all(delPromise)
+
+    for (let i = 0; i < delMeshes.length; i++) {
+
+        disintegrateAnim(delMeshes[i], delRef[i])
+        
     }
 
     //Panel delete

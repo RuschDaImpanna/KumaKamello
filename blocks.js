@@ -1,4 +1,5 @@
 //Import all settings from classController
+import { disintegrateAnim, getMesh } from "./animations.js";
 import { classController } from "./class.js";
 import { setting } from "./settings.js";
 
@@ -42,7 +43,10 @@ document.addEventListener("updateBlock", () => {
         )
 
         //Delete from DOM
-        document.getElementById('block' + deletedBlock.id).remove()
+        const delBlock = document.getElementById('block' + deletedBlock.id)
+        getMesh(delBlock).then(r => {
+            disintegrateAnim(r, delBlock)
+        });
 
         console.log('Delete', deletedBlock)
 
@@ -53,7 +57,11 @@ document.addEventListener("updateBlock", () => {
     //Delete delete bin space
     if (availableBlocks.length == 0) {
 
-        document.getElementById('deleteBin').remove()
+        const deleteBin = document.getElementById('deleteBin')
+
+        getMesh(deleteBin).then(r => {
+            disintegrateAnim(r, deleteBin)
+        });
     
     }
 
