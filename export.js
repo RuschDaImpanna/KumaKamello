@@ -52,7 +52,7 @@ export function createFile() {
 
     const anchor = document.createElement('a')
     anchor.href = URL.createObjectURL(file)
-    anchor.download = setting[0] ? `KumaSession_${setting[0]}`:'KumaSession_unnamed.json'
+    anchor.download = setting[0] ? `KumaSession_${setting[0]}.json`:'KumaSession_unnamed.json'
     anchor.click()
 
 }

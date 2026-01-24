@@ -1,4 +1,5 @@
 import { classController } from "./class.js" // All controllers
+import { setting } from "./settings.js"
 
 const ssBtn = document.getElementById('ssImg')
 
@@ -97,12 +98,12 @@ async function createImage() {
         
         }
         
-        const canvas = await html2canvas(schedule, { backgroundColor: null, scale: 2, useCORS: true })
+        const canvas = await html2canvas(schedule, { backgroundColor: "#ffffff", scale: 2, useCORS: true })
 
         const imageURL = canvas.toDataURL("image/png")
 
         schedule.style.backgroundColor = ''
-        //document.getElementById('logoSS').remove()
+        document.getElementById('logoSS').remove()
         schedule.appendChild(bottomArea)
 
         ghosts.forEach(element => {
@@ -116,9 +117,53 @@ async function createImage() {
             imageUrl: imageURL,
             imageAlt: "Screenshot",
             showCloseButton: true,
-            confirmButtonText: "Copy to clipboard"
+            showDenyButton: true,
+            confirmButtonText: "Download Image",
+            confirmButtonColor: 'green',
+            denyButtonText: "Copy To Clipboard",
+            denyButtonColor: '#3085d6'
+            
 
-        });
+        }).then(async result => {
+
+            //Download
+            if (result.isConfirmed){
+
+                const anchor = document.createElement('a')
+                anchor.href = imageURL
+                anchor.download = setting[0] ? `KumaSession_${setting[0]}.png`:'KumaSession_unnamed.png'
+                anchor.click()
+
+            }
+            //Copy image to clipboard
+            else if (result.isDenied){
+
+                const blob = await canvasToBlob(canvas)
+
+                await navigator.clipboard.write([
+
+                    new ClipboardItem({
+
+                        "image/png": blob
+
+                    })
+
+                ])
+
+                function canvasToBlob(canvas) {
+
+                    return new Promise(resolve => {
+
+                        canvas.toBlob(blob => resolve(blob), "image/png")
+                        
+                    })
+
+                }
+
+
+            }
+
+        })
 
 
         function makeLogo (){
@@ -193,7 +238,7 @@ async function createImage() {
 
 
             const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-            icon.setAttribute('viewBox', '-16.87 -283.7 2499.35 1965.93')
+            icon.setAttribute('viewBox', '0 0 2499.35 1965.93')
             icon.setAttribute('preserveAspectRatio', 'xMidYMid meet')
 
             icon.style.position = 'absolute'
