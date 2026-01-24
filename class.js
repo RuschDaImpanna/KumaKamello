@@ -1,5 +1,6 @@
 import { disintegrateAnim, getMesh } from "./animations.js"
 import { updateVoucherColor, createDarkColor } from "./blocks.js"
+import { callToStep } from "./movingBlocks.js"
 import { addSection, classSlots } from "./section.js"
 
 //Get the panel container
@@ -290,6 +291,8 @@ export async function deleteClass(id, section, controller) {
             ...classSlots.filter(drop => {
 
                 if (drop.id.substring(1) === `${id}.${controller.id}`) {
+
+                    if (drop.childNodes.length > 1) callToStep(drop.lastElementChild)
                     
                     delPromise.push(getMesh(drop))
                     delRef.push(drop)
