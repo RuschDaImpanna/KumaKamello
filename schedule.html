@@ -66,13 +66,15 @@
 
                 <form id="files">
 
-                <input type="file" id="import" accept=".json" hidden/>
-                <button type="button" onclick="document.getElementById('import').click()">
-                    Import
-                </button>
-                <button type="button" id="export" disabled>Export</button>
+                    <input type="file" id="import" accept=".json" hidden/>
+                    <button type="button" onclick="document.getElementById('import').click()">
+                        Import
+                    </button>
+                    <button type="button" id="export" disabled>Export</button>
 
                 </form>
+
+                <button type="button" id="ssImg" disabled>Take screenshot</button>
 
                 <br/>
                 <br/>
@@ -226,6 +228,7 @@
     <script type="module" src="export.js"></script>
     <script type="module" src="import.js"></script>
     <script type="module" src="animations.js"></script>
+    <script type="module" src="screenshot.js"></script>
     <script>
 
         const screen = document.getElementById('intro')
