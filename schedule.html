@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="author" content="Rusch Da Impanna">
         <meta name="description" content="A way to organize your schedule by building blocks depending on available slots. Ideal for college schedules">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="stylesheet" href="table.css">
         <link rel="stylesheet" href="blocks.css">
@@ -20,7 +21,7 @@
 
     </head>
 
-    <body>
+    <body class="intro">
 
         <div id="intro">
 
@@ -37,7 +38,7 @@
 
 
             </div>
-            <img id="logo" src="" alt="placeholder" style="border:1px dashed #000; display:inline-block;"/>
+            <img id="logo" src="logo_color.svg"/>
 
         </div>
 
@@ -168,7 +169,7 @@
                     <div id="color">
 
                         <h3>Color</h3>
-                        <input type="color" id="tableColor" name="color"  value="#6E97F7" oninput="dynamicColor()">
+                        <input type="color" id="tableColor" name="color"  value="#ff8030" oninput="dynamicColor()">
 
                     </div>
 
@@ -238,6 +239,7 @@
 
             screen.classList.add('close')
             logo.classList.add('close')
+            document.body.classList.remove('intro')
 
             setTimeout(() => {
 

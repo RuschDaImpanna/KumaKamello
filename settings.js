@@ -4,7 +4,7 @@ const form = document.getElementById('tableSettings')
 const table = document.querySelector(".table")
 const tableTitle = document.getElementById('tableTitle')
 
-export const setting = ['', 0, 4, 420, 1140, 2, false, true, '#6e97f7']
+export const setting = ['', 0, 4, 420, 1140, 2, false, true, '#ff8030']
 
 let indexChange
 
