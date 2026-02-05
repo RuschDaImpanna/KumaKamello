@@ -1,6 +1,12 @@
 h1, h3, h4 {
 
     margin: 0;
+    font-family: Germania One;
+
+}
+p, h5, h6, button, label, input{
+
+    font-family: Playwrite DE Grund;
 
 }
 body{
