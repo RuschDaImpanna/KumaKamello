@@ -273,7 +273,7 @@ async function importSession(progressBar, file) {
         3
         
     )
-    const supportableBuilt = '0.2.0'
+    const supportableBuilt = '0.2.1'
     await updateImport(
 
         250,
@@ -287,7 +287,7 @@ async function importSession(progressBar, file) {
                 <h3>Not compatible JSON file</h3> 
                 <br/>
                 <p>Not compatible header lenght → ${Object.keys(data[0]).length}</p>`)
-            if (data[0].file != 'Kuma Kamello') throw new Error (`
+            if (data[0].file != 'KumaKamello') throw new Error (`
                 <h3>Not compatible JSON file</h3> 
                 <br/>
                 <p>Doesn't support ${data[0].file} file type`)

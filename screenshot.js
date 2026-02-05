@@ -285,7 +285,7 @@ async function createImage() {
             title.style.top = '70px'
             title.style.fontSize  = '14px'
 
-            title.innerText = 'Kuma Kamello'
+            title.innerText = 'KumaKamello'
 
             star.append(label, title)
 
