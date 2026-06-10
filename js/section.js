@@ -28,10 +28,16 @@ export const classSlots = []
 
 function createSectionPanel (controller, sectionObj) {
 
+    console.log(controller, sectionObj)
+
+    const darkSection = createDarkColor(controller.color)
+    const lightSection = `color-mix(in srgb, ${controller.color} 25%, white)`
+
     //Create div
     const panel = document.createElement('div')
     panel.classList.add('sectionPanel')
     panel.dataset.id = sectionObj.id
+    panel.style.backgroundColor = `color-mix(in srgb, ${controller.color} 65%, white)`
 
     //Create a header
     const header = document. createElement('div')
@@ -40,6 +46,7 @@ function createSectionPanel (controller, sectionObj) {
         //Teacher's name
         const title = document.createElement('h3')
         title.innerText = sectionObj.teacher
+        title.style.color = darkSection
 
         //Code display
         const codeDisplay = document.createElement('p')
@@ -47,8 +54,52 @@ function createSectionPanel (controller, sectionObj) {
 
         //Delete button
         const deleteBtn = document.createElement('button')
-        deleteBtn.innerText = 'Delete'
-        deleteBtn.onclick = () => deleteClass(sectionObj.id, sectionObj, controller) //Delete function
+
+            const deleteLbl = document.createElement('span')
+            deleteLbl.classList.add('material-symbols-outlined')
+            deleteLbl.innerText = 'delete'
+            deleteBtn.append(deleteLbl)
+
+        deleteBtn.onclick = () => { 
+
+            deleteClass(sectionObj.id, sectionObj, controller) //Delete function
+
+            requestAnimationFrame(() => {
+
+                    const copy = [...document.querySelector('.blocks').children].find(b => b.classList.contains('copy'))
+
+                    if (copy) copy.remove()
+
+                        setTimeout(() => {
+
+                            const sectionPark = document.querySelector('.sectionPark'+controller.id)
+
+                            const splitsChk = sectionPark.querySelectorAll('.sectionPanelControlls input[type=checkbox]')
+                            controller.splitBlock = [...splitsChk].some(chk => chk.checked)
+
+                            const secondHourInput = document.getElementById('SlI_'+controller.id)
+                            const secondHourLabel = document.getElementById('Sh3_'+controller.id)
+                            
+                            if (controller.splitBlock) {
+
+                                secondHourLabel.hidden = false
+                                secondHourInput.hidden = false
+
+                            } else {
+
+                                secondHourLabel.hidden = true
+                                secondHourInput.hidden = true
+
+                            }
+
+                            document.dispatchEvent(new Event('change', { bubbles:true }))
+                            
+                        }, 155)
+                
+            })
+
+        }
+        deleteBtn.style.backgroundColor = darkSection
 
         //Push and title to header
         header.append(title, codeDisplay, deleteBtn)
@@ -57,76 +108,84 @@ function createSectionPanel (controller, sectionObj) {
     const controls = document.createElement('div')
     controls.classList.add('sectionPanelControlls')
 
-        //Title input
-        const nameInput = document.createElement('input')
-        nameInput.placeholder = `Teacher's name`
-        nameInput.type = 'text'
-        nameInput.value = sectionObj.teacher
-        nameInput.maxLength = 32
+        //First controllers wrap
+        const idWrapping = document.createElement('div')
+        idWrapping.classList.add('idWrapping')
 
-        //OnInput, changes on real time
-        nameInput.oninput = () => {
+            //Title input
+            const nameInput = document.createElement('input')
+            nameInput.placeholder = `Teacher's name`
+            nameInput.type = 'text'
+            nameInput.value = sectionObj.teacher
+            nameInput.maxLength = 32
+            nameInput.style.backgroundColor = lightSection
 
-            //Rewrite title at classController object
-            sectionObj.teacher = nameInput.value
-            //Dynamically, change text on real time
-            title.innerText = nameInput.value
+            //OnInput, changes on real time
+            nameInput.oninput = () => {
 
-            const dropTitle = document.querySelectorAll(`#teacherTitle${sectionObj.id}\\.${controller.id}`)
+                //Rewrite title at classController object
+                sectionObj.teacher = nameInput.value
+                //Dynamically, change text on real time
+                title.innerText = nameInput.value
 
-            if (!dropTitle) return
+                const dropTitle = document.querySelectorAll(`#teacherTitle${sectionObj.id}\\.${controller.id}`)
 
-            dropTitle.forEach(txt => {
+                if (!dropTitle) return
 
-                txt.innerText = nameInput.value
-                
-            });
+                dropTitle.forEach(txt => {
 
-        }
-
-        //Code input
-        const codeInput = document.createElement('input')
-        codeInput.placeholder = 'Code'
-        codeInput.type = 'number'
-        codeInput.value = sectionObj.code
-        codeInput.min = 0
-        codeInput.max = 999999
-
-        codeInput.oninput = () => {
-
-            //Rewrite first length at classController object
-            const inputValue = Number(codeInput.value)
-
-            //In case it's an invalid input, use the last value
-            if (Number.isNaN(inputValue) || inputValue == ''){
-
-                codeInput.value = sectionObj.code
+                    txt.innerText = nameInput.value
+                    
+                });
 
             }
 
-            //Take the value between 0 to 9999
-            const clampValue = Math.min(Math.max(inputValue, 0), 999999)
+            //Code input
+            const codeInput = document.createElement('input')
+            codeInput.placeholder = 'Code'
+            codeInput.type = 'number'
+            codeInput.value = sectionObj.code
+            codeInput.min = 0
+            codeInput.max = 999999
+            codeInput.style.backgroundColor = lightSection
 
-            //Change the controller and the display
-            codeInput.value = String(clampValue).padStart(6, '0')
-            sectionObj.code = String(clampValue).padStart(6, '0')
+            codeInput.oninput = () => {
 
-            //Dynamically, change text on real time
-            codeDisplay.innerText = codeInput.value
-            
-            document.querySelectorAll('#labelPlacedBlock'+controller.id).forEach(element => { element.innerText = codeInput.value })
+                //Rewrite first length at classController object
+                const inputValue = Number(codeInput.value)
 
-            const dropCode = document.querySelectorAll(`#codeTitle${sectionObj.id}\\.${controller.id}`)
+                //In case it's an invalid input, use the last value
+                if (Number.isNaN(inputValue) || inputValue == ''){
 
-            if (!dropCode) return
+                    codeInput.value = sectionObj.code
 
-            dropCode.forEach(txt => {
-    
-                txt.innerText = codeInput.value
+                }
 
-            });
+                //Take the value between 0 to 9999
+                const clampValue = Math.min(Math.max(inputValue, 0), 999999)
 
-        }
+                //Change the controller and the display
+                codeInput.value = String(clampValue).padStart(6, '0')
+                sectionObj.code = String(clampValue).padStart(6, '0')
+
+                //Dynamically, change text on real time
+                codeDisplay.innerText = codeInput.value
+                
+                document.querySelectorAll('#labelPlacedBlock'+controller.id).forEach(element => { element.innerText = codeInput.value })
+
+                const dropCode = document.querySelectorAll(`#codeTitle${sectionObj.id}\\.${controller.id}`)
+
+                if (!dropCode) return
+
+                dropCode.forEach(txt => {
+        
+                    txt.innerText = codeInput.value
+
+                });
+
+            }
+
+            idWrapping.append(nameInput, codeInput)
 
         //A Time
         const ATime = document.createElement('div')
@@ -136,6 +195,7 @@ function createSectionPanel (controller, sectionObj) {
             const ATitle = document.createElement('h3')
             ATitle.innerText = 'Section class schedule'
             ATitle.id = `ATitle${sectionObj.id}.${controller.id}`
+            ATitle.style.color = darkSection
 
             //A days
             const ADays = document.createElement('div')
@@ -145,80 +205,87 @@ function createSectionPanel (controller, sectionObj) {
                 daysCreation(ADays, sectionObj, controller)
 
             //A Initial time
-            const AInitTimeLabel = document.createElement('label')
-            AInitTimeLabel.htmlFor = `AInitTime${sectionObj.id}.${controller.id}`
-            AInitTimeLabel.innerText = 'Initial time'
+            const ATimeWrapper = document.createElement('div')
+            ATimeWrapper.classList.add('ATimeWrapper')
 
-            const AInitTime = document.createElement('input')
-            AInitTime.type = 'time'
-            AInitTime.value = sectionObj.aInitHour == sectionObj.aEndHour ? '':`${String(Math.floor(sectionObj.aInitHour/60)).padStart(2, '0')}:${String(sectionObj.aInitHour % 60).padStart(2, '0')}`
+                const AInitTimeLabel = document.createElement('label')
+                AInitTimeLabel.htmlFor = `AInitTime${sectionObj.id}.${controller.id}`
+                AInitTimeLabel.innerText = 'Initial time'
 
-            AInitTime.name = 'ATime'
-            AInitTime.id = `AInitTime${sectionObj.id}.${controller.id}`
+                const AInitTime = document.createElement('input')
+                AInitTime.style.backgroundColor = lightSection
+                AInitTime.type = 'time'
+                AInitTime.value = sectionObj.aInitHour == sectionObj.aEndHour ? '':`${String(Math.floor(sectionObj.aInitHour/60)).padStart(2, '0')}:${String(sectionObj.aInitHour % 60).padStart(2, '0')}`
 
-            //A End time
-            const AEndTimeLabel = document.createElement('label')
-            AEndTimeLabel.htmlFor = `AEndTime${sectionObj.id}.${controller.id}`
-            AEndTimeLabel.innerText = 'End time'
+                AInitTime.name = 'ATime'
+                AInitTime.id = `AInitTime${sectionObj.id}.${controller.id}`
 
-            const AEndTime = document.createElement('input')
-            AEndTime.type = 'time'
-            AEndTime.value = sectionObj.aEndHour == sectionObj.aInitHour ? '':`${String(Math.floor(sectionObj.aEndHour/60)).padStart(2, '0')}:${String(sectionObj.aEndHour % 60).padStart(2, '0')}`
-            AEndTime.disabled = true
+                //A End time
+                const AEndTimeLabel = document.createElement('label')
+                AEndTimeLabel.htmlFor = `AEndTime${sectionObj.id}.${controller.id}`
+                AEndTimeLabel.innerText = 'End time'
 
-            AEndTime.name = 'ATime'
-            AEndTime.id = `AEndTime${sectionObj.id}.${controller.id}`
+                const AEndTime = document.createElement('input')
+                AEndTime.style.backgroundColor = lightSection
+                AEndTime.type = 'time'
+                AEndTime.value = sectionObj.aEndHour == sectionObj.aInitHour ? '':`${String(Math.floor(sectionObj.aEndHour/60)).padStart(2, '0')}:${String(sectionObj.aEndHour % 60).padStart(2, '0')}`
+                AEndTime.disabled = true
 
-            //Time fixes
-            AInitTime.onblur = () => {
+                AEndTime.name = 'ATime'
+                AEndTime.id = `AEndTime${sectionObj.id}.${controller.id}`
 
-                if (!AInitTime.value) return
+                //Time fixes
+                AInitTime.onblur = () => {
 
-                timeFloor(sectionObj, 'aInitHour', AInitTime.value, AInitTime)
+                    if (!AInitTime.value) return
 
-                const addTime = timeParse[setting[5]]*controller.unitLength
+                    timeFloor(sectionObj, 'aInitHour', AInitTime.value, AInitTime)
 
-                if (sectionObj.splitSection && sectionObj.bDay == sectionObj.aDay) {
+                    const addTime = timeParse[setting[5]]*controller.unitLength
 
-                    const step = timeParse[setting[5]]
-                    const aEnd = sectionObj.aInitHour + addTime
+                    if (sectionObj.splitSection && sectionObj.bDay == sectionObj.aDay) {
 
-                    for (let t = sectionObj.aInitHour; t < aEnd; t += step) {
+                        const step = timeParse[setting[5]]
+                        const aEnd = sectionObj.aInitHour + addTime
 
-                        for (let bT = sectionObj.bInitHour; bT < sectionObj.bEndHour; bT += step) {
+                        for (let t = sectionObj.aInitHour; t < aEnd; t += step) {
 
-                            if (t === bT) {
+                            for (let bT = sectionObj.bInitHour; bT < sectionObj.bEndHour; bT += step) {
 
-                                AInitTime.value = ''
-                                sectionObj.aInitHour = 0
+                                if (t === bT) {
 
-                                Swal.fire({
+                                    AInitTime.value = ''
+                                    sectionObj.aInitHour = 0
 
-                                    title:'Time conflict',
-                                    icon:'error',
-                                    text: `You can't place the first segment into a time that the second segment is using`
+                                    Swal.fire({
 
-                                })
+                                        title:'Time conflict',
+                                        icon:'error',
+                                        text: `You can't place the first segment into a time that the second segment is using`
 
-                                return
+                                    })
+
+                                    return
+                                }
                             }
                         }
                     }
+
+
+                    let hour = parseInt(AInitTime.value.slice(0,2))
+                    let min = parseInt(AInitTime.value.slice(-2))
+
+                    const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
+                    const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
+                    
+                    sectionObj.aEndHour = modTime
+                    AEndTime.value = timeStr
+
                 }
 
+                ATimeWrapper.append(AInitTimeLabel, AInitTime, AEndTimeLabel, AEndTime)
 
-                let hour = parseInt(AInitTime.value.slice(0,2))
-                let min = parseInt(AInitTime.value.slice(-2))
-
-                const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
-                const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
-                
-                sectionObj.aEndHour = modTime
-                AEndTime.value = timeStr
-
-            }
-
-        ATime.append(ATitle, ADays, AInitTimeLabel, AInitTime, AEndTimeLabel, AEndTime)
+        ATime.append(ATitle, ADays, ATimeWrapper)
 
         //For splitBlock
         const splitLabel = document.createElement('label')
@@ -240,6 +307,7 @@ function createSectionPanel (controller, sectionObj) {
             const BTitle = document.createElement('h3')
             BTitle.innerText = 'Second segment schedule'
             BTitle.id = `BTitle${sectionObj.id}.${controller.id}`
+            BTitle.style.color = darkSection
 
             //B days
             const BDays = document.createElement('div')
@@ -249,82 +317,88 @@ function createSectionPanel (controller, sectionObj) {
                 daysCreation(BDays, sectionObj, controller)
 
             //B Initial time
-            const BInitTimeLabel = document.createElement('label')
-            BInitTimeLabel.htmlFor = `BInitTime${sectionObj.id}.${controller.id}`
-            BInitTimeLabel.innerText = 'Initial time'
+            const BTimeWrapper = document.createElement('div')
+            BTimeWrapper.classList.add('BTimeWrapper')
 
-            const BInitTime = document.createElement('input')
-            BInitTime.type = 'time'
-            BInitTime.value = sectionObj.bInitHour == sectionObj.bEndHour ? '':`${String(Math.floor(sectionObj.bInitHour/60)).padStart(2, '0')}:${String(sectionObj.bInitHour % 60).padStart(2, '0')}`
+                const BInitTimeLabel = document.createElement('label')
+                BInitTimeLabel.htmlFor = `BInitTime${sectionObj.id}.${controller.id}`
+                BInitTimeLabel.innerText = 'Initial time'
 
-            BInitTime.name = 'BTime'
-            BInitTime.id = `BInitTime${sectionObj.id}.${controller.id}`
+                const BInitTime = document.createElement('input')
+                BInitTime.style.backgroundColor = lightSection
+                BInitTime.type = 'time'
+                BInitTime.value = sectionObj.bInitHour == sectionObj.bEndHour ? '':`${String(Math.floor(sectionObj.bInitHour/60)).padStart(2, '0')}:${String(sectionObj.bInitHour % 60).padStart(2, '0')}`
 
-            //B End time
-            const BEndTimeLabel = document.createElement('label')
-            BEndTimeLabel.htmlFor = `BEndTime${sectionObj.id}.${controller.id}`
-            BEndTimeLabel.innerText = 'End time'
+                BInitTime.name = 'BTime'
+                BInitTime.id = `BInitTime${sectionObj.id}.${controller.id}`
 
-            const BEndTime = document.createElement('input')
-            BEndTime.type = 'time'
-            BEndTime.value = sectionObj.bEndHour == sectionObj.bInitHour ? '':`${String(Math.floor(sectionObj.bEndHour/60)).padStart(2, '0')}:${String(sectionObj.bEndHour % 60).padStart(2, '0')}`
-            BEndTime.disabled = true
+                //B End time
+                const BEndTimeLabel = document.createElement('label')
+                BEndTimeLabel.htmlFor = `BEndTime${sectionObj.id}.${controller.id}`
+                BEndTimeLabel.innerText = 'End time'
 
-            BEndTime.name = 'BTime'
-            BEndTime.id = `BEndTime${sectionObj.id}.${controller.id}`
+                const BEndTime = document.createElement('input')
+                BEndTime.style.backgroundColor = lightSection
+                BEndTime.type = 'time'
+                BEndTime.value = sectionObj.bEndHour == sectionObj.bInitHour ? '':`${String(Math.floor(sectionObj.bEndHour/60)).padStart(2, '0')}:${String(sectionObj.bEndHour % 60).padStart(2, '0')}`
+                BEndTime.disabled = true
 
-            //Time fixes
-            BInitTime.onblur = () => {
+                BEndTime.name = 'BTime'
+                BEndTime.id = `BEndTime${sectionObj.id}.${controller.id}`
 
-                if (!BInitTime.value) return
-                
-                timeFloor(sectionObj, 'bInitHour', BInitTime.value, BInitTime)
+                //Time fixes
+                BInitTime.onblur = () => {
 
-                const addTime = timeParse[setting[5]]*controller.secondLength
+                    if (!BInitTime.value) return
+                    
+                    timeFloor(sectionObj, 'bInitHour', BInitTime.value, BInitTime)
 
-                const step = timeParse[setting[5]]
-                const bEnd = sectionObj.bInitHour + addTime
+                    const addTime = timeParse[setting[5]]*controller.secondLength
 
-                if (sectionObj.aDay == sectionObj.bDay) {
+                    const step = timeParse[setting[5]]
+                    const bEnd = sectionObj.bInitHour + addTime
 
-                    for (let t = sectionObj.bInitHour; t < bEnd; t += step) {
-    
-                        for (let aT = sectionObj.aInitHour; aT < sectionObj.aEndHour; aT += step) {
-    
-                            if (t === aT) {
-    
-                                BInitTime.value = ''
-                                sectionObj.bInitHour = 0
+                    if (sectionObj.aDay == sectionObj.bDay) {
 
-                                Swal.fire({
+                        for (let t = sectionObj.bInitHour; t < bEnd; t += step) {
+        
+                            for (let aT = sectionObj.aInitHour; aT < sectionObj.aEndHour; aT += step) {
+        
+                                if (t === aT) {
+        
+                                    BInitTime.value = ''
+                                    sectionObj.bInitHour = 0
 
-                                    title:'Time conflict',
-                                    icon:'error',
-                                    text: `You can't place the second segment into a time that the first segment is using`
+                                    Swal.fire({
 
-                                })
+                                        title:'Time conflict',
+                                        icon:'error',
+                                        text: `You can't place the second segment into a time that the first segment is using`
 
-                                return
+                                    })
 
+                                    return
+
+                                }
                             }
                         }
                     }
+
+
+                    let hour = parseInt(BInitTime.value.slice(0,2))
+                    let min = parseInt(BInitTime.value.slice(-2))
+
+                    const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
+                    const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
+
+                    sectionObj.bEndHour = modTime
+                    BEndTime.value = timeStr
+
+
                 }
+                BTimeWrapper.append(BInitTimeLabel, BInitTime, BEndTimeLabel, BEndTime)
 
-
-                let hour = parseInt(BInitTime.value.slice(0,2))
-                let min = parseInt(BInitTime.value.slice(-2))
-
-                const modTime = (hour*60 + Math.floor(((min+5)/10))*10)+addTime
-                const timeStr = `${String(Math.floor(modTime/60)).padStart(2, '0')}:${String(modTime % 60).padStart(2, '0')}`
-
-                sectionObj.bEndHour = modTime
-                BEndTime.value = timeStr
-
-
-            }
-
-        BTime.append(BTitle, BDays, BInitTimeLabel, BInitTime, BEndTimeLabel, BEndTime)
+        BTime.append(BTitle, BDays, BTimeWrapper)
 
         //Section park
         const sectionPark = document.querySelector('.sectionPark'+controller.id)
@@ -337,19 +411,28 @@ function createSectionPanel (controller, sectionObj) {
             sectionObj.splitSection = splitBtn.checked
 
             const secondHourInput = document.getElementById('SlI_'+controller.id)
+            const secondHourLabel = document.getElementById('Sh3_'+controller.id)
+
+            if (controller.splitBlock) {
+
+                secondHourLabel.hidden = false
+                secondHourInput.hidden = false
+
+            } else {
+
+                secondHourLabel.hidden = true
+                secondHourInput.hidden = true
+
+            }
 
             if (sectionObj.splitSection){
 
                 BTime.hidden = false
-                secondHourInput.hidden = false
-
                 ATitle.innerText = 'First segment schedule'
 
             } else {
 
                 BTime.hidden = true
-                secondHourInput.hidden = true
-
                 ATitle.innerText = 'Section class schedule'
 
                 //Find corresponding B slot to delete
@@ -388,9 +471,9 @@ function createSectionPanel (controller, sectionObj) {
         }
 
 
-    controls.append(nameInput, codeInput, ATime, document.createElement('br'), splitLabel, splitBtn, BTime)
+    controls.append(idWrapping, ATime, document.createElement('br'), splitLabel, splitBtn, BTime)
 
-    panel.append(document.createElement('br'), header, controls)
+    panel.append(header, controls)
 
     //Ship it
     sectionPark.appendChild(panel)
@@ -581,8 +664,18 @@ document.addEventListener(('updateTable'), (e) => {
 //If something new is placed
 document.addEventListener('change', e => {
 
-    //Find if the form update is from any sectionPanel
-    const sectionPanel = e.target.closest('.sectionPanel')
+    let sectionPanel
+
+    try {
+
+        //Find if the form update is from any sectionPanel
+        sectionPanel = e.target.closest('.sectionPanel')
+
+    } catch (e) {
+
+        return
+
+    }
 
     if (!sectionPanel) return
 

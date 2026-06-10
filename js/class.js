@@ -75,10 +75,14 @@ export function addClass(fileImprt){
 
 function createPanel (classObj) {
 
+    const lightController = `color-mix(in srgb, ${classObj.color} 25%, white)`
+    const darkController = createDarkColor(classObj.color)
+
     //Create div
     const panel = document.createElement('div')
     panel.classList.add('classPanel')
     panel.dataset.id = classObj.id
+    panel.style.backgroundColor = `color-mix(in srgb, ${classObj.color} 45%, white)`
 
     //Header
     const header = document.createElement('div')
@@ -87,16 +91,29 @@ function createPanel (classObj) {
         //Title
         const title = document.createElement('h3')
         title.innerText = classObj.title
+        title.style.color = darkController
 
         //Add available section
         const addSctBtn = document.createElement('button')
         addSctBtn.id = 'Sct_' + classObj.id
-        addSctBtn.innerText = 'Add available section'
+
+            const addSctLbl = document.createElement('span')
+            addSctLbl.classList.add('material-symbols-outlined')
+            addSctLbl.innerText = 'add_circle'
+            addSctBtn.append(addSctLbl)
+
+        addSctBtn.style.backgroundColor = darkController
         addSctBtn.onclick = () => addSection(classObj) //Add Section function
 
         //Delete button
         const deleteBtn = document.createElement('button')
-        deleteBtn.innerText = 'Delete'
+
+            const deleteLbl = document.createElement('span')
+            deleteLbl.classList.add('material-symbols-outlined')
+            deleteLbl.innerText = 'delete'
+            deleteBtn.append(deleteLbl)
+        
+        deleteBtn.style.backgroundColor = darkController
         deleteBtn.onclick = () => deleteClass(classObj.id) //Delete function
 
         //Push and title to header
@@ -106,73 +123,51 @@ function createPanel (classObj) {
     const controls = document.createElement('div')
     controls.classList.add('panelControls')
 
-        //Title input
-        const nameInput = document.createElement('input')
-        nameInput.type = 'text'
-        nameInput.value = classObj.title
-        nameInput.placeholder = 'Class title'
-        nameInput.maxLength = 32
+        //Title Wrap 
+        const titleWrap = document.createElement('div')
+        titleWrap.classList.add('titleWrap')
 
-        //OnInput, changes on real time
-        nameInput.oninput = () => {
+            //Title input
+            const nameInput = document.createElement('input')
+            nameInput.type = 'text'
+            nameInput.value = classObj.title
+            nameInput.placeholder = 'Class title'
+            nameInput.maxLength = 32
+            nameInput.style.backgroundColor = lightController
 
-            //Rewrite title at classController object
-            classObj.title = nameInput.value
-            //Dynamically, change text on real time
-            title.innerText = nameInput.value
-            document.getElementById('titlePlacedBlock'+classObj.id).innerText = nameInput.value
+            //OnInput, changes on real time
+            nameInput.oninput = () => {
 
-            if (!document.getElementById('titleBlock'+classObj.id)) return
-            document.getElementById('titleBlock'+classObj.id).innerText = nameInput.value
+                //Rewrite title at classController object
+                classObj.title = nameInput.value
+                //Dynamically, change text on real time
+                title.innerText = nameInput.value
+                document.getElementById('titlePlacedBlock'+classObj.id).innerText = nameInput.value
 
-        }
+                if (!document.getElementById('titleBlock'+classObj.id)) return
+                document.getElementById('titleBlock'+classObj.id).innerText = nameInput.value
 
-        //Color input
-        const colorInput = document.createElement('input')
-        colorInput.type = 'color'
-        colorInput.value = classObj.color
+            }
 
-        colorInput.oninput = () => {
-
-            //Rewrite title at classController object
-            classObj.color = colorInput.value
-
-            //Change voucher color
-            updateVoucherColor(colorInput.value, classObj.id)
-
-            //Change drop color
-            const slots = classSlots.filter(s => s.id.substring(s.id.indexOf('.')+1) == classObj.id)
-
-            slots.forEach(slot => {
-
-                slot.style.backgroundColor = classObj.color + '4D'
-                slot.style.border = '5px solid ' + classObj.color
-
-                slot.childNodes.forEach(obj => {
-
-                    if(obj.classList.contains('dropInfo')){
-
-                        obj.childNodes.forEach(txt => txt.style.color = createDarkColor(classObj.color))
-
-                    }
-
-                })
-                
-            });
-
-        }
+            //Color input
+            const colorInput = document.createElement('input')
+            colorInput.type = 'color'
+            colorInput.value = classObj.color
+            colorInput.style.width = '100%'
 
         //Fancy label for the first length
         const unitLngthH3 = document.createElement('h3')
         unitLngthH3.innerText = 'Class unit length'
         unitLngthH3.id = 'Fh3_' + classObj.id
+        unitLngthH3.style.color = darkController
 
         //First hour length
         const unitLengthInput = document.createElement('input')
         unitLengthInput.type = 'number'
         unitLengthInput.min = 1
         unitLengthInput.max = 3
-        unitLengthInput.value= classObj.unitLength
+        unitLengthInput.value = classObj.unitLength
+        unitLengthInput.style.backgroundColor = lightController
 
         unitLengthInput.oninput = () => {
 
@@ -200,6 +195,7 @@ function createPanel (classObj) {
         sndLngthH3.innerText = 'Second class segment length'
         sndLngthH3.id = 'Sh3_' + classObj.id
         sndLngthH3.hidden = true
+        sndLngthH3.style.color = darkController
 
         //Second hour length
         const secondLengthInput = document.createElement('input')
@@ -209,6 +205,7 @@ function createPanel (classObj) {
         secondLengthInput.max = 3
         secondLengthInput.value = classObj.secondLength
         secondLengthInput.hidden = true
+        secondLengthInput.style.backgroundColor = lightController
 
         secondLengthInput.oninput = () => {
 
@@ -234,20 +231,75 @@ function createPanel (classObj) {
         //Available section park to place in
         const sectionPark = document.createElement('div')
         sectionPark.classList.add('sectionPark'+classObj.id)
+
+            colorInput.oninput = () => {
+
+                const newDark = createDarkColor(classObj.color)
+                const newLight = `color-mix(in srgb, ${classObj.color} 25%, white)`
+
+                //Rewrite title at classController object
+                classObj.color = colorInput.value
+
+                //Change voucher color
+                updateVoucherColor(colorInput.value, classObj.id)
+
+                //Change drop color
+                const slots = classSlots.filter(s => s.id.substring(s.id.indexOf('.')+1) == classObj.id)
+
+                slots.forEach(slot => {
+
+                    slot.style.backgroundColor = classObj.color + '4D'
+                    slot.style.border = '5px solid ' + classObj.color
+
+                    slot.childNodes.forEach(obj => {
+
+                        if(obj.classList.contains('dropInfo')){
+
+                            obj.childNodes.forEach(txt => txt.style.color = newDark)
+
+                        }
+
+                    })
+                    
+                });
+
+                //Change controller colors
+                panel.style.backgroundColor = `color-mix(in srgb, ${classObj.color} 45%, white)`
+                title.style.color = newDark
+                addSctBtn.style.backgroundColor = newDark
+                deleteBtn.style.backgroundColor = newDark
+                nameInput.style.backgroundColor = newLight
+                unitLngthH3.style.color = newDark
+                sndLngthH3.style.color = newDark
+                unitLengthInput.style.backgroundColor = newLight
+
+                const sectionControllers = panel.querySelectorAll('.sectionPanel')
+                sectionControllers.forEach(section => {
+
+                    section.style.backgroundColor = `color-mix(in srgb, ${classObj.color} 65%, white)`
+                    section.querySelectorAll('h3').forEach(t => t.style.color = newDark)
+                    section.querySelectorAll('button').forEach(t => t.style.backgroundColor = newDark)
+                    section.querySelectorAll('input:not(input[type="radio"], input[type="checkbox"])').forEach(t => t.style.backgroundColor = newLight)
+                    
+                })
+
+            }
+
+            titleWrap.append(nameInput, colorInput)
         
 
         //Push every setting
         controls.append(
-            nameInput,
-            colorInput,
+            titleWrap,
             unitLngthH3,
             unitLengthInput,
             sndLngthH3,
-            secondLengthInput
+            secondLengthInput,
+            document.createElement('br')
         )
 
     //Header + controls + section park (for available sections)
-    panel.append(document.createElement('br'), header, controls, sectionPark)
+    panel.append(header, controls, sectionPark)
 
     //Ship it
     container.appendChild(panel)

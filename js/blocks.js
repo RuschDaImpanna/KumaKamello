@@ -640,7 +640,8 @@ function createBin () {
 
         //Text
         const binText = document.createElement('h3')
-        binText.innerText = 'Delete'
+        binText.classList.add('material-symbols-outlined', 'deleteSymbol')
+        binText.innerText = 'delete'
 
         deleteBin.append (binText)
     

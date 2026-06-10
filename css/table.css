@@ -127,18 +127,11 @@ body::-webkit-scrollbar-thumb:hover{
     top: -5px;
     left: 0;
     right: 0;
-    border-bottom: 5px dashed #8C8EFF;
+    border-bottom: 5px dashed var(--darkColor);
 
 }
 
-input[type="radio"],
-input[type="checkbox"],
-input[type="reset"],
-button, 
-#initDay label,
-#endDay label,
-.ADays label,
-.BDays label
+input[type="radio"], input[type="checkbox"], input[type="reset"], button, label:not(.ATimeWrapper label, .BTimeWrapper label, .timeLapseLbl)
 {
 
     cursor: pointer;
@@ -148,5 +141,69 @@ button,
 input[type="time"]{
 
     cursor: text;
+
+}
+
+.settings, .classSettings {
+
+    position: fixed;
+
+    transition: transform 0.35s cubic-bezier(0, 1.5, 1, 0.9);
+
+    h1, h3 {
+
+        color: var(--darkColor);
+        margin: 5px 0;
+
+    }
+
+    h1 {
+
+        text-align: center;
+
+    }
+
+    button, input[type="reset"] {
+
+        border: none;
+        border-radius: 5px;
+
+        padding: 5px 7px;
+
+    }
+    button:not(:disabled), input[type="reset"] {
+
+        background-color: var(--darkColor);
+        color: white;
+
+    }
+    button:disabled {
+
+        background-color: #9E9E9E;
+
+    }
+
+    input[type="text"], input[type="number"], input[type="time"]{
+
+        border: none;
+        border-radius: 10px;
+        padding: 2px 5px;
+
+        background-color: var(--baseColor);
+
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+
+        accent-color: var(--baseColor);
+        color: white;
+
+    }
+
+    input::placeholder {
+
+        color: var(--lightColor);
+
+    }
 
 }

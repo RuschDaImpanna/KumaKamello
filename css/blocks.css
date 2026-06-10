@@ -37,6 +37,13 @@ input:disabled, button:disabled{
 #deleteBin {
 
     min-height: 90px;
+    
+    .deleteSymbol {
+
+        position: absolute;
+        font-size: 5em;
+
+    }
 
 }
 #deleteBin[selected]{

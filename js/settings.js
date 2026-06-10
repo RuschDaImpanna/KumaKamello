@@ -73,6 +73,7 @@ export function dynamicColor(){
 
     //Get colors to CSS
     document.documentElement.style.setProperty('--lightColor', `color-mix(in srgb, ${setting[8]} 45%, white)`)
+    document.documentElement.style.setProperty('--baseColor', setting[8])
     document.documentElement.style.setProperty('--darkColor', darkColor)
     setBackgrounds(darkColor)
 
@@ -252,6 +253,7 @@ function createTable() {
 
     //Get colors to CSS
     document.documentElement.style.setProperty('--lightColor', `color-mix(in srgb, ${setting[8]} 45%, white)`)
+    document.documentElement.style.setProperty('--baseColor', setting[8])
     document.documentElement.style.setProperty('--darkColor', darkColor)
     setBackgrounds(darkColor)
 

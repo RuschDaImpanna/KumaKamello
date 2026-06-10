@@ -17,6 +17,7 @@
 
         <!--Fonts-->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playwrite+DE+Grund:400|Germania+One">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_circle,calendar_add_on,delete,download,photo_camera,upload" rel="stylesheet"/>
 
         <title>KumaKamello</title>
 
@@ -70,17 +71,25 @@
 
                 <h1>Schedule Settings</h1>
 
-                <form id="files">
+                <div id="buttonsWrap">
 
-                    <input type="file" id="import" accept=".json" hidden/>
-                    <button type="button" onclick="document.getElementById('import').click()">
-                        Import
+                    <form id="files">
+
+                        <input type="file" id="import" accept=".json" hidden/>
+                        <button type="button" onclick="document.getElementById('import').click()">
+                            <span class="material-symbols-outlined">upload</span> Import
+                        </button>
+                        <button type="button" id="export" disabled>
+                            <span class="material-symbols-outlined">download</span> Export
+                        </button>
+
+                    </form>
+
+                    <button type="button" id="ssImg" disabled>
+                        <span class="material-symbols-outlined">photo_camera</span> Take screenshot
                     </button>
-                    <button type="button" id="export" disabled>Export</button>
 
-                </form>
-
-                <button type="button" id="ssImg" disabled>Take screenshot</button>
+                </div>
 
                 <br/>
                 <br/>
@@ -142,9 +151,9 @@
 
                     <div id="lapse">
 
-                    <label for="initTime">Initial Hour</label>
+                    <label for="initTime" class="timeLapseLbl">Initial Hour</label>
                     <input type="time" name="initTime" value="07:00">
-                    <label for="endTime">Ending Hour</label>
+                    <label for="endTime" class="timeLapseLbl">Ending Hour</label>
                     <input type="time" name="endTime" value="19:00">
 
                     </div>
@@ -168,8 +177,6 @@
                         <input type="checkbox" id="format" name="format" checked>
 
                     </div>
-
-                    <br/>
 
                     <div id="color">
 
@@ -203,7 +210,7 @@
 
                 <form id="classCreation">
 
-                    <button type="button" id="addClass">Add Class</button>
+                    <button type="button" id="addClass"><span class="material-symbols-outlined">calendar_add_on</span> Add Class</button>
 
                 </form>
 
