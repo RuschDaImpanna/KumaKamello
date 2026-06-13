@@ -205,7 +205,7 @@ async function importSession(progressBar, file) {
     //Stage 1 - Know if file is json (5)
     await updateImport(
 
-        150,
+        50,
         () => {
 
             if (!file) throw new Error (`<h3>No file provided</h3>`)
@@ -216,7 +216,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        250,
+        100,
         () => {
 
             const type = file.type
@@ -237,7 +237,7 @@ async function importSession(progressBar, file) {
     let rawText
     await updateImport(
 
-        150,
+        50,
         async () => {
 
             try {
@@ -257,7 +257,7 @@ async function importSession(progressBar, file) {
     let data
     await updateImport(
 
-        150,
+        50,
         async () => {
 
             try {
@@ -277,7 +277,7 @@ async function importSession(progressBar, file) {
     const supportableBuilt = '0.2.1'
     await updateImport(
 
-        250,
+        100,
         () => {
 
             if (data.length != 4) throw new Error (`
@@ -341,8 +341,6 @@ async function importSession(progressBar, file) {
         });
 
     }
-
-
 
     //Stage 3 - Check if setting and classController have the right format (30)
     const fileSetting = [...data[1]]
@@ -493,7 +491,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        50,
         () => {
 
             if (!(0 <= fileSetting[1] && fileSetting[1] <= 6)) {
@@ -514,7 +512,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        50,
         () => {
 
             if (!(0 <= fileSetting[2] && fileSetting[2] <= 6)) {
@@ -535,7 +533,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        50,
         () => {
 
             if (!(0 <= fileSetting[3] && fileSetting[3] <= 1440)) {
@@ -558,7 +556,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        50,
         () => {
 
             if (!(0 <= fileSetting[4] && fileSetting[4] <= 1440)) {
@@ -581,7 +579,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        50,
         () => {
 
             if (!(0 <= fileSetting[5] && fileSetting[5] <= 2)) {
@@ -626,7 +624,7 @@ async function importSession(progressBar, file) {
     )
     await updateImport(
 
-        100,
+        50,
         () => {
 
             form.color.value = fileSetting[8]
@@ -686,7 +684,7 @@ async function importSession(progressBar, file) {
 
         await updateImport(
 
-            200,
+            120,
             () => {
 
                 const fragment = document.createElement('template')
@@ -764,7 +762,7 @@ async function importSession(progressBar, file) {
 
         await updateImport(
 
-            100,
+            50,
             () => {
 
                 const match = blocks.find(e => e.id == block.id)
