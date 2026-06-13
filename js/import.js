@@ -27,6 +27,7 @@ importBtn.addEventListener("change" , () => {
         if (result.isDismissed) return 'cancel'
 
         return result.isConfirmed ? 'save':'notSave'
+
     })
 
     confirm.then(action => {
@@ -55,7 +56,7 @@ importBtn.addEventListener("change" , () => {
 
             allowOutsideClick: false,
             allowEscapeKey: false,
-            allowEnterKey: false,
+            preConfirm: false,
             showConfirmButton: false,
 
             //On alert

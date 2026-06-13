@@ -30,6 +30,7 @@ form.addEventListener("reset", () => {
 
         readSettings()
         createTable()
+        tableTitle.innerText = ''
         
     }, 0)
 
