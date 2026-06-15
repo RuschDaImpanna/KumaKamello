@@ -51,7 +51,7 @@ exportBtn.addEventListener("click", createFile)
 
 export function createFile() {
 
-    const info  = [{file:'KumaKamello',version:'0.2.1'}]
+    const info  = [{file:'KumaKamello',version:'1.0.0'}]
     const exportedSlots = classSlots.map(slot => ({
 
         obj: slot.outerHTML,

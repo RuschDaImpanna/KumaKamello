@@ -274,7 +274,7 @@ async function importSession(progressBar, file) {
         3
         
     )
-    const supportableBuilt = '0.2.1'
+    const supportableBuilt = '1.0.0'
     await updateImport(
 
         100,
