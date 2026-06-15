@@ -165,7 +165,7 @@ function createPanel (classObj) {
         const unitLengthInput = document.createElement('input')
         unitLengthInput.type = 'number'
         unitLengthInput.min = 1
-        unitLengthInput.max = 3
+        unitLengthInput.max = 5
         unitLengthInput.value = classObj.unitLength
         unitLengthInput.style.backgroundColor = lightController
 
@@ -181,8 +181,8 @@ function createPanel (classObj) {
 
             }
 
-            //Take the value between 1 to 3
-            const clampValue = Math.min(Math.max(inputValue, 1), 3)
+            //Take the value between 1 to 5
+            const clampValue = Math.min(Math.max(inputValue, 1), 5)
 
             //Change the controller and the display
             unitLengthInput.value = clampValue
@@ -202,7 +202,7 @@ function createPanel (classObj) {
         secondLengthInput.id = 'SlI_' + classObj.id
         secondLengthInput.type = 'number'
         secondLengthInput.min = 1
-        secondLengthInput.max = 3
+        secondLengthInput.max = 5
         secondLengthInput.value = classObj.secondLength
         secondLengthInput.hidden = true
         secondLengthInput.style.backgroundColor = lightController
@@ -219,8 +219,8 @@ function createPanel (classObj) {
 
             }
 
-            //Take the value between 1 to 3
-            const clampValue = Math.min(Math.max(inputValue, 1), 3)
+            //Take the value between 1 to 5
+            const clampValue = Math.min(Math.max(inputValue, 1), 5)
 
             //Change the controller and the display
             secondLengthInput.value = clampValue
