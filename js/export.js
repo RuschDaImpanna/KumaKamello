@@ -32,6 +32,19 @@ function disbaleExport (disabled, condition) {
 
 }
 
+window.addEventListener("beforeunload", (event) => {
+
+    if (!exportBtn.disabled) {
+
+        event.preventDefault()
+
+        event.returnValue = ""
+
+        return ""
+
+    }
+
+})
 
 //To make the JSON file
 exportBtn.addEventListener("click", createFile)
